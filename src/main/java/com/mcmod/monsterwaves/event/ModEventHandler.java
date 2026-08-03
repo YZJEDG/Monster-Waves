@@ -64,6 +64,34 @@ public final class ModEventHandler {
     /** 客户端轮询：配置界面中"传送到重生点"开关变化时立即重建界面（实时条件显示）；首次 tick 同步实际值 */
     private static boolean lastFallToRespawn = true;
 
+    /** 上次属性球清理执行的服务器 tick（用于倒计时提醒） */
+    private static long lastCleanupTick = 0;
+    /** 上次提醒的剩余分钟数（每分钟提醒一次） */
+    private static int lastRemindMin = -1;
+
+    /** 清理倒计时提醒：剩余 < 5 分钟提醒一次，之后每分钟提醒一次，≥5 分钟不提醒 */
+    private static void remindCleanup(MinecraftServer server) {
+        MWConfig cfg = MWConfig.get();
+        if (!cfg.cleanupEnable) {
+            lastRemindMin = -1;
+            return;
+        }
+        long now = server.getTickCount();
+        long interval = Math.max(1, cfg.cleanupInterval);
+        long remain = (lastCleanupTick + interval) - now;
+        if (remain > 0 && remain < 6000) { // 5 分钟内
+            int min = Math.max(1, (int) Math.ceil(remain / 1200.0));
+            if (min != lastRemindMin) {
+                lastRemindMin = min;
+                server.getPlayerList().broadcastSystemMessage(Component.literal(
+                        "【怪物狂潮】约 " + min + " 分钟后将清理掉落物，请及时拾取重要物品")
+                        .withStyle(ChatFormatting.YELLOW), false);
+            }
+        } else {
+            lastRemindMin = -1;
+        }
+    }
+
     /** 客户端 tick：检测配置开关变化并实时重建 Cloth Config 界面 */
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
@@ -90,6 +118,8 @@ public final class ModEventHandler {
         }
         MinecraftServer server = event.getServer();
         StageManager.serverTick(server);
+        // 属性球清理倒计时提醒（全局一次）
+        remindCleanup(server);
         // 休息维度玩家规则：锁饥饿 + 跳下传送
         ServerLevel safeLevel = SafeDimensionManager.getSafeLevel(server);
         if (safeLevel != null) {
@@ -113,10 +143,11 @@ public final class ModEventHandler {
     }
 
     /**
-     * 属性球/掉落物清理（防堆积）：
-     * - 按配置的**物品名名单**匹配要清理的掉落物（不限于本模组属性球）
-     * - **追踪时间**（实体存在 tick）：超时清理
-     * - 超上限时按时间升序清理**最早的一批**；cleanupAutoAttract=true 时先尝试吸向最近玩家
+     * 掉落物清理（防堆积）：
+     * - 按配置的**物品名名单**匹配要清理的掉落物
+     * - **超时直接清理**（追踪存在时间）
+     * - **超上限直接清理超出数量**（不按时间排序）
+     * - 清理开始/完成均有聊天栏反馈（完成含清理数量）
      */
     private static void cleanupBalls(ServerLevel level) {
         MWConfig cfg = MWConfig.get();
@@ -137,30 +168,51 @@ public final class ModEventHandler {
         if (balls.isEmpty()) {
             return;
         }
-        // 追踪时间：超时清理
-        balls.removeIf(b -> {
-            if (b.tickCount > cfg.cleanupDespawnTime) {
+        // 清理开始反馈
+        level.getServer().getPlayerList().broadcastSystemMessage(
+                Component.literal("【怪物狂潮】开始清理掉落物...").withStyle(ChatFormatting.GRAY), false);
+        int removed = 0;
+
+        // 超时清理：存在时间超过上限的直接清除
+        for (ItemEntity b : balls) {
+            if (b.isAlive() && b.tickCount > cfg.cleanupDespawnTime) {
                 b.discard();
-                return true;
+                removed++;
             }
-            return false;
-        });
-        // 数量上限：按存在时间升序，清理最早的一批
-        if (balls.size() > cfg.cleanupMaxCount) {
-            balls.sort(java.util.Comparator.comparingInt(b -> b.tickCount));
-            int toRemove = balls.size() - cfg.cleanupMaxCount;
-            for (int i = 0; i < toRemove; i++) {
-                ItemEntity ball = balls.get(i);
+        }
+        // 超上限清理：直接清除超出数量（不排序）
+        int alive = 0;
+        for (ItemEntity b : balls) {
+            if (b.isAlive()) {
+                alive++;
+            }
+        }
+        if (alive > cfg.cleanupMaxCount) {
+            int toRemove = alive - cfg.cleanupMaxCount;
+            int removedInLimit = 0;
+            for (ItemEntity b : balls) {
+                if (removedInLimit >= toRemove) {
+                    break;
+                }
+                if (!b.isAlive()) {
+                    continue;
+                }
                 if (cfg.cleanupAutoAttract) {
-                    // 尝试吸向最近玩家（3 格内），否则移除
-                    var nearest = level.getNearestPlayer(ball, 3.0);
+                    // 3 格内有玩家的掉落物暂不清理
+                    var nearest = level.getNearestPlayer(b, 3.0);
                     if (nearest != null) {
                         continue;
                     }
                 }
-                ball.discard();
+                b.discard();
+                removed++;
+                removedInLimit++;
             }
         }
+        // 清理完成反馈（含清理数量）
+        level.getServer().getPlayerList().broadcastSystemMessage(Component.literal(
+                "【怪物狂潮】清理完成，共清理 " + removed + " 个掉落物").withStyle(ChatFormatting.GREEN), false);
+        lastCleanupTick = level.getServer().getTickCount();
     }
 
     /**
