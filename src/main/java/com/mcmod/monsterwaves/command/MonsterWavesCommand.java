@@ -14,6 +14,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -67,7 +68,7 @@ public final class MonsterWavesCommand {
         dispatcher.register(Commands.literal("monsterwaves")
                 .then(Commands.literal("spawn")
                         .requires(src -> src.hasPermission(2))
-                        .then(Commands.argument("mob", StringArgumentType.word()).suggests(SUGGEST_MOBS)
+                        .then(Commands.argument("mob", ResourceLocationArgument.id()).suggests(SUGGEST_MOBS)
                                 .executes(ctx -> spawn(ctx, 1))
                                 .then(Commands.argument("count", com.mojang.brigadier.arguments.IntegerArgumentType.integer(1, 100))
                                         .executes(ctx -> spawn(ctx, com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "count"))))))
@@ -119,9 +120,9 @@ public final class MonsterWavesCommand {
     }
 
     private static int spawn(CommandContext<CommandSourceStack> ctx, int count) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
-        String mobId = StringArgumentType.getString(ctx, "mob");
-        ResourceLocation rl = ResourceLocation.tryParse(mobId);
-        EntityType<?> type = rl == null ? null : ForgeRegistries.ENTITY_TYPES.getValue(rl);
+        ResourceLocation rl = ResourceLocationArgument.getId(ctx, "mob");
+        String mobId = rl.toString();
+        EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(rl);
         if (type == null) {
             ctx.getSource().sendFailure(Component.literal("未知生物：" + mobId + "（格式：minecraft:zombie）"));
             return 0;
