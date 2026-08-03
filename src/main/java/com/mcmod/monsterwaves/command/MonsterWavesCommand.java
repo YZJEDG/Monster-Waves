@@ -6,8 +6,6 @@ import com.mcmod.monsterwaves.item.ModItems;
 import com.mcmod.monsterwaves.spawn.MobSpawnManager;
 import com.mcmod.monsterwaves.stage.StageData;
 import com.mcmod.monsterwaves.stage.StageManager;
-import com.mcmod.monsterwaves.team.TeamInfo;
-import com.mcmod.monsterwaves.team.TeamManager;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -80,8 +78,6 @@ public final class MonsterWavesCommand {
                                 .executes(ctx -> stats(ctx, EntityArgument.getPlayer(ctx, "player")))))
                 .then(Commands.literal("difficulty")
                         .executes(MonsterWavesCommand::difficulty))
-                .then(Commands.literal("team")
-                        .executes(MonsterWavesCommand::team))
                 .then(Commands.literal("stage")
                         .then(Commands.literal("info").executes(MonsterWavesCommand::stageInfo))
                         .then(Commands.literal("next").requires(src -> src.hasPermission(2))
@@ -172,27 +168,6 @@ public final class MonsterWavesCommand {
         ctx.getSource().sendSuccess(() -> Component.literal("当前阶段：")
                 .append(Component.literal(stage.id()).withStyle(ChatFormatting.GOLD))
                 .append(Component.literal(" ｜ 难度系数：x" + stage.difficulty())), false);
-        return 1;
-    }
-
-    /** 显示玩家团队信息（软依赖 FTB Teams） */
-    private static int team(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
-        ServerPlayer player = ctx.getSource().getPlayerOrException();
-        CommandSourceStack src = ctx.getSource();
-        if (!TeamManager.isFtbTeamsLoaded()) {
-            src.sendSuccess(() -> Component.literal("未安装 FTB Teams，团队功能未启用"), false);
-            return 1;
-        }
-        TeamInfo info = TeamManager.getTeam(player);
-        if (info == null) {
-            src.sendSuccess(() -> Component.literal("FTB Teams 已安装，但暂无法获取团队信息（管理器未就绪）"), false);
-            return 1;
-        }
-        src.sendSuccess(() -> Component.literal("你的团队：")
-                .append(Component.literal(info.name()).withStyle(ChatFormatting.GOLD))
-                .append(Component.literal(" ｜ 成员 " + info.memberCount()
-                        + "，在线 " + info.onlineMembers().size()
-                        + " ｜ " + (info.party() ? "玩家队伍" : "个人/服务器队伍"))), false);
         return 1;
     }
 
