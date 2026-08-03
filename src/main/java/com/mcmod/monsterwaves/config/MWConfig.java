@@ -144,13 +144,12 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public double lootExtraCountPerLevel = 0.0;
 
-    /** 普通怪掉落条目（每项 JSON 字符串） */
+    /** 普通怪掉落条目（POJO 表单，字段见开发手册"掉落条目字段"表） */
     @ConfigEntry.Category("loot")
-    @ConfigEntry.Gui.Tooltip()
-    public List<String> normalLoot = new ArrayList<>(List.of(
-            "{\"item\":\"minecraft:diamond\",\"minCount\":1,\"maxCount\":1,\"chance\":0.1}"));
+    public List<LootEntry> normalLoot = new ArrayList<>(List.of(
+            new LootEntry("minecraft:diamond", 1, 1, 0.1)));
 
-    /** 掉落条目：item 注册名 / nbt（可选）/ min-max 数量 / 概率（0~1）/ 是否受抢夺影响（用于 Gson 解析 JSON 条目） */
+    /** 掉落条目：item 注册名 / nbt（可选）/ min-max 数量 / 概率（0~1）/ 是否受抢夺影响 */
     public static class LootEntry {
         public String item = "minecraft:diamond";
         public String nbt = "";

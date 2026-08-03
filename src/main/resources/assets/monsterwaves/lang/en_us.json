@@ -60,7 +60,7 @@
   "text.autoconfig.monsterwaves.option.lootExtraCountPerLevel": "Extra Count Per Difficulty",
   "text.autoconfig.monsterwaves.option.lootExtraCountPerLevel.@Tooltip": "Extra count = floor(this × (difficulty-1))",
   "text.autoconfig.monsterwaves.option.normalLoot": "Normal Loot Entries",
-  "text.autoconfig.monsterwaves.option.normalLoot.@Tooltip": "Each entry is JSON: {\"item\":\"minecraft:diamond\",\"minCount\":1,\"maxCount\":1,\"chance\":0.1}",
+  "text.autoconfig.monsterwaves.option.normalLoot.@Tooltip": "Each entry: item id, NBT (optional), count range, chance, looting affected (see dev manual)",
   "text.autoconfig.monsterwaves.option.normalLoot.item": "Item",
   "text.autoconfig.monsterwaves.option.normalLoot.nbt": "NBT",
   "text.autoconfig.monsterwaves.option.normalLoot.minCount": "Min Count",
