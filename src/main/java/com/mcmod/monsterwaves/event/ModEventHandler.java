@@ -60,6 +60,8 @@ public final class ModEventHandler {
     private static final double BALL_MAX_VY = 0.2;
     /** 属性球已被处理的标记（防同一 tick 内多玩家重复拾取） */
     private static final String BALL_CLAIMED = "monsterwaves_ball_claimed";
+    /** 掉落物归属标记（击杀者 UUID，供 onlyOwnDrops 使用） */
+    private static final String DROP_OWNER = "monsterwaves_owner";
 
     /** 客户端轮询：配置界面中"传送到重生点"开关变化时立即重建界面（实时条件显示）；首次 tick 同步实际值 */
     private static boolean lastFallToRespawn = true;
@@ -139,7 +141,61 @@ public final class ModEventHandler {
         for (ServerLevel level : server.getAllLevels()) {
             MobSpawnManager.serverTick(level);
             pickupBalls(level);
+            pickupAround(level);
             cleanupBalls(level);
+        }
+    }
+
+    /**
+     * 大范围拾取：自动拾取玩家周围物品与属性球。
+     * - 属性球走 applyBall（含提示/音效/CLAIMED 防重复）
+     * - 普通物品入背包 + 拾取音效
+     * - 黑名单过滤；onlyOwnDrops 时仅拾取归属自己的掉落（DROP_OWNER 标记）
+     */
+    private static void pickupAround(ServerLevel level) {
+        MWConfig cfg = MWConfig.get();
+        if (!cfg.pickupEnable) {
+            return;
+        }
+        if (level.getServer().getTickCount() % Math.max(1, cfg.pickupInterval) != 0) {
+            return;
+        }
+        double range = Math.max(1.0, cfg.pickupRange);
+        for (ServerPlayer player : level.players()) {
+            java.util.List<ItemEntity> items = level.getEntitiesOfClass(ItemEntity.class,
+                    player.getBoundingBox().inflate(range));
+            for (ItemEntity item : items) {
+                if (item.isRemoved()) {
+                    continue;
+                }
+                // 属性球
+                if (item.getItem().getItem() instanceof AttributeBallItem) {
+                    if (cfg.pickupAttributeBalls) {
+                        applyBall(player, item);
+                    }
+                    continue;
+                }
+                // 普通物品
+                if (!cfg.pickupItems) {
+                    continue;
+                }
+                String reg = ForgeRegistries.ITEMS.getKey(item.getItem().getItem()).toString();
+                if (cfg.pickupBlacklist.contains(reg)) {
+                    continue;
+                }
+                if (cfg.pickupOnlyOwnDrops) {
+                    String owner = item.getPersistentData().getString(DROP_OWNER);
+                    if (owner.isEmpty() || !owner.equals(player.getStringUUID())) {
+                        continue;
+                    }
+                }
+                ItemStack stack = item.getItem();
+                if (player.getInventory().add(stack)) {
+                    item.discard();
+                    player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                            SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2f, 1.0f);
+                }
+            }
         }
     }
 
@@ -355,6 +411,11 @@ public final class ModEventHandler {
         ServerLevel level = (ServerLevel) entity.level();
         double difficulty = StageManager.getDifficulty(level.getServer());
         MWConfig cfg = MWConfig.get();
+        // 击杀者归属（供 onlyOwnDrops 使用）
+        String owner = "";
+        if (event.getSource().getEntity() instanceof net.minecraft.world.entity.player.Player killer) {
+            owner = killer.getStringUUID();
+        }
 
         // 属性球掉落（可开关）
         if (cfg.ballDropEnabled) {
@@ -375,18 +436,29 @@ public final class ModEventHandler {
                     // 生成属性球（数量按事件参数，至少 1）
                     int count = Math.max(1, dropEvent.getBallCount());
                     for (int i = 0; i < count; i++) {
-                        spawnBall(level, dropEvent.getDropPos(), type);
+                        spawnBall(level, dropEvent.getDropPos(), type, owner);
                     }
                 }
             }
         }
 
         // 统一掉落（与属性球并行，不受属性球开关影响）
-        dropLoot(entity, level, difficulty);
+        dropLoot(entity, level, difficulty, owner);
+    }
+
+    /** 原版掉落也打归属标记（击杀者玩家） */
+    @SubscribeEvent
+    public static void onLivingDrops(net.minecraftforge.event.entity.living.LivingDropsEvent event) {
+        if (event.getSource().getEntity() instanceof net.minecraft.world.entity.player.Player p) {
+            String owner = p.getStringUUID();
+            for (net.minecraft.world.entity.item.ItemEntity e : event.getDrops()) {
+                e.getPersistentData().putString(DROP_OWNER, owner);
+            }
+        }
     }
 
     /** 统一掉落：按配置 normalLoot 生成掉落物（概率/数量受难度影响） */
-    private static void dropLoot(LivingEntity entity, ServerLevel level, double difficulty) {
+    private static void dropLoot(LivingEntity entity, ServerLevel level, double difficulty, String owner) {
         MWConfig cfg = MWConfig.get();
         if (!cfg.lootEnabled || cfg.normalLoot.isEmpty()) {
             return;
@@ -416,7 +488,11 @@ public final class ModEventHandler {
                     MonsterWavesMod.LOGGER.warn("MW 掉落 NBT 解析失败：{}（{}）", entry.nbt, entry.item);
                 }
             }
-            level.addFreshEntity(new ItemEntity(level, entity.getX(), entity.getY() + 0.5, entity.getZ(), stack));
+            ItemEntity drop = new ItemEntity(level, entity.getX(), entity.getY() + 0.5, entity.getZ(), stack);
+            if (!owner.isEmpty()) {
+                drop.getPersistentData().putString(DROP_OWNER, owner);
+            }
+            level.addFreshEntity(drop);
         }
     }
 
@@ -424,11 +500,14 @@ public final class ModEventHandler {
         return MWConfig.get().ballTypes.contains(type);
     }
 
-    private static void spawnBall(ServerLevel level, Vec3 pos, String type) {
+    private static void spawnBall(ServerLevel level, Vec3 pos, String type, String owner) {
         ItemStack stack = new ItemStack(ModItems.getBall(type));
         ItemEntity ball = new ItemEntity(level, pos.x, pos.y, pos.z, stack);
-        // 属性球永不进入背包；保留原生重力，球自然落地不飘空
+        // 属性球永不进入背包，只由本模组的接触检测处理；保留原生重力，球自然落地不飘空
         ball.setNeverPickUp();
+        if (!owner.isEmpty()) {
+            ball.getPersistentData().putString(DROP_OWNER, owner);
+        }
         level.addFreshEntity(ball);
     }
 

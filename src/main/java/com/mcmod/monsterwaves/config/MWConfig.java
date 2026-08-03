@@ -206,6 +206,38 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("arena")
     public int arenaSpawnY = 4;
 
+    // ===== 大范围拾取（pickup）=====
+    /** 大范围拾取总开关 */
+    @ConfigEntry.Category("pickup")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean pickupEnable = true;
+
+    /** 拾取半径（格） */
+    @ConfigEntry.Category("pickup")
+    public double pickupRange = 6.0;
+
+    /** 是否拾取普通物品实体 */
+    @ConfigEntry.Category("pickup")
+    public boolean pickupItems = true;
+
+    /** 是否拾取属性球 */
+    @ConfigEntry.Category("pickup")
+    public boolean pickupAttributeBalls = true;
+
+    /** 拾取检测间隔（tick） */
+    @ConfigEntry.Category("pickup")
+    public int pickupInterval = 5;
+
+    /** 是否只拾取自己击杀产生的掉落物 */
+    @ConfigEntry.Category("pickup")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean pickupOnlyOwnDrops = false;
+
+    /** 黑名单物品（注册名），不被拾取 */
+    @ConfigEntry.Category("pickup")
+    @ConfigEntry.Gui.Tooltip()
+    public List<String> pickupBlacklist = new ArrayList<>();
+
     // ===== 休息维度（safe）=====
     /** 是否启用休息维度与返回符咒 */
     @ConfigEntry.Category("safe")
