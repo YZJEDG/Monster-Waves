@@ -29,6 +29,7 @@
   "text.autoconfig.monsterwaves.option.mobPool.@Tooltip": "每项格式：注册名:权重（如 minecraft:zombie:5）",
   "text.autoconfig.monsterwaves.option.healthBonusPerLevel": "每点难度生命增幅",
   "text.autoconfig.monsterwaves.option.attackBonusPerLevel": "每点难度攻击增幅",
+  "text.autoconfig.monsterwaves.option.armorBonusPerLevel": "每点难度护甲增幅",
   "text.autoconfig.monsterwaves.option.ballBaseChance": "属性球基础掉落率",
   "text.autoconfig.monsterwaves.option.ballDropEnabled": "启用属性球掉落",
   "text.autoconfig.monsterwaves.option.ballDropEnabled.@Tooltip": "关闭后不再掉落属性球（统一掉落不受影响）",

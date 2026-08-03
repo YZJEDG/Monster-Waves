@@ -11,19 +11,31 @@ import java.util.List;
  * 阶段切换时向全体玩家广播提示。
  */
 public final class StageManager {
-    public record Stage(String id, double difficulty, long durationTicks) {
+    public record Stage(String id, double difficulty, long durationTicks,
+                        java.util.List<String> mobListOverride,
+                        double healthMultiplier, double attackMultiplier, double armorMultiplier,
+                        java.util.List<com.mcmod.monsterwaves.config.MWConfig.StageConfig.EffectEntry> effects) {
         public boolean isInfinite() {
             return durationTicks < 0;
+        }
+
+        public boolean hasMobListOverride() {
+            return mobListOverride != null && !mobListOverride.isEmpty();
         }
     }
 
     private StageManager() {
     }
 
-    /** 从配置读取阶段列表（各阶段难度/时长可分别调整） */
+    /** 从配置读取阶段列表（各阶段难度/时长/怪物池/属性倍率/BUFF 可分别调整） */
     public static java.util.List<Stage> getStages() {
         return com.mcmod.monsterwaves.config.MWConfig.get().stages.stream()
-                .map(s -> new Stage(s.id, s.difficulty, s.duration))
+                .map(s -> new Stage(s.id, s.difficulty, s.duration,
+                        s.mobListOverride == null ? java.util.List.of() : s.mobListOverride,
+                        s.attributeMultipliers == null ? 1.0 : s.attributeMultipliers.healthMultiplier,
+                        s.attributeMultipliers == null ? 1.0 : s.attributeMultipliers.attackMultiplier,
+                        s.attributeMultipliers == null ? 1.0 : s.attributeMultipliers.armorMultiplier,
+                        s.mobEffects == null ? java.util.List.of() : s.mobEffects))
                 .toList();
     }
 

@@ -57,7 +57,7 @@ public class StageData extends SavedData {
     public StageManager.Stage currentStage() {
         List<StageManager.Stage> stages = StageManager.getStages();
         if (stages.isEmpty()) {
-            return new StageManager.Stage("空", 1.0, -1);
+            return new StageManager.Stage("空", 1.0, -1, java.util.List.of(), 1.0, 1.0, 1.0, java.util.List.of());
         }
         return stages.get(Math.floorMod(index, stages.size()));
     }

@@ -141,6 +141,7 @@ public final class MonsterWavesCommand {
         ServerLevel level = ctx.getSource().getLevel();
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         double difficulty = StageManager.getDifficulty(level.getServer());
+        StageManager.Stage stage = StageManager.getData(level.getServer()).currentStage();
         int spawned = 0;
         for (int i = 0; i < count; i++) {
             Entity entity = type.spawn(level,
@@ -149,7 +150,7 @@ public final class MonsterWavesCommand {
                     MobSpawnType.COMMAND);
             if (entity instanceof Mob mob) {
                 mob.getPersistentData().putBoolean(MobSpawnManager.MARKER, true);
-                MobSpawnManager.applyDifficultyTo(mob, difficulty);
+                MobSpawnManager.applyDifficultyTo(mob, difficulty, stage);
                 spawned++;
             } else if (entity != null) {
                 // 非 Mob 实体（如物品/经验球）不适用本模组流程，直接移除

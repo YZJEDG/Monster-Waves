@@ -56,19 +56,24 @@ public final class MobSpawnManager {
         }
         List<EntityType<?>> types = new ArrayList<>();
         List<Integer> weights = new ArrayList<>();
-        loadMobPool(cfg, types, weights);
+        StageManager.Stage stage = StageManager.getData(level.getServer()).currentStage();
+        if (stage.hasMobListOverride()) {
+            loadMobPool(stage.mobListOverride(), types, weights); // 阶段专属怪物池
+        } else {
+            loadMobPool(cfg.mobPool, types, weights); // 全局怪物池
+        }
         if (types.isEmpty()) {
-            MonsterWavesMod.LOGGER.warn("MW 怪物池为空，无法生成（检查配置 mobPool）");
+            MonsterWavesMod.LOGGER.warn("MW 怪物池为空，无法生成（检查配置 mobPool/阶段 mobListOverride）");
             return;
         }
         for (ServerPlayer player : level.players()) {
-            spawnForPlayer(level, player, cfg, types, weights);
+            spawnForPlayer(level, player, cfg, types, weights, stage);
         }
     }
 
-    /** 从配置解析怪物池（"minecraft:zombie:5" 格式） */
-    private static void loadMobPool(MWConfig cfg, List<EntityType<?>> types, List<Integer> weights) {
-        for (String entry : cfg.mobPool) {
+    /** 从怪物池配置解析（"minecraft:zombie:5" 格式；pool 可为全局 mobPool 或阶段 mobListOverride） */
+    private static void loadMobPool(List<String> pool, List<EntityType<?>> types, List<Integer> weights) {
+        for (String entry : pool) {
             String[] parts = entry.split(":");
             if (parts.length != 3) {
                 continue;
@@ -90,7 +95,8 @@ public final class MobSpawnManager {
     }
 
     private static void spawnForPlayer(ServerLevel level, ServerPlayer player, MWConfig cfg,
-                                       List<EntityType<?>> types, List<Integer> weights) {
+                                       List<EntityType<?>> types, List<Integer> weights,
+                                       StageManager.Stage stage) {
         if (countSpawnedNear(level, player, cfg) >= cfg.maxMobsPerPlayer) {
             return;
         }
@@ -105,7 +111,7 @@ public final class MobSpawnManager {
                         level.dimension().location(), player.getName().getString());
                 continue;
             }
-            spawnMob(level, pos, difficulty, types, weights);
+            spawnMob(level, pos, difficulty, types, weights, stage);
         }
     }
 
@@ -163,7 +169,8 @@ public final class MobSpawnManager {
     }
 
     private static void spawnMob(ServerLevel level, BlockPos pos, double difficulty,
-                                 List<EntityType<?>> types, List<Integer> weights) {
+                                 List<EntityType<?>> types, List<Integer> weights,
+                                 StageManager.Stage stage) {
         EntityType<?> type = pickEntityType(level.getRandom(), types, weights);
         if (type == null) {
             return;
@@ -175,26 +182,48 @@ public final class MobSpawnManager {
             return;
         }
         mob.getPersistentData().putBoolean(MARKER, true);
-        applyDifficultyTo(mob, difficulty);
+        applyDifficultyTo(mob, difficulty, stage);
         MonsterWavesMod.LOGGER.debug("MW 已生成 {} 于 {}", type, pos);
     }
 
-    /** 按难度系数调整生物生命/攻击（供生成引擎与指令共用） */
-    public static void applyDifficultyTo(Mob mob, double difficulty) {
-        if (difficulty <= 1.0) {
-            return;
-        }
+    /**
+     * 按难度系数与阶段配置调整生物属性并应用阶段 BUFF（供生成引擎与指令共用）：
+     * 生命 = 基础 × (1 + (难度-1)×生命加成) × 阶段生命倍率
+     * 攻击 = 基础 + (难度-1)×攻击加成 × 阶段攻击倍率
+     * 护甲 = 基础 + (难度-1)×护甲加成 × 阶段护甲倍率
+     */
+    public static void applyDifficultyTo(Mob mob, double difficulty, StageManager.Stage stage) {
         MWConfig cfg = MWConfig.get();
-        double mult = 1 + (difficulty - 1) * cfg.healthBonusPerLevel;
+        double healthMult = 1 + (difficulty - 1) * cfg.healthBonusPerLevel;
+        healthMult *= stage.healthMultiplier();
         var hpAttr = mob.getAttribute(Attributes.MAX_HEALTH);
         if (hpAttr != null) {
-            hpAttr.setBaseValue(hpAttr.getBaseValue() * mult);
+            hpAttr.setBaseValue(hpAttr.getBaseValue() * healthMult);
             mob.setHealth(mob.getMaxHealth());
         }
         var atkAttr = mob.getAttribute(Attributes.ATTACK_DAMAGE);
         if (atkAttr != null) {
             atkAttr.setBaseValue(atkAttr.getBaseValue()
-                    + (difficulty - 1) * cfg.attackBonusPerLevel);
+                    + (difficulty - 1) * cfg.attackBonusPerLevel * stage.attackMultiplier());
+        }
+        var armorAttr = mob.getAttribute(Attributes.ARMOR);
+        if (armorAttr != null) {
+            armorAttr.setBaseValue(armorAttr.getBaseValue()
+                    + (difficulty - 1) * cfg.armorBonusPerLevel * stage.armorMultiplier());
+        }
+        // 阶段 BUFF
+        for (var e : stage.effects()) {
+            if (mob.getRandom().nextDouble() >= e.chance) {
+                continue;
+            }
+            var effect = net.minecraftforge.registries.ForgeRegistries.MOB_EFFECTS
+                    .getValue(net.minecraft.resources.ResourceLocation.tryParse(e.effect));
+            if (effect == null) {
+                MonsterWavesMod.LOGGER.warn("MW 未知药水效果：{}", e.effect);
+                continue;
+            }
+            mob.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                    effect, e.duration, e.amplifier, false, e.showParticles, e.showIcon));
         }
     }
 }

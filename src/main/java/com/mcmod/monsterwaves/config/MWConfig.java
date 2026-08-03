@@ -62,7 +62,7 @@ public class MWConfig implements ConfigData {
             "minecraft:creeper:2"));
 
     // ===== 阶段系统（stage）=====
-    /** 阶段列表（可分别调整各阶段难度/时长；字段 id/difficulty/duration 见开发手册"阶段字段"表） */
+    /** 阶段列表（可分别调整各阶段难度/时长/怪物池/属性倍率/BUFF；字段见开发手册"阶段字段"表） */
     @ConfigEntry.Category("stage")
     @ConfigEntry.Gui.Tooltip()
     public List<StageConfig> stages = new ArrayList<>(List.of(
@@ -70,11 +70,17 @@ public class MWConfig implements ConfigData {
             new StageConfig("激战期", 2.5, 12000),
             new StageConfig("终局之战", 5.0, -1)));
 
-    /** 阶段条目：id 名称 / difficulty 难度系数（参与各类运算）/ duration 时长 tick（-1 无限） */
+    /** 阶段条目：id 名称 / difficulty 难度系数 / duration 时长 / mobListOverride 专属怪物池 / attributeMultipliers 属性倍率 / mobEffects 自带BUFF */
     public static class StageConfig {
         public String id = "萌芽期";
         public double difficulty = 1.0;
         public int duration = 6000;
+        /** 阶段专属怪物池（"注册名:权重"，空=用全局 mobPool） */
+        public List<String> mobListOverride = new ArrayList<>();
+        /** 阶段属性倍率（1.0=无加成） */
+        public AttributeMultipliers attributeMultipliers = new AttributeMultipliers();
+        /** 阶段怪物自带 BUFF */
+        public List<EffectEntry> mobEffects = new ArrayList<>();
 
         public StageConfig() {
         }
@@ -84,6 +90,21 @@ public class MWConfig implements ConfigData {
             this.difficulty = difficulty;
             this.duration = duration;
         }
+
+        public static class AttributeMultipliers {
+            public double healthMultiplier = 1.0;
+            public double attackMultiplier = 1.0;
+            public double armorMultiplier = 1.0;
+        }
+
+        public static class EffectEntry {
+            public String effect = "minecraft:strength";
+            public int amplifier = 0;
+            public int duration = -1;
+            public double chance = 1.0;
+            public boolean showParticles = true;
+            public boolean showIcon = true;
+        }
     }
 
     // ===== 难度参数（difficulty）=====
@@ -92,6 +113,9 @@ public class MWConfig implements ConfigData {
 
     @ConfigEntry.Category("difficulty")
     public double attackBonusPerLevel = 0.5;
+
+    @ConfigEntry.Category("difficulty")
+    public double armorBonusPerLevel = 0.5;
 
     // ===== 属性球（ball）=====
     /** 属性球掉落总开关（关闭则不再掉落属性球，统一掉落不受影响） */

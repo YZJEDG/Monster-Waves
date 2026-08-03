@@ -29,6 +29,7 @@
   "text.autoconfig.monsterwaves.option.mobPool.@Tooltip": "Each entry: registry name:weight (e.g. minecraft:zombie:5)",
   "text.autoconfig.monsterwaves.option.healthBonusPerLevel": "Health Bonus Per Difficulty",
   "text.autoconfig.monsterwaves.option.attackBonusPerLevel": "Attack Bonus Per Difficulty",
+  "text.autoconfig.monsterwaves.option.armorBonusPerLevel": "Armor Bonus Per Difficulty",
   "text.autoconfig.monsterwaves.option.ballBaseChance": "Base Ball Drop Chance",
   "text.autoconfig.monsterwaves.option.ballDropEnabled": "Ball Drop Enabled",
   "text.autoconfig.monsterwaves.option.ballDropEnabled.@Tooltip": "When off, attribute balls no longer drop (unified loot unaffected)",
