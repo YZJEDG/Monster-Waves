@@ -60,6 +60,7 @@
   "text.autoconfig.monsterwaves.option.lootExtraCountPerLevel": "每点难度额外数量",
   "text.autoconfig.monsterwaves.option.lootExtraCountPerLevel.@Tooltip": "额外数量 = floor(此值 × (难度-1))",
   "text.autoconfig.monsterwaves.option.normalLoot": "普通怪掉落条目",
+  "text.autoconfig.monsterwaves.option.normalLoot.@Tooltip": "每条：物品注册名、NBT（可空）、数量范围、概率、是否受抢夺影响",
   "text.autoconfig.monsterwaves.option.normalLoot.item": "物品",
   "text.autoconfig.monsterwaves.option.normalLoot.nbt": "NBT",
   "text.autoconfig.monsterwaves.option.normalLoot.minCount": "最小数量",

@@ -167,6 +167,11 @@ public class MWConfig implements ConfigData {
             this.maxCount = maxCount;
             this.chance = chance;
         }
+
+        @Override
+        public String toString() {
+            return item + " x" + minCount + "-" + maxCount + " (" + (int) (chance * 100) + "%)";
+        }
     }
 
     // ===== 战斗符咒（battle）=====
