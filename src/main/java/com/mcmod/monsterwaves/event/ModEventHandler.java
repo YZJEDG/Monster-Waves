@@ -1,5 +1,6 @@
 package com.mcmod.monsterwaves.event;
 
+import com.mcmod.monsterwaves.MonsterWavesMod;
 import com.mcmod.monsterwaves.arena.ArenaDimensionManager;
 import com.mcmod.monsterwaves.config.MWConfig;
 import com.mcmod.monsterwaves.data.PlayerDataManager;
@@ -15,12 +16,16 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -103,6 +108,51 @@ public final class ModEventHandler {
         for (ServerLevel level : server.getAllLevels()) {
             MobSpawnManager.serverTick(level);
             pickupBalls(level);
+            cleanupBalls(level);
+        }
+    }
+
+    /**
+     * 属性球清理（防堆积）：超时消失 + 单维度数量上限清理最早的。
+     * cleanupAutoAttract=true 时超限球先尝试飞向最近玩家，否则直接移除。
+     */
+    private static void cleanupBalls(ServerLevel level) {
+        MWConfig cfg = MWConfig.get();
+        if (!cfg.cleanupEnable) {
+            return;
+        }
+        if (level.getServer().getTickCount() % Math.max(1, cfg.cleanupInterval) != 0) {
+            return;
+        }
+        java.util.List<ItemEntity> balls = level.getEntitiesOfClass(ItemEntity.class,
+                new net.minecraft.world.phys.AABB(-3.0E7, -3.0E7, -3.0E7, 3.0E7, 3.0E7, 3.0E7),
+                e -> e.getItem().getItem() instanceof AttributeBallItem);
+        if (balls.isEmpty()) {
+            return;
+        }
+        // 超时清理
+        balls.removeIf(b -> {
+            if (b.tickCount > cfg.cleanupDespawnTime) {
+                b.discard();
+                return true;
+            }
+            return false;
+        });
+        // 数量上限：清理最早的（按存在时长排序）
+        if (balls.size() > cfg.cleanupMaxCount) {
+            balls.sort(java.util.Comparator.comparingInt(b -> b.tickCount));
+            int toRemove = balls.size() - cfg.cleanupMaxCount;
+            for (int i = 0; i < toRemove; i++) {
+                ItemEntity ball = balls.get(i);
+                if (cfg.cleanupAutoAttract) {
+                    // 尝试吸向最近玩家（3 格内），否则移除
+                    var nearest = level.getNearestPlayer(ball, 3.0);
+                    if (nearest != null) {
+                        continue;
+                    }
+                }
+                ball.discard();
+            }
         }
     }
 
@@ -172,11 +222,20 @@ public final class ModEventHandler {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         PlayerDataManager.applyAll(event.getEntity());
-        // 开局给予返回符咒（giveOnJoin）
-        if (event.getEntity() instanceof ServerPlayer sp && MWConfig.get().giveOnJoin) {
-            boolean has = sp.getInventory().hasAnyMatching(s -> s.getItem() == ModItems.RETURN_CHARM.get());
-            if (!has) {
-                sp.getInventory().add(new ItemStack(ModItems.RETURN_CHARM.get()));
+        // 开局给予返回符咒与战斗符咒（各自 giveOnJoin 开关）
+        if (event.getEntity() instanceof ServerPlayer sp) {
+            MWConfig cfg = MWConfig.get();
+            if (cfg.giveOnJoin) {
+                boolean hasReturn = sp.getInventory().hasAnyMatching(s -> s.getItem() == ModItems.RETURN_CHARM.get());
+                if (!hasReturn) {
+                    sp.getInventory().add(new ItemStack(ModItems.RETURN_CHARM.get()));
+                }
+            }
+            if (cfg.battleCharmGiveOnJoin) {
+                boolean hasBattle = sp.getInventory().hasAnyMatching(s -> s.getItem() == ModItems.BATTLE_CHARM.get());
+                if (!hasBattle) {
+                    sp.getInventory().add(new ItemStack(ModItems.BATTLE_CHARM.get()));
+                }
             }
         }
     }
@@ -259,6 +318,41 @@ public final class ModEventHandler {
         int count = Math.max(1, dropEvent.getBallCount());
         for (int i = 0; i < count; i++) {
             spawnBall(level, dropEvent.getDropPos(), type);
+        }
+
+        // 统一掉落（与属性球并行）
+        dropLoot(entity, level, difficulty);
+    }
+
+    /** 统一掉落：按配置 normalLoot 生成掉落物（概率/数量受难度影响） */
+    private static void dropLoot(LivingEntity entity, ServerLevel level, double difficulty) {
+        MWConfig cfg = MWConfig.get();
+        if (!cfg.lootEnabled || cfg.normalLoot.isEmpty()) {
+            return;
+        }
+        for (MWConfig.LootEntry entry : cfg.normalLoot) {
+            double chance = Math.min(1.0, entry.chance * difficulty * cfg.lootGlobalChanceMultiplier);
+            if (entity.getRandom().nextDouble() >= chance) {
+                continue;
+            }
+            int min = Math.max(1, entry.minCount);
+            int max = Math.max(min, entry.maxCount);
+            int count = min + entity.getRandom().nextInt(max - min + 1);
+            count += (int) Math.floor(cfg.lootExtraCountPerLevel * (difficulty - 1));
+            Item item = ForgeRegistries.ITEMS.getValue(net.minecraft.resources.ResourceLocation.tryParse(entry.item));
+            if (item == null) {
+                MonsterWavesMod.LOGGER.warn("MW 掉落物品不存在：{}", entry.item);
+                continue;
+            }
+            ItemStack stack = new ItemStack(item, Math.max(1, count));
+            if (entry.nbt != null && !entry.nbt.isEmpty()) {
+                try {
+                    stack.setTag(TagParser.parseTag(entry.nbt));
+                } catch (Exception e) {
+                    MonsterWavesMod.LOGGER.warn("MW 掉落 NBT 解析失败：{}（{}）", entry.nbt, entry.item);
+                }
+            }
+            level.addFreshEntity(new ItemEntity(level, entity.getX(), entity.getY() + 0.5, entity.getZ(), stack));
         }
     }
 

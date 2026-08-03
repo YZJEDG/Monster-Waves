@@ -84,11 +84,95 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("ball")
     public List<String> ballTypes = new ArrayList<>(List.of("ATTACK", "HEALTH", "ARMOR"));
 
+    // ===== 属性球清理（ball_cleanup）=====
+    /** 是否启用属性球自动清理（防堆积） */
+    @ConfigEntry.Category("ball_cleanup")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean cleanupEnable = true;
+
+    /** 清理检测间隔（tick） */
+    @ConfigEntry.Category("ball_cleanup")
+    public int cleanupInterval = 1200;
+
+    /** 单个维度属性球数量上限，超过清理最早的 */
+    @ConfigEntry.Category("ball_cleanup")
+    public int cleanupMaxCount = 500;
+
+    /** 属性球存在时间上限（tick），超时消失 */
+    @ConfigEntry.Category("ball_cleanup")
+    public int cleanupDespawnTime = 12000;
+
+    /** 仅清理已加载区块中的属性球（性能优化） */
+    @ConfigEntry.Category("ball_cleanup")
+    public boolean cleanupIgnoreChunkLoad = false;
+
+    /** 清理时尝试将超限属性球吸向最近玩家 */
+    @ConfigEntry.Category("ball_cleanup")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean cleanupAutoAttract = true;
+
     // ===== 维度开关（dimensions）=====
     /** 启用本模组刷怪的维度列表；空列表 = 全部维度启用（休息维度始终不刷怪） */
     @ConfigEntry.Category("dimensions")
     @ConfigEntry.Gui.Tooltip()
     public List<String> enabledDimensions = new ArrayList<>();
+
+    // ===== 统一掉落（loot）=====
+    /** 统一掉落开关（与属性球掉落并行） */
+    @ConfigEntry.Category("loot")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean lootEnabled = true;
+
+    /** 全局概率倍率（再乘难度） */
+    @ConfigEntry.Category("loot")
+    @ConfigEntry.Gui.Tooltip()
+    public double lootGlobalChanceMultiplier = 1.0;
+
+    /** 每点难度额外数量（物品掉落） */
+    @ConfigEntry.Category("loot")
+    @ConfigEntry.Gui.Tooltip()
+    public double lootExtraCountPerLevel = 0.0;
+
+    /** 普通怪掉落条目 */
+    @ConfigEntry.Category("loot")
+    public List<LootEntry> normalLoot = new ArrayList<>(List.of(
+            new LootEntry("minecraft:diamond", 1, 1, 0.1)));
+
+    /** 掉落条目：item 注册名 / nbt（可选）/ min-max 数量 / 概率（0~1）/ 是否受抢夺影响 */
+    public static class LootEntry {
+        public String item = "minecraft:diamond";
+        public String nbt = "";
+        public int minCount = 1;
+        public int maxCount = 1;
+        public double chance = 0.1;
+        public boolean isPlayerAffected = true;
+
+        public LootEntry() {
+        }
+
+        public LootEntry(String item, int minCount, int maxCount, double chance) {
+            this.item = item;
+            this.minCount = minCount;
+            this.maxCount = maxCount;
+            this.chance = chance;
+        }
+    }
+
+    // ===== 战斗符咒（battle）=====
+    /** 战斗符咒开关 */
+    @ConfigEntry.Category("battle")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean battleCharmEnabled = true;
+
+    /** 首次加入是否给予战斗符咒 */
+    @ConfigEntry.Category("battle")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean battleCharmGiveOnJoin = true;
+
+    /** 战斗符咒冷却（tick） */
+    @ConfigEntry.Category("battle")
+    @ConfigEntry.Gui.Tooltip()
+    public int battleCharmCooldown = 600;
 
     // ===== 刷怪维度（arena）=====
     /** 是否启用刷怪维度 */

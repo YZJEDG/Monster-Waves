@@ -22,6 +22,9 @@ public final class ModItems {
     public static final RegistryObject<Item> RETURN_CHARM = ITEMS.register("return_charm",
             ReturnCharmItem::new);
 
+    public static final RegistryObject<Item> BATTLE_CHARM = ITEMS.register("battle_charm",
+            BattleCharmItem::new);
+
     private ModItems() {
     }
 
