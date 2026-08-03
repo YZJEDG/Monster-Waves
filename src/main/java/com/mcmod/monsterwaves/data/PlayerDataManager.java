@@ -85,13 +85,19 @@ public final class PlayerDataManager {
         }
     }
 
-    /** 按类型名从配置 attributeMapping 解析属性（支持原版/模组属性注册名） */
+    /** 按类型名从配置 attributeMapping 解析属性；无映射时 fallback 将类型名本身当作属性注册名（如类型直接写 minecraft:generic.movement_speed） */
     private static Attribute resolveAttribute(String type) {
         String id = MWConfig.get().attributeMapping.get(type);
         if (id == null || id.isEmpty()) {
-            return null;
+            id = type;
         }
         return ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.tryParse(id));
+    }
+
+    /** 速度类属性：基础值很小（如 movement_speed=0.1），用比例加成避免 ADDITION 爆炸 */
+    private static boolean isSpeedAttribute(Attribute attribute) {
+        var key = ForgeRegistries.ATTRIBUTES.getKey(attribute);
+        return key != null && key.getPath().contains("movement_speed");
     }
 
     /** 按类型名生成稳定 UUID：保留历史 3 类型固定 UUID（兼容旧存档），自定义类型用名称哈希（跨会话一致） */
@@ -113,9 +119,14 @@ public final class PlayerDataManager {
             instance.removeModifier(uuid);
         }
         if (value != 0) {
+            // 速度类属性用比例加成（每点 +1% 基础速度），其余属性用绝对值（每点 +N）
+            boolean speed = isSpeedAttribute(attribute);
+            AttributeModifier.Operation op = speed
+                    ? AttributeModifier.Operation.MULTIPLY_BASE
+                    : AttributeModifier.Operation.ADDITION;
+            double amount = speed ? value * 0.01 : value;
             instance.addTransientModifier(new AttributeModifier(
-                    uuid, "monsterwaves_" + attribute.getDescriptionId(), value,
-                    AttributeModifier.Operation.ADDITION));
+                    uuid, "monsterwaves_" + attribute.getDescriptionId(), amount, op));
         }
     }
 
