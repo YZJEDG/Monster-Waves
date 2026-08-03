@@ -1,5 +1,6 @@
 package com.mcmod.monsterwaves.event;
 
+import com.mcmod.monsterwaves.arena.ArenaDimensionManager;
 import com.mcmod.monsterwaves.config.MWConfig;
 import com.mcmod.monsterwaves.data.PlayerDataManager;
 import com.mcmod.monsterwaves.item.AttributeBallItem;
@@ -187,10 +188,10 @@ public final class ModEventHandler {
         }
     }
 
-    /** 休息维度不生成任何生物（本模组及原版） */
+    /** 休息维度与刷怪维度均不生成原版生物（本模组生成引擎接管） */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onCheckSpawn(MobSpawnEvent.PositionCheck event) {
-        if (SafeDimensionManager.isSafe(event.getLevel())) {
+        if (SafeDimensionManager.isSafe(event.getLevel()) || ArenaDimensionManager.isArena(event.getLevel())) {
             event.setResult(Event.Result.DENY);
         }
     }

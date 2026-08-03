@@ -90,6 +90,16 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public List<String> enabledDimensions = new ArrayList<>();
 
+    // ===== 刷怪维度（arena）=====
+    /** 是否启用刷怪维度 */
+    @ConfigEntry.Category("arena")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean arenaEnabled = true;
+
+    /** 刷怪维度出生点 Y（X/Z 固定为 0） */
+    @ConfigEntry.Category("arena")
+    public int arenaSpawnY = 4;
+
     // ===== 休息维度（safe）=====
     /** 是否启用休息维度与返回符咒 */
     @ConfigEntry.Category("safe")
@@ -122,9 +132,9 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("safe")
     public int safeSpawnY = 65;
 
-    /** 坠落传送目标维度（arena 建立后改回 monsterwaves:arena） */
+    /** 坠落传送目标维度（arena 已建立，默认改为刷怪维度） */
     @ConfigEntry.Category("safe")
-    public String fallDestinationDimension = "minecraft:overworld";
+    public String fallDestinationDimension = "monsterwaves:arena";
 
     /** 传送到重生点（开启=主世界用玩家重生点/其他维度用目标出生点；关闭=用下方自定义坐标，开启时隐藏自定义坐标） */
     @ConfigEntry.Category("safe")
