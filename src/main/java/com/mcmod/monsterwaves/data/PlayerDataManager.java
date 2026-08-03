@@ -130,7 +130,12 @@ public final class PlayerDataManager {
         }
     }
 
+    /** 属性显示名：类型能解析为属性时用原版/模组属性本地化名（中文），否则用自定义键 */
     public static Component attributeDisplayName(String type) {
+        Attribute attr = resolveAttribute(type);
+        if (attr != null) {
+            return Component.translatable(attr.getDescriptionId());
+        }
         return Component.translatable("attribute.monsterwaves." + type);
     }
 }

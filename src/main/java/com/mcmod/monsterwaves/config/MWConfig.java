@@ -135,17 +135,28 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public boolean dropBallsFromAllMobs = true;
 
-    /** 可用属性球类型（ATTACK/HEALTH/ARMOR 等） */
+    /** 可用属性球类型（默认用 MC 属性注册名，如 minecraft:generic.attack_damage；也可自定义名如 MANA） */
     @ConfigEntry.Category("ball")
-    public List<String> ballTypes = new ArrayList<>(List.of("ATTACK", "HEALTH", "ARMOR"));
+    public List<String> ballTypes = new ArrayList<>(List.of(
+            "minecraft:generic.attack_damage",
+            "minecraft:generic.max_health",
+            "minecraft:generic.armor"));
+
+    /** 属性球类型掉落权重（类型名→权重，0=不掉落该类型） */
+    @ConfigEntry.Category("ball")
+    @ConfigEntry.Gui.Tooltip()
+    public Map<String, Integer> attributeWeights = new java.util.HashMap<>(Map.of(
+            "minecraft:generic.attack_damage", 20,
+            "minecraft:generic.max_health", 20,
+            "minecraft:generic.armor", 15));
 
     /** 属性映射：属性球类型名 → 原版/模组属性注册名（可加自定义类型映射任意模组属性，如 "MANA"→"my_mod:mana"） */
     @ConfigEntry.Category("ball")
     @ConfigEntry.Gui.Tooltip()
     public Map<String, String> attributeMapping = new java.util.HashMap<>(Map.of(
-            "ATTACK", "minecraft:generic.attack_damage",
-            "HEALTH", "minecraft:generic.max_health",
-            "ARMOR", "minecraft:generic.armor"));
+            "minecraft:generic.attack_damage", "minecraft:generic.attack_damage",
+            "minecraft:generic.max_health", "minecraft:generic.max_health",
+            "minecraft:generic.armor", "minecraft:generic.armor"));
 
     // ===== 属性球清理（ball_cleanup）=====
     /** 是否启用属性球自动清理（防堆积） */

@@ -38,6 +38,8 @@
   "text.autoconfig.monsterwaves.option.dropBallsFromAllMobs": "Drop From Non-Mod Mobs",
   "text.autoconfig.monsterwaves.option.dropBallsFromAllMobs.@Tooltip": "When on, hostile mobs from vanilla/other mods also drop balls",
   "text.autoconfig.monsterwaves.option.ballTypes": "Ball Types",
+  "text.autoconfig.monsterwaves.option.attributeWeights": "Ball Drop Weights",
+  "text.autoconfig.monsterwaves.option.attributeWeights.@Tooltip": "Type -> weight (0 = never drop); weighted random selection",
   "text.autoconfig.monsterwaves.option.attributeMapping": "Attribute Mapping",
   "text.autoconfig.monsterwaves.option.attributeMapping.@Tooltip": "Ball type -> vanilla/mod attribute id (e.g. ATTACK->minecraft:generic.attack_damage; any mod attribute supported)",
   "text.autoconfig.monsterwaves.category.ball_cleanup": "Ball Cleanup",

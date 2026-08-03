@@ -428,11 +428,10 @@ public final class ModEventHandler {
             if (!MinecraftForge.EVENT_BUS.post(dropEvent)) {
                 // 概率判定
                 if (entity.getRandom().nextDouble() < dropEvent.getChance()) {
-                    // 属性类型：事件指定（须合法）或随机
+                    // 属性类型：事件指定（须合法）或按权重随机
                     String type = dropEvent.getAttributeType();
                     if (type == null || !isValidBallType(type)) {
-                        java.util.List<String> types = cfg.ballTypes;
-                        type = types.get(entity.getRandom().nextInt(types.size()));
+                        type = weightedPick(cfg, entity.getRandom());
                     }
                     // 生成属性球（数量按事件参数，至少 1）
                     int count = Math.max(1, dropEvent.getBallCount());
@@ -499,6 +498,31 @@ public final class ModEventHandler {
 
     private static boolean isValidBallType(String type) {
         return MWConfig.get().ballTypes.contains(type);
+    }
+
+    /** 按配置权重选择属性球类型（权重 0 的类型不选；总权重 ≤0 时回退第一个） */
+    private static String weightedPick(MWConfig cfg, net.minecraft.util.RandomSource random) {
+        java.util.List<String> types = cfg.ballTypes;
+        if (types.isEmpty()) {
+            return null;
+        }
+        int total = 0;
+        int[] weights = new int[types.size()];
+        for (int i = 0; i < types.size(); i++) {
+            weights[i] = Math.max(0, cfg.attributeWeights.getOrDefault(types.get(i), 1));
+            total += weights[i];
+        }
+        if (total <= 0) {
+            return types.get(0);
+        }
+        int roll = random.nextInt(total);
+        for (int i = 0; i < types.size(); i++) {
+            roll -= weights[i];
+            if (roll < 0) {
+                return types.get(i);
+            }
+        }
+        return types.get(types.size() - 1);
     }
 
     private static void spawnBall(ServerLevel level, Vec3 pos, String type, String owner) {

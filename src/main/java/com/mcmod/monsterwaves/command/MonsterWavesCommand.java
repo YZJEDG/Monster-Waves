@@ -102,24 +102,24 @@ public final class MonsterWavesCommand {
                         .requires(src -> src.hasPermission(2))
                         .then(Commands.literal("give")
                                 .then(Commands.argument("player", EntityArgument.player())
-                                        .then(Commands.argument("type", StringArgumentType.word()).suggests(SUGGEST_BALL_TYPES)
+                                        .then(Commands.argument("type", AttributeTypeArgument.type()).suggests(SUGGEST_BALL_TYPES)
                                                 .then(Commands.argument("amount", com.mojang.brigadier.arguments.IntegerArgumentType.integer(1, 999))
                                                         .executes(MonsterWavesCommand::ballGive)))))
                         .then(Commands.literal("set")
                                 .then(Commands.argument("player", EntityArgument.player())
-                                        .then(Commands.argument("type", StringArgumentType.word()).suggests(SUGGEST_BALL_TYPES)
+                                        .then(Commands.argument("type", AttributeTypeArgument.type()).suggests(SUGGEST_BALL_TYPES)
                                                 .then(Commands.argument("value", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, 99999))
                                                         .executes(MonsterWavesCommand::ballSet))))))
                 .then(Commands.literal("player")
                         .requires(src -> src.hasPermission(2))
                         .then(Commands.literal("add")
                                 .then(Commands.argument("player", EntityArgument.player())
-                                        .then(Commands.argument("type", StringArgumentType.word()).suggests(SUGGEST_BALL_TYPES)
+                                        .then(Commands.argument("type", AttributeTypeArgument.type()).suggests(SUGGEST_BALL_TYPES)
                                                 .then(Commands.argument("value", com.mojang.brigadier.arguments.IntegerArgumentType.integer(1, 99999))
                                                         .executes(MonsterWavesCommand::playerAdd)))))
                         .then(Commands.literal("set")
                                 .then(Commands.argument("player", EntityArgument.player())
-                                        .then(Commands.argument("type", StringArgumentType.word()).suggests(SUGGEST_BALL_TYPES)
+                                        .then(Commands.argument("type", AttributeTypeArgument.type()).suggests(SUGGEST_BALL_TYPES)
                                                 .then(Commands.argument("value", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, 99999))
                                                         .executes(MonsterWavesCommand::playerSet)))))
                         .then(Commands.literal("reset")
@@ -269,7 +269,7 @@ public final class MonsterWavesCommand {
 
     private static int ballGive(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         ServerPlayer target = EntityArgument.getPlayer(ctx, "player");
-        String type = StringArgumentType.getString(ctx, "type").toUpperCase();
+        String type = AttributeTypeArgument.getType(ctx, "type");
         int amount = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "amount");
         if (!checkType(ctx, type)) {
             return 0;
@@ -283,7 +283,7 @@ public final class MonsterWavesCommand {
     /** 直接设置玩家属性值（覆盖） */
     private static int ballSet(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         ServerPlayer target = EntityArgument.getPlayer(ctx, "player");
-        String type = StringArgumentType.getString(ctx, "type").toUpperCase();
+        String type = AttributeTypeArgument.getType(ctx, "type");
         int value = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "value");
         if (!checkType(ctx, type)) {
             return 0;
@@ -297,7 +297,7 @@ public final class MonsterWavesCommand {
 
     private static int playerAdd(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         ServerPlayer target = EntityArgument.getPlayer(ctx, "player");
-        String type = StringArgumentType.getString(ctx, "type").toUpperCase();
+        String type = AttributeTypeArgument.getType(ctx, "type");
         int value = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "value");
         if (!checkType(ctx, type)) {
             return 0;
@@ -310,7 +310,7 @@ public final class MonsterWavesCommand {
 
     private static int playerSet(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         ServerPlayer target = EntityArgument.getPlayer(ctx, "player");
-        String type = StringArgumentType.getString(ctx, "type").toUpperCase();
+        String type = AttributeTypeArgument.getType(ctx, "type");
         int value = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "value");
         if (!checkType(ctx, type)) {
             return 0;
