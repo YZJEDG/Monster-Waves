@@ -69,6 +69,11 @@ public class MWConfig implements ConfigData {
     public double attackBonusPerLevel = 0.5;
 
     // ===== 属性球（ball）=====
+    /** 属性球掉落总开关（关闭则不再掉落属性球，统一掉落不受影响） */
+    @ConfigEntry.Category("ball")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean ballDropEnabled = true;
+
     @ConfigEntry.Category("ball")
     public double ballBaseChance = 0.2;
 
@@ -105,6 +110,12 @@ public class MWConfig implements ConfigData {
     /** 仅清理已加载区块中的属性球（性能优化） */
     @ConfigEntry.Category("ball_cleanup")
     public boolean cleanupIgnoreChunkLoad = false;
+
+    /** 参与清理的掉落物物品名（注册名）；按名字匹配，符合的才清理 */
+    @ConfigEntry.Category("ball_cleanup")
+    @ConfigEntry.Gui.Tooltip()
+    public List<String> cleanupItemNames = new ArrayList<>(List.of(
+            "monsterwaves:attack_ball", "monsterwaves:health_ball", "monsterwaves:armor_ball"));
 
     /** 清理时尝试将超限属性球吸向最近玩家 */
     @ConfigEntry.Category("ball_cleanup")

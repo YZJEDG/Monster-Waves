@@ -113,8 +113,10 @@ public final class ModEventHandler {
     }
 
     /**
-     * 属性球清理（防堆积）：超时消失 + 单维度数量上限清理最早的。
-     * cleanupAutoAttract=true 时超限球先尝试飞向最近玩家，否则直接移除。
+     * 属性球/掉落物清理（防堆积）：
+     * - 按配置的**物品名名单**匹配要清理的掉落物（不限于本模组属性球）
+     * - **追踪时间**（实体存在 tick）：超时清理
+     * - 超上限时按时间升序清理**最早的一批**；cleanupAutoAttract=true 时先尝试吸向最近玩家
      */
     private static void cleanupBalls(ServerLevel level) {
         MWConfig cfg = MWConfig.get();
@@ -124,13 +126,18 @@ public final class ModEventHandler {
         if (level.getServer().getTickCount() % Math.max(1, cfg.cleanupInterval) != 0) {
             return;
         }
+        java.util.List<String> names = cfg.cleanupItemNames;
+        if (names == null || names.isEmpty()) {
+            return;
+        }
         java.util.List<ItemEntity> balls = level.getEntitiesOfClass(ItemEntity.class,
                 new net.minecraft.world.phys.AABB(-3.0E7, -3.0E7, -3.0E7, 3.0E7, 3.0E7, 3.0E7),
-                e -> e.getItem().getItem() instanceof AttributeBallItem);
+                e -> names.contains(net.minecraftforge.registries.ForgeRegistries.ITEMS
+                        .getKey(e.getItem().getItem()).toString()));
         if (balls.isEmpty()) {
             return;
         }
-        // 超时清理
+        // 追踪时间：超时清理
         balls.removeIf(b -> {
             if (b.tickCount > cfg.cleanupDespawnTime) {
                 b.discard();
@@ -138,7 +145,7 @@ public final class ModEventHandler {
             }
             return false;
         });
-        // 数量上限：清理最早的（按存在时长排序）
+        // 数量上限：按存在时间升序，清理最早的一批
         if (balls.size() > cfg.cleanupMaxCount) {
             balls.sort(java.util.Comparator.comparingInt(b -> b.tickCount));
             int toRemove = balls.size() - cfg.cleanupMaxCount;
@@ -292,35 +299,34 @@ public final class ModEventHandler {
         }
         ServerLevel level = (ServerLevel) entity.level();
         double difficulty = StageManager.getDifficulty(level.getServer());
-        double chance = Math.min(1.0, MWConfig.get().ballBaseChance * difficulty);
+        MWConfig cfg = MWConfig.get();
 
-        // 发布掉落触发事件：怪物被杀死即触发掉落机制
-        AttributeBallDropEvent dropEvent = new AttributeBallDropEvent(entity, level,
-                new Vec3(entity.getX(), entity.getY() + 0.5, entity.getZ()),
-                chance, null, 1);
-        if (MinecraftForge.EVENT_BUS.post(dropEvent)) {
-            return; // 事件被取消：本次不掉落
+        // 属性球掉落（可开关）
+        if (cfg.ballDropEnabled) {
+            double chance = Math.min(1.0, cfg.ballBaseChance * difficulty);
+            // 发布掉落触发事件：怪物被杀死即触发掉落机制
+            AttributeBallDropEvent dropEvent = new AttributeBallDropEvent(entity, level,
+                    new Vec3(entity.getX(), entity.getY() + 0.5, entity.getZ()),
+                    chance, null, 1);
+            if (!MinecraftForge.EVENT_BUS.post(dropEvent)) {
+                // 概率判定
+                if (entity.getRandom().nextDouble() < dropEvent.getChance()) {
+                    // 属性类型：事件指定（须合法）或随机
+                    String type = dropEvent.getAttributeType();
+                    if (type == null || !isValidBallType(type)) {
+                        java.util.List<String> types = cfg.ballTypes;
+                        type = types.get(entity.getRandom().nextInt(types.size()));
+                    }
+                    // 生成属性球（数量按事件参数，至少 1）
+                    int count = Math.max(1, dropEvent.getBallCount());
+                    for (int i = 0; i < count; i++) {
+                        spawnBall(level, dropEvent.getDropPos(), type);
+                    }
+                }
+            }
         }
 
-        // 概率判定
-        if (entity.getRandom().nextDouble() >= dropEvent.getChance()) {
-            return;
-        }
-
-        // 属性类型：事件指定（须合法）或随机
-        String type = dropEvent.getAttributeType();
-        if (type == null || !isValidBallType(type)) {
-            java.util.List<String> types = MWConfig.get().ballTypes;
-            type = types.get(entity.getRandom().nextInt(types.size()));
-        }
-
-        // 生成属性球（数量按事件参数，至少 1）
-        int count = Math.max(1, dropEvent.getBallCount());
-        for (int i = 0; i < count; i++) {
-            spawnBall(level, dropEvent.getDropPos(), type);
-        }
-
-        // 统一掉落（与属性球并行）
+        // 统一掉落（与属性球并行，不受属性球开关影响）
         dropLoot(entity, level, difficulty);
     }
 
