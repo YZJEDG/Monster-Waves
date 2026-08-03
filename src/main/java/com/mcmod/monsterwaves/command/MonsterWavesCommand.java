@@ -8,9 +8,11 @@ import com.mcmod.monsterwaves.stage.StageData;
 import com.mcmod.monsterwaves.stage.StageManager;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.network.chat.Component;
@@ -21,6 +23,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -39,11 +42,32 @@ public final class MonsterWavesCommand {
     private MonsterWavesCommand() {
     }
 
+    /** Tab 补全：已注册实体（过滤非生物类 MISC 实体，如物品/箭/船） */
+    private static final SuggestionProvider<CommandSourceStack> SUGGEST_MOBS = (ctx, builder) ->
+            SharedSuggestionProvider.suggest(
+                    ForgeRegistries.ENTITY_TYPES.getKeys().stream()
+                            .filter(rl -> {
+                                EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(rl);
+                                return type != null && type.getCategory() != MobCategory.MISC;
+                            })
+                            .map(ResourceLocation::toString)
+                            .sorted(),
+                    builder);
+
+    /** Tab 补全：可用阶段 id */
+    private static final SuggestionProvider<CommandSourceStack> SUGGEST_STAGE_IDS = (ctx, builder) ->
+            SharedSuggestionProvider.suggest(
+                    StageManager.STAGES.stream().map(StageManager.Stage::id).toList(), builder);
+
+    /** Tab 补全：属性球类型 */
+    private static final SuggestionProvider<CommandSourceStack> SUGGEST_BALL_TYPES = (ctx, builder) ->
+            SharedSuggestionProvider.suggest(Arrays.asList(MWConfig.BALL_TYPES), builder);
+
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("monsterwaves")
                 .then(Commands.literal("spawn")
                         .requires(src -> src.hasPermission(2))
-                        .then(Commands.argument("mob", StringArgumentType.word())
+                        .then(Commands.argument("mob", StringArgumentType.word()).suggests(SUGGEST_MOBS)
                                 .executes(ctx -> spawn(ctx, 1))
                                 .then(Commands.argument("count", com.mojang.brigadier.arguments.IntegerArgumentType.integer(1, 100))
                                         .executes(ctx -> spawn(ctx, com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "count"))))))
@@ -60,13 +84,13 @@ public final class MonsterWavesCommand {
                         .then(Commands.literal("prev").requires(src -> src.hasPermission(2))
                                 .executes(MonsterWavesCommand::stagePrev))
                         .then(Commands.literal("set").requires(src -> src.hasPermission(2))
-                                .then(Commands.argument("id", StringArgumentType.string())
+                                .then(Commands.argument("id", StringArgumentType.greedyString()).suggests(SUGGEST_STAGE_IDS)
                                         .executes(MonsterWavesCommand::stageSet))))
                 .then(Commands.literal("ball")
                         .requires(src -> src.hasPermission(2))
                         .then(Commands.literal("give")
                                 .then(Commands.argument("player", EntityArgument.player())
-                                        .then(Commands.argument("type", StringArgumentType.word())
+                                        .then(Commands.argument("type", StringArgumentType.word()).suggests(SUGGEST_BALL_TYPES)
                                                 .then(Commands.argument("amount", com.mojang.brigadier.arguments.IntegerArgumentType.integer(1, 999))
                                                         .executes(MonsterWavesCommand::ballGive))))))
         );
