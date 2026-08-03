@@ -68,7 +68,7 @@ public final class SafeDimensionManager {
         return true;
     }
 
-    /** 跳下空岛传送：safe 维度玩家 Y 低于阈值时传送至目标维度 */
+    /** 跳下空岛传送：safe 维度玩家 Y 低于阈值时传送至目标维度（主世界则传玩家重生点） */
     public static void handleFall(ServerPlayer player) {
         MWConfig cfg = MWConfig.get();
         MinecraftServer server = player.getServer();
@@ -82,6 +82,21 @@ public final class SafeDimensionManager {
             player.displayClientMessage(Component.literal("坠落目标维度不可用"), true);
             return;
         }
+
+        // 目标为主世界且开关开启：传送到玩家重生点（床/出生点）
+        if (targetKey.equals(Level.OVERWORLD) && cfg.fallToRespawnPoint) {
+            BlockPos respawn = player.getRespawnPosition();
+            if (respawn != null && player.getRespawnDimension().equals(Level.OVERWORLD)) {
+                player.teleportTo(target, respawn.getX() + 0.5, respawn.getY(), respawn.getZ() + 0.5,
+                        player.getRespawnAngle(), 0.0F);
+            } else {
+                BlockPos spawn = target.getSharedSpawnPos();
+                player.teleportTo(target, spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5, 0.0F, 0.0F);
+            }
+            return;
+        }
+
+        // 其余维度：自定义坐标或目标维度出生点
         Vec3 dest;
         if (cfg.useCustomFallDestination) {
             dest = new Vec3(cfg.fallDestinationX + 0.5, cfg.fallDestinationY, cfg.fallDestinationZ + 0.5);

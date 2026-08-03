@@ -126,6 +126,11 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("safe")
     public String fallDestinationDimension = "minecraft:overworld";
 
+    /** 跳下至主世界时是否传送到玩家重生点（床/出生点）；关闭则用下方自定义坐标 */
+    @ConfigEntry.Category("safe")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean fallToRespawnPoint = true;
+
     @ConfigEntry.Category("safe")
     public int fallDestinationX = 0;
 

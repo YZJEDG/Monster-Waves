@@ -45,6 +45,8 @@
   "text.autoconfig.monsterwaves.option.fallTeleportY": "跳下传送Y",
   "text.autoconfig.monsterwaves.option.safeSpawnY": "空岛出生Y",
   "text.autoconfig.monsterwaves.option.fallDestinationDimension": "坠落目标维度",
+  "text.autoconfig.monsterwaves.option.fallToRespawnPoint": "跳下传送至重生点",
+  "text.autoconfig.monsterwaves.option.fallToRespawnPoint.@Tooltip": "跳下空岛至主世界时传送到玩家重生点（床/出生点）；关闭则用自定义坠落坐标",
   "text.autoconfig.monsterwaves.option.fallDestinationX": "坠落目标X",
   "text.autoconfig.monsterwaves.option.fallDestinationY": "坠落目标Y",
   "text.autoconfig.monsterwaves.option.fallDestinationZ": "坠落目标Z",
