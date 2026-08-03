@@ -64,11 +64,16 @@ public final class ModEventHandler {
         // 休息维度玩家规则：锁饥饿 + 跳下传送
         ServerLevel safeLevel = SafeDimensionManager.getSafeLevel(server);
         if (safeLevel != null) {
+            // 先收集待传送玩家，遍历结束后统一传送（避免遍历 players() 时传送修改列表触发 CME）
+            java.util.List<ServerPlayer> toFall = new java.util.ArrayList<>();
             for (ServerPlayer p : safeLevel.players()) {
                 SafeDimensionManager.applySafeRules(p);
                 if (p.getY() < MWConfig.get().fallTeleportY) {
-                    SafeDimensionManager.handleFall(p);
+                    toFall.add(p);
                 }
+            }
+            for (ServerPlayer p : toFall) {
+                SafeDimensionManager.handleFall(p);
             }
         }
         for (ServerLevel level : server.getAllLevels()) {
