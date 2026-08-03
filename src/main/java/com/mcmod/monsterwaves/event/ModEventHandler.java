@@ -79,7 +79,8 @@ public final class ModEventHandler {
         long now = server.getTickCount();
         long interval = Math.max(1, cfg.cleanupInterval);
         long remain = (lastCleanupTick + interval) - now;
-        if (remain > 0 && remain < 6000) { // 5 分钟内
+        // 只要剩余时间在 5 分钟内就提醒（按分钟去重；每次清理后 lastRemindMin 被重置，保证每周期都提醒）
+        if (remain > 0 && remain < 6000) {
             int min = Math.max(1, (int) Math.ceil(remain / 1200.0));
             if (min != lastRemindMin) {
                 lastRemindMin = min;
@@ -212,7 +213,9 @@ public final class ModEventHandler {
         // 清理完成反馈（含清理数量）
         level.getServer().getPlayerList().broadcastSystemMessage(Component.literal(
                 "【怪物狂潮】清理完成，共清理 " + removed + " 个掉落物").withStyle(ChatFormatting.GREEN), false);
+        // 记录下次清理时间并重置提醒状态（保证每个周期进入 <5 分钟都会重新提醒）
         lastCleanupTick = level.getServer().getTickCount();
+        lastRemindMin = -1;
     }
 
     /**
