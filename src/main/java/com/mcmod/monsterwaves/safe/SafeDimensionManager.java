@@ -92,8 +92,7 @@ public final class SafeDimensionManager {
         player.teleportTo(target, dest.x, dest.y, dest.z, player.getYRot(), player.getXRot());
     }
 
-    /** 空岛生成（幂等）：中心 (0, spawnY-1)，顶部方块 + 3 层泥土 + 4 层石头，圆形半径配置 */
-    public static void ensureIsland(ServerLevel safeLevel) {
+    /** 空岛生成（幂等）：中心 (0, spawnY-1)，顶部方块 + 3 层泥土 + 4 层石头，圆形半径配置 */    public static void ensureIsland(ServerLevel safeLevel) {
         if (!isSafe(safeLevel)) {
             return;
         }
@@ -139,11 +138,96 @@ public final class SafeDimensionManager {
                 placeFuncBlock(safeLevel, bx, surfaceY, bz, Blocks.BOOKSHELF);
             }
         }
+        // 景观装饰：树 / 花与草 / 周围漂浮小岛
+        placeTree(safeLevel, -5, topY + 1, -4);
+        placeTree(safeLevel, 7, topY + 1, -3);
+        placeTree(safeLevel, -8, topY + 1, 6);
+        placeFlowers(safeLevel, topY, r);
+        placeFloatIsland(safeLevel, 12, topY - 3, 8, 3);
+        placeFloatIsland(safeLevel, -13, topY - 5, -9, 4);
+        placeFloatIsland(safeLevel, 14, topY - 2, -12, 2);
         data.generated = true;
     }
 
     private static void placeFuncBlock(ServerLevel level, int x, int y, int z, net.minecraft.world.level.block.Block block) {
         level.setBlock(new BlockPos(x, y, z), block.defaultBlockState(), 2);
+    }
+
+    /** 手工放置一棵小橡树（主干 + 三层树叶冠） */
+    private static void placeTree(ServerLevel level, int x, int baseY, int z) {
+        for (int i = 0; i < 4; i++) {
+            level.setBlock(new BlockPos(x, baseY + i, z), Blocks.OAK_LOG.defaultBlockState(), 2);
+        }
+        setLeaves(level, x, baseY + 3, z, 1);
+        setLeaves(level, x, baseY + 4, z, 2);
+        setLeaves(level, x, baseY + 5, z, 1);
+        level.setBlock(new BlockPos(x, baseY + 5, z), Blocks.OAK_LEAVES.defaultBlockState(), 2);
+    }
+
+    private static void setLeaves(ServerLevel level, int cx, int y, int cz, int r) {
+        for (int dx = -r; dx <= r; dx++) {
+            for (int dz = -r; dz <= r; dz++) {
+                if (Math.abs(dx) == r && Math.abs(dz) == r) {
+                    continue;
+                }
+                BlockPos p = new BlockPos(cx + dx, y, cz + dz);
+                if (level.getBlockState(p).isAir()) {
+                    level.setBlock(p, Blocks.OAK_LEAVES.defaultBlockState(), 2);
+                }
+            }
+        }
+    }
+
+    /** 空岛地面撒花草（避开中心设施区与附魔台区） */
+    private static void placeFlowers(ServerLevel level, int topY, int r) {
+        net.minecraft.util.RandomSource random = level.getRandom();
+        net.minecraft.world.level.block.Block[] flowers = {
+                Blocks.GRASS, Blocks.POPPY, Blocks.DANDELION, Blocks.OXEYE_DAISY,
+                Blocks.CORNFLOWER, Blocks.TALL_GRASS, Blocks.AZURE_BLUET
+        };
+        for (int i = 0; i < 40; i++) {
+            int x = random.nextInt(r * 2) - r;
+            int z = random.nextInt(r * 2) - r;
+            if (x * x + z * z > r * r) {
+                continue;
+            }
+            if (Math.abs(x) <= 5 && Math.abs(z) <= 5) {
+                continue; // 中心设施区
+            }
+            if (x >= 2 && x <= 6 && Math.abs(z) <= 2) {
+                continue; // 附魔台区
+            }
+            BlockPos p = new BlockPos(x, topY + 1, z);
+            if (level.getBlockState(p).isAir() && level.getBlockState(p.below()).isSolid()) {
+                level.setBlock(p, flowers[random.nextInt(flowers.length)].defaultBlockState(), 2);
+            }
+        }
+    }
+
+    /** 周围漂浮小岛（草顶 + 泥土），带小树苗装饰 */
+    private static void placeFloatIsland(ServerLevel level, int cx, int cy, int cz, int r) {
+        for (int x = -r; x <= r; x++) {
+            for (int z = -r; z <= r; z++) {
+                if (x * x + z * z > r * r) {
+                    continue;
+                }
+                level.setBlock(new BlockPos(cx + x, cy, cz + z), Blocks.GRASS_BLOCK.defaultBlockState(), 2);
+                level.setBlock(new BlockPos(cx + x, cy - 1, cz + z), Blocks.DIRT.defaultBlockState(), 2);
+            }
+        }
+        if (level.getRandom().nextBoolean()) {
+            level.setBlock(new BlockPos(cx, cy + 1, cz), Blocks.OAK_SAPLING.defaultBlockState(), 2);
+        }
+    }
+
+    /** 重置空岛标记并立即重建（覆盖旧方块与装饰，调试/刷新景观用） */
+    public static void resetIsland(ServerLevel safeLevel) {
+        if (!isSafe(safeLevel)) {
+            return;
+        }
+        IslandData data = IslandData.get(safeLevel);
+        data.generated = false;
+        ensureIsland(safeLevel);
     }
 
     private static BlockState parseBlock(String id, BlockState fallback) {

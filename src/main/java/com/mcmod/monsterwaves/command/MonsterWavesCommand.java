@@ -81,7 +81,10 @@ public final class MonsterWavesCommand {
                         .executes(MonsterWavesCommand::difficulty))
                 .then(Commands.literal("safe")
                         .requires(src -> src.hasPermission(2))
-                        .executes(MonsterWavesCommand::safe))
+                        .executes(MonsterWavesCommand::safe)
+                        .then(Commands.literal("reset")
+                                .requires(src -> src.hasPermission(2))
+                                .executes(MonsterWavesCommand::safeReset)))
                 .then(Commands.literal("stage")
                         .then(Commands.literal("info").executes(MonsterWavesCommand::stageInfo))
                         .then(Commands.literal("next").requires(src -> src.hasPermission(2))
@@ -179,6 +182,18 @@ public final class MonsterWavesCommand {
     private static int safe(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         return SafeDimensionManager.teleportToSafe(player) ? 1 : 0;
+    }
+
+    /** 重置并重建空岛（调试/刷新景观用） */
+    private static int safeReset(CommandContext<CommandSourceStack> ctx) {
+        ServerLevel safeLevel = SafeDimensionManager.getSafeLevel(ctx.getSource().getServer());
+        if (safeLevel == null) {
+            ctx.getSource().sendFailure(Component.literal("休息维度不可用"));
+            return 0;
+        }
+        SafeDimensionManager.resetIsland(safeLevel);
+        ctx.getSource().sendSuccess(() -> Component.literal("空岛已重置重建"), true);
+        return 1;
     }
 
     private static int stageInfo(CommandContext<CommandSourceStack> ctx) {
