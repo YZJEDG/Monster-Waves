@@ -18,9 +18,9 @@ public final class StageManager {
     }
 
     public static final List<Stage> STAGES = List.of(
-            new Stage("🌱 萌芽期", 1.0, 6000L),
-            new Stage("⚔️ 激战期", 2.5, 12000L),
-            new Stage("🔥 终局之战", 5.0, -1L)
+            new Stage("萌芽期", 1.0, 6000L),
+            new Stage("激战期", 2.5, 12000L),
+            new Stage("终局之战", 5.0, -1L)
     );
 
     private StageManager() {
