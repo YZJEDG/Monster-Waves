@@ -54,6 +54,28 @@ public final class ModEventHandler {
     /** 属性球已被处理的标记（防同一 tick 内多玩家重复拾取） */
     private static final String BALL_CLAIMED = "monsterwaves_ball_claimed";
 
+    /** 客户端轮询：配置界面中"传送到重生点"开关变化时立即重建界面（实时条件显示）；首次 tick 同步实际值 */
+    private static boolean lastFallToRespawn = true;
+
+    /** 客户端 tick：检测配置开关变化并实时重建 Cloth Config 界面 */
+    @SubscribeEvent
+    public static void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+        net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
+        if (mc.screen == null) {
+            lastFallToRespawn = MWConfig.get().fallToRespawnPoint;
+            return;
+        }
+        if (mc.screen instanceof me.shedaniel.clothconfig2.gui.ClothConfigScreen
+                && MWConfig.get().fallToRespawnPoint != lastFallToRespawn) {
+            lastFallToRespawn = MWConfig.get().fallToRespawnPoint;
+            mc.setScreen(me.shedaniel.autoconfig.AutoConfig.getConfigScreen(
+                    MWConfig.class, mc.screen).get());
+        }
+    }
+
     @SubscribeEvent
     public static void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) {
