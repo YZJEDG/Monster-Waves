@@ -37,6 +37,8 @@
   "text.autoconfig.monsterwaves.option.dropBallsFromAllMobs": "非本模组怪也掉落",
   "text.autoconfig.monsterwaves.option.dropBallsFromAllMobs.@Tooltip": "开启后原版/其他模组生成的敌对怪死亡也掉属性球",
   "text.autoconfig.monsterwaves.option.ballTypes": "属性球类型",
+  "text.autoconfig.monsterwaves.option.attributeMapping": "属性映射",
+  "text.autoconfig.monsterwaves.option.attributeMapping.@Tooltip": "属性球类型名 → 原版/模组属性注册名（如 ATTACK→minecraft:generic.attack_damage；可映射任意模组属性）",
   "text.autoconfig.monsterwaves.category.ball_cleanup": "属性球清理",
   "text.autoconfig.monsterwaves.option.cleanupEnable": "启用自动清理",
   "text.autoconfig.monsterwaves.option.cleanupEnable.@Tooltip": "定期清理超时/超量的属性球，防止堆积",

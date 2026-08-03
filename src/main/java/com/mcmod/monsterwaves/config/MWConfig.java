@@ -8,6 +8,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 怪物狂潮配置（Cloth Config AutoConfig）。
@@ -137,6 +138,14 @@ public class MWConfig implements ConfigData {
     /** 可用属性球类型（ATTACK/HEALTH/ARMOR 等） */
     @ConfigEntry.Category("ball")
     public List<String> ballTypes = new ArrayList<>(List.of("ATTACK", "HEALTH", "ARMOR"));
+
+    /** 属性映射：属性球类型名 → 原版/模组属性注册名（可加自定义类型映射任意模组属性，如 "MANA"→"my_mod:mana"） */
+    @ConfigEntry.Category("ball")
+    @ConfigEntry.Gui.Tooltip()
+    public Map<String, String> attributeMapping = new java.util.HashMap<>(Map.of(
+            "ATTACK", "minecraft:generic.attack_damage",
+            "HEALTH", "minecraft:generic.max_health",
+            "ARMOR", "minecraft:generic.armor"));
 
     // ===== 属性球清理（ball_cleanup）=====
     /** 是否启用属性球自动清理（防堆积） */
