@@ -1,5 +1,6 @@
 package com.mcmod.monsterwaves.spawn;
 
+import com.mcmod.monsterwaves.MonsterWavesMod;
 import com.mcmod.monsterwaves.config.MWConfig;
 import com.mcmod.monsterwaves.safe.SafeDimensionManager;
 import com.mcmod.monsterwaves.stage.StageManager;
@@ -57,6 +58,7 @@ public final class MobSpawnManager {
         List<Integer> weights = new ArrayList<>();
         loadMobPool(cfg, types, weights);
         if (types.isEmpty()) {
+            MonsterWavesMod.LOGGER.warn("MW 怪物池为空，无法生成（检查配置 mobPool）");
             return;
         }
         for (ServerPlayer player : level.players()) {
@@ -99,6 +101,8 @@ public final class MobSpawnManager {
         for (int i = 0; i < toSpawn; i++) {
             BlockPos pos = findSpawnPos(level, player, cfg);
             if (pos == null) {
+                MonsterWavesMod.LOGGER.warn("MW 未找到合法生成位置（维度 {}，玩家 {}）",
+                        level.dimension().location(), player.getName().getString());
                 continue;
             }
             spawnMob(level, pos, difficulty, types, weights);
@@ -166,10 +170,13 @@ public final class MobSpawnManager {
         }
         Mob mob = (Mob) type.spawn(level, pos, MobSpawnType.MOB_SUMMONED);
         if (mob == null) {
+            MonsterWavesMod.LOGGER.warn("MW 实体生成返回 null（{} 在 {}，维度 {}）",
+                    type, pos, level.dimension().location());
             return;
         }
         mob.getPersistentData().putBoolean(MARKER, true);
         applyDifficultyTo(mob, difficulty);
+        MonsterWavesMod.LOGGER.debug("MW 已生成 {} 于 {}", type, pos);
     }
 
     /** 按难度系数调整生物生命/攻击（供生成引擎与指令共用） */
