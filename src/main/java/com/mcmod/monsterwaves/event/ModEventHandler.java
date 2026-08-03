@@ -16,6 +16,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -156,6 +157,11 @@ public final class ModEventHandler {
         PlayerDataManager.applyAll(event.getEntity());
     }
 
+    /**
+     * 怪物死亡触发属性球掉落：
+     * 1. 发布 {@link AttributeBallDropEvent}（可取消/修改概率、类型、数量）
+     * 2. 未取消则按事件参数判定概率并生成属性球
+     */
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
         var entity = event.getEntity();
@@ -168,13 +174,45 @@ public final class ModEventHandler {
         ServerLevel level = (ServerLevel) entity.level();
         double difficulty = StageManager.getDifficulty(level.getServer());
         double chance = Math.min(1.0, MWConfig.BALL_BASE_CHANCE * difficulty);
-        if (entity.getRandom().nextDouble() >= chance) {
+
+        // 发布掉落触发事件：怪物被杀死即触发掉落机制
+        AttributeBallDropEvent dropEvent = new AttributeBallDropEvent(entity, level,
+                new Vec3(entity.getX(), entity.getY() + 0.5, entity.getZ()),
+                chance, null, 1);
+        if (MinecraftForge.EVENT_BUS.post(dropEvent)) {
+            return; // 事件被取消：本次不掉落
+        }
+
+        // 概率判定
+        if (entity.getRandom().nextDouble() >= dropEvent.getChance()) {
             return;
         }
-        String type = MWConfig.BALL_TYPES[entity.getRandom().nextInt(MWConfig.BALL_TYPES.length)];
+
+        // 属性类型：事件指定（须合法）或随机
+        String type = dropEvent.getAttributeType();
+        if (type == null || !isValidBallType(type)) {
+            type = MWConfig.BALL_TYPES[entity.getRandom().nextInt(MWConfig.BALL_TYPES.length)];
+        }
+
+        // 生成属性球（数量按事件参数，至少 1）
+        int count = Math.max(1, dropEvent.getBallCount());
+        for (int i = 0; i < count; i++) {
+            spawnBall(level, dropEvent.getDropPos(), type);
+        }
+    }
+
+    private static boolean isValidBallType(String type) {
+        for (String t : MWConfig.BALL_TYPES) {
+            if (t.equals(type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void spawnBall(ServerLevel level, Vec3 pos, String type) {
         ItemStack stack = new ItemStack(ModItems.getBall(type));
-        ItemEntity ball = new ItemEntity(level,
-                entity.getX(), entity.getY() + 0.5, entity.getZ(), stack);
+        ItemEntity ball = new ItemEntity(level, pos.x, pos.y, pos.z, stack);
         // 属性球永不进入背包，只由本模组的接触检测处理；
         // 关闭 ItemEntity 自带重力，由服务端按经验球式逻辑模拟重力与吸附
         ball.setNeverPickUp();
