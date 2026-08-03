@@ -40,8 +40,8 @@ public final class ModEventHandler {
 
     /** 属性球吸附范围（格），参考经验球机制：范围内自动飞向玩家 */
     private static final double BALL_ATTRACT_RANGE = 3.0;
-    /** 属性球被吸收的距离（格，中心距离） */
-    private static final double BALL_PICKUP_DISTANCE_SQ = 1.0;
+    /** 属性球吸收判定：球体膨胀半径（格），与玩家包围盒相交即吸收（经验球式接触判定） */
+    private static final double BALL_PICKUP_INFLATE = 0.5;
     /** 属性球重力加速度（经验球为 0.04 格/tick²，用于抵消上飘并自然下落） */
     private static final double BALL_GRAVITY = 0.04;
     /** 属性球出生后不被吸引的时长（tick，经验球为 10 = 0.5 秒，防出生即吸） */
@@ -66,7 +66,7 @@ public final class ModEventHandler {
      * 属性球采用经验球式机制（服务端每 tick 处理）：
      * - 出生 0.5 秒内只受重力自由下落，不被吸引
      * - 进入吸附范围（3 格）后按距离衰减地加速飞向玩家（胸口高度）
-     * - 进入吸收距离（1 格）后立即应用属性并消失，永不进入背包
+     * - 球体接触玩家包围盒（AABB 相交）即吸收，永不进入背包
      * （Forge 1.20.1 无拾取前事件，且自定义实体留待后续阶段，此方案最贴近经验球体验）
      */
     private static void pickupBalls(ServerLevel level) {
@@ -78,7 +78,8 @@ public final class ModEventHandler {
                 if (ball.getPersistentData().getBoolean(BALL_CLAIMED)) {
                     continue;
                 }
-                if (ball.distanceToSqr(player) <= BALL_PICKUP_DISTANCE_SQ) {
+                if (ball.getBoundingBox().inflate(BALL_PICKUP_INFLATE)
+                        .intersects(player.getBoundingBox())) {
                     applyBall(player, ball);
                 } else {
                     attractBall(ball, player);
