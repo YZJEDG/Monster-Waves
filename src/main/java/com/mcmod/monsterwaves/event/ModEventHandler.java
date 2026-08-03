@@ -17,6 +17,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -188,10 +189,14 @@ public final class ModEventHandler {
         }
     }
 
-    /** 休息维度与刷怪维度均不生成原版生物（本模组生成引擎接管） */
+    /**
+     * 休息维度与刷怪维度禁止**原版自然生成**（仅 NATURAL 类型拦截；
+     * 本模组 MOB_SUMMONED 生成不受影响，否则会连本模组刷怪一起被 DENY）
+     */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onCheckSpawn(MobSpawnEvent.PositionCheck event) {
-        if (SafeDimensionManager.isSafe(event.getLevel()) || ArenaDimensionManager.isArena(event.getLevel())) {
+        if (event.getSpawnType() == MobSpawnType.NATURAL
+                && (SafeDimensionManager.isSafe(event.getLevel()) || ArenaDimensionManager.isArena(event.getLevel()))) {
             event.setResult(Event.Result.DENY);
         }
     }
