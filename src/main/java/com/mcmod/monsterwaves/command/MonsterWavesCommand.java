@@ -6,6 +6,7 @@ import com.mcmod.monsterwaves.item.ModItems;
 import com.mcmod.monsterwaves.spawn.MobSpawnManager;
 import com.mcmod.monsterwaves.stage.StageData;
 import com.mcmod.monsterwaves.stage.StageManager;
+import com.mcmod.monsterwaves.safe.SafeDimensionManager;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -78,6 +79,9 @@ public final class MonsterWavesCommand {
                                 .executes(ctx -> stats(ctx, EntityArgument.getPlayer(ctx, "player")))))
                 .then(Commands.literal("difficulty")
                         .executes(MonsterWavesCommand::difficulty))
+                .then(Commands.literal("safe")
+                        .requires(src -> src.hasPermission(2))
+                        .executes(MonsterWavesCommand::safe))
                 .then(Commands.literal("stage")
                         .then(Commands.literal("info").executes(MonsterWavesCommand::stageInfo))
                         .then(Commands.literal("next").requires(src -> src.hasPermission(2))
@@ -169,6 +173,12 @@ public final class MonsterWavesCommand {
                 .append(Component.literal(stage.id()).withStyle(ChatFormatting.GOLD))
                 .append(Component.literal(" ｜ 难度系数：x" + stage.difficulty())), false);
         return 1;
+    }
+
+    /** 传送至休息维度（管理员指令，无冷却） */
+    private static int safe(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        return SafeDimensionManager.teleportToSafe(player) ? 1 : 0;
     }
 
     private static int stageInfo(CommandContext<CommandSourceStack> ctx) {

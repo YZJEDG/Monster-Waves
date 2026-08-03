@@ -19,6 +19,9 @@ public final class ModItems {
     public static final RegistryObject<Item> ARMOR_BALL = ITEMS.register("armor_ball",
             () -> new AttributeBallItem(PlayerDataManager.ARMOR));
 
+    public static final RegistryObject<Item> RETURN_CHARM = ITEMS.register("return_charm",
+            ReturnCharmItem::new);
+
     private ModItems() {
     }
 

@@ -1,6 +1,7 @@
 package com.mcmod.monsterwaves.spawn;
 
 import com.mcmod.monsterwaves.config.MWConfig;
+import com.mcmod.monsterwaves.safe.SafeDimensionManager;
 import com.mcmod.monsterwaves.stage.StageManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +33,19 @@ public final class MobSpawnManager {
     private MobSpawnManager() {
     }
 
+    /** 维度开关：空列表 = 全部启用；非空则仅列出的维度刷怪 */
+    private static boolean isDimensionEnabled(ServerLevel level) {
+        java.util.List<String> dims = MWConfig.get().enabledDimensions;
+        return dims.isEmpty() || dims.contains(level.dimension().location().toString());
+    }
+
     public static void serverTick(ServerLevel level) {
+        if (SafeDimensionManager.isSafe(level)) {
+            return; // 休息维度不生成怪物
+        }
+        if (!isDimensionEnabled(level)) {
+            return; // 维度开关：未启用
+        }
         MWConfig cfg = MWConfig.get();
         if (!cfg.enabled) {
             return;

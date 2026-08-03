@@ -4,6 +4,7 @@ import com.mcmod.monsterwaves.config.MWConfig;
 import com.mcmod.monsterwaves.data.PlayerDataManager;
 import com.mcmod.monsterwaves.item.AttributeBallItem;
 import com.mcmod.monsterwaves.item.ModItems;
+import com.mcmod.monsterwaves.safe.SafeDimensionManager;
 import com.mcmod.monsterwaves.spawn.MobSpawnManager;
 import com.mcmod.monsterwaves.stage.StageManager;
 import net.minecraft.ChatFormatting;
@@ -21,7 +22,11 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.List;
@@ -56,6 +61,16 @@ public final class ModEventHandler {
         }
         MinecraftServer server = event.getServer();
         StageManager.serverTick(server);
+        // 休息维度玩家规则：锁饥饿 + 跳下传送
+        ServerLevel safeLevel = SafeDimensionManager.getSafeLevel(server);
+        if (safeLevel != null) {
+            for (ServerPlayer p : safeLevel.players()) {
+                SafeDimensionManager.applySafeRules(p);
+                if (p.getY() < MWConfig.get().fallTeleportY) {
+                    SafeDimensionManager.handleFall(p);
+                }
+            }
+        }
         for (ServerLevel level : server.getAllLevels()) {
             MobSpawnManager.serverTick(level);
             pickupBalls(level);
@@ -128,6 +143,29 @@ public final class ModEventHandler {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         PlayerDataManager.applyAll(event.getEntity());
+        // 开局给予返回符咒（giveOnJoin）
+        if (event.getEntity() instanceof ServerPlayer sp && MWConfig.get().giveOnJoin) {
+            boolean has = sp.getInventory().hasAnyMatching(s -> s.getItem() == ModItems.RETURN_CHARM.get());
+            if (!has) {
+                sp.getInventory().add(new ItemStack(ModItems.RETURN_CHARM.get()));
+            }
+        }
+    }
+
+    /** 休息维度免疫一切伤害 */
+    @SubscribeEvent
+    public static void onLivingHurt(LivingHurtEvent event) {
+        if (event.getEntity() instanceof ServerPlayer p && SafeDimensionManager.isSafe(p.level())) {
+            event.setCanceled(true);
+        }
+    }
+
+    /** 休息维度不生成任何生物（本模组及原版） */
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onCheckSpawn(MobSpawnEvent.PositionCheck event) {
+        if (SafeDimensionManager.isSafe(event.getLevel())) {
+            event.setResult(Event.Result.DENY);
+        }
     }
 
     @SubscribeEvent

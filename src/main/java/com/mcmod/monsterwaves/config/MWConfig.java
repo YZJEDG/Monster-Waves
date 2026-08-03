@@ -83,4 +83,60 @@ public class MWConfig implements ConfigData {
     /** 可用属性球类型（ATTACK/HEALTH/ARMOR 等） */
     @ConfigEntry.Category("ball")
     public List<String> ballTypes = new ArrayList<>(List.of("ATTACK", "HEALTH", "ARMOR"));
+
+    // ===== 维度开关（dimensions）=====
+    /** 启用本模组刷怪的维度列表；空列表 = 全部维度启用（休息维度始终不刷怪） */
+    @ConfigEntry.Category("dimensions")
+    @ConfigEntry.Gui.Tooltip()
+    public List<String> enabledDimensions = new ArrayList<>();
+
+    // ===== 休息维度（safe）=====
+    /** 是否启用休息维度与返回符咒 */
+    @ConfigEntry.Category("safe")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean safeEnabled = true;
+
+    /** 空岛半径（格，自中心向外） */
+    @ConfigEntry.Category("safe")
+    public int islandRadius = 20;
+
+    /** 空岛顶部方块 */
+    @ConfigEntry.Category("safe")
+    public String islandBlock = "minecraft:grass_block";
+
+    /** 首次加入是否给予返回符咒 */
+    @ConfigEntry.Category("safe")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean giveOnJoin = true;
+
+    /** 返回符咒冷却（tick） */
+    @ConfigEntry.Category("safe")
+    @ConfigEntry.Gui.Tooltip()
+    public int safeCooldown = 600;
+
+    /** 跳下传送触发 Y 坐标（低于此值传送） */
+    @ConfigEntry.Category("safe")
+    public int fallTeleportY = -10;
+
+    /** 休息维度出生点 Y（X/Z 固定为 0） */
+    @ConfigEntry.Category("safe")
+    public int safeSpawnY = 65;
+
+    /** 坠落传送目标维度（arena 建立后改回 monsterwaves:arena） */
+    @ConfigEntry.Category("safe")
+    public String fallDestinationDimension = "minecraft:overworld";
+
+    @ConfigEntry.Category("safe")
+    public int fallDestinationX = 0;
+
+    @ConfigEntry.Category("safe")
+    public int fallDestinationY = 64;
+
+    @ConfigEntry.Category("safe")
+    public int fallDestinationZ = 0;
+
+    /** 是否使用自定义坠落坐标（false 用目标维度出生点） */
+    @ConfigEntry.Category("safe")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean useCustomFallDestination = true;
 }
