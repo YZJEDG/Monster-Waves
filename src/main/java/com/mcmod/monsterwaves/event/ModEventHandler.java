@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -161,6 +162,8 @@ public final class ModEventHandler {
      * 怪物死亡触发属性球掉落：
      * 1. 发布 {@link AttributeBallDropEvent}（可取消/修改概率、类型、数量）
      * 2. 未取消则按事件参数判定概率并生成属性球
+     * 适用范围：敌对怪物（Monster）。默认所有敌对怪物（含非本mod生成的）都触发，
+     * 由 MWConfig.DROP_BALLS_FROM_ALL_MOBS 控制；关闭时仅本mod生成的怪（带标记）触发。
      */
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
@@ -168,8 +171,12 @@ public final class ModEventHandler {
         if (entity.level().isClientSide) {
             return;
         }
-        if (!entity.getPersistentData().getBoolean(MobSpawnManager.MARKER)) {
-            return;
+        if (!(entity instanceof Monster)) {
+            return; // 仅敌对怪物参与掉落
+        }
+        if (!MWConfig.DROP_BALLS_FROM_ALL_MOBS
+                && !entity.getPersistentData().getBoolean(MobSpawnManager.MARKER)) {
+            return; // 开关关闭：仅本mod生成的怪掉落
         }
         ServerLevel level = (ServerLevel) entity.level();
         double difficulty = StageManager.getDifficulty(level.getServer());

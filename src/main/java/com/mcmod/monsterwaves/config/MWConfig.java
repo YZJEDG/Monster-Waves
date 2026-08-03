@@ -40,6 +40,12 @@ public final class MWConfig {
     public static final double BALL_BASE_CHANCE = 0.2;    // 普通怪基础掉落率
     public static final int BALL_VALUE = 1;               // 每个属性球的加成点数
 
+    /**
+     * 非本mod生成的怪物（敌对 Monster）死亡是否也触发属性球掉落。
+     * true=所有敌对怪物（原版自然刷怪/其他mod生成）都按概率掉落；false=仅本mod生成的怪（带 monsterwaves_spawned 标记）。
+     */
+    public static final boolean DROP_BALLS_FROM_ALL_MOBS = true;
+
     /** 属性球类型（MVP 精简为攻击/生命/护甲三种） */
     public static final String[] BALL_TYPES = {"ATTACK", "HEALTH", "ARMOR"};
 }
