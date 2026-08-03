@@ -62,7 +62,7 @@ public final class MonsterWavesCommand {
 
     /** Tab 补全：属性球类型 */
     private static final SuggestionProvider<CommandSourceStack> SUGGEST_BALL_TYPES = (ctx, builder) ->
-            SharedSuggestionProvider.suggest(Arrays.asList(MWConfig.BALL_TYPES), builder);
+            SharedSuggestionProvider.suggest(MWConfig.get().ballTypes, builder);
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("monsterwaves")
@@ -154,7 +154,7 @@ public final class MonsterWavesCommand {
         CommandSourceStack src = ctx.getSource();
         src.sendSuccess(() -> Component.literal("=== " + target.getScoreboardName() + " 的属性 ===")
                 .withStyle(ChatFormatting.AQUA), false);
-        for (String type : MWConfig.BALL_TYPES) {
+        for (String type : MWConfig.get().ballTypes) {
             int value = PlayerDataManager.get(target, type);
             src.sendSuccess(() -> PlayerDataManager.attributeDisplayName(type).copy()
                     .append(Component.literal("：+" + value)).withStyle(ChatFormatting.GREEN), false);
@@ -221,9 +221,10 @@ public final class MonsterWavesCommand {
 
     /** 校验属性类型是否合法，非法时向执行者报错并返回 false */
     private static boolean checkType(CommandContext<CommandSourceStack> ctx, String type) {
-        if (Arrays.stream(MWConfig.BALL_TYPES).noneMatch(t -> t.equals(type))) {
+        java.util.List<String> types = MWConfig.get().ballTypes;
+        if (!types.contains(type)) {
             ctx.getSource().sendFailure(Component.literal("未知属性类型：" + type
-                    + "，可用：" + String.join(", ", MWConfig.BALL_TYPES)));
+                    + "，可用：" + String.join(", ", types)));
             return false;
         }
         return true;
@@ -286,7 +287,7 @@ public final class MonsterWavesCommand {
 
     private static int playerReset(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         ServerPlayer target = EntityArgument.getPlayer(ctx, "player");
-        for (String type : MWConfig.BALL_TYPES) {
+        for (String type : MWConfig.get().ballTypes) {
             PlayerDataManager.set(target, type, 0);
         }
         ctx.getSource().sendSuccess(() -> Component.literal("已重置 " + target.getScoreboardName() + " 的全部属性"), true);

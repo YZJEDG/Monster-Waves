@@ -12,7 +12,7 @@ import net.minecraftforge.eventbus.api.Event;
  * <p>可修改参数（setter）：
  * <ul>
  *   <li>{@code chance}：掉落判定概率（默认 = min(1, baseChance × 难度)），设 0 禁掉、设 1 必掉</li>
- *   <li>{@code attributeType}：指定属性类型（null = 随机），须为 MWConfig.BALL_TYPES 之一</li>
+ *   <li>{@code attributeType}：指定属性类型（null = 随机），须为配置 ballTypes 之一</li>
  *   <li>{@code ballCount}：掉落数量（至少 1）</li>
  * </ul>
  *
@@ -60,7 +60,7 @@ public class AttributeBallDropEvent extends Event {
         this.chance = chance;
     }
 
-    /** 指定属性类型（null = 随机）；须为 MWConfig.BALL_TYPES 之一 */
+    /** 指定属性类型（null = 随机）；须为配置 ballTypes 之一 */
     public String getAttributeType() {
         return attributeType;
     }

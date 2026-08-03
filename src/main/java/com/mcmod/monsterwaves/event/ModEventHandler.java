@@ -112,10 +112,11 @@ public final class ModEventHandler {
         }
         ball.getPersistentData().putBoolean(BALL_CLAIMED, true);
         AttributeBallItem ballItem = (AttributeBallItem) ball.getItem().getItem();
-        PlayerDataManager.add(player, ballItem.getAttributeType(), MWConfig.BALL_VALUE);
+        int value = MWConfig.get().ballValue;
+        PlayerDataManager.add(player, ballItem.getAttributeType(), value);
         int total = PlayerDataManager.get(player, ballItem.getAttributeType());
         player.displayClientMessage(
-                Component.literal("你获得了 +" + MWConfig.BALL_VALUE + " ")
+                Component.literal("你获得了 +" + value + " ")
                         .append(PlayerDataManager.attributeDisplayName(ballItem.getAttributeType()))
                         .append(Component.literal("！当前累计：" + total))
                         .withStyle(ChatFormatting.GREEN), true);
@@ -144,7 +145,7 @@ public final class ModEventHandler {
      * 1. 发布 {@link AttributeBallDropEvent}（可取消/修改概率、类型、数量）
      * 2. 未取消则按事件参数判定概率并生成属性球
      * 适用范围：敌对怪物（Monster）。默认所有敌对怪物（含非本mod生成的）都触发，
-     * 由 MWConfig.DROP_BALLS_FROM_ALL_MOBS 控制；关闭时仅本mod生成的怪（带标记）触发。
+     * 由配置 dropBallsFromAllMobs 控制；关闭时仅本mod生成的怪（带标记）触发。
      */
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
@@ -155,13 +156,13 @@ public final class ModEventHandler {
         if (!(entity instanceof Monster)) {
             return; // 仅敌对怪物参与掉落
         }
-        if (!MWConfig.DROP_BALLS_FROM_ALL_MOBS
+        if (!MWConfig.get().dropBallsFromAllMobs
                 && !entity.getPersistentData().getBoolean(MobSpawnManager.MARKER)) {
             return; // 开关关闭：仅本mod生成的怪掉落
         }
         ServerLevel level = (ServerLevel) entity.level();
         double difficulty = StageManager.getDifficulty(level.getServer());
-        double chance = Math.min(1.0, MWConfig.BALL_BASE_CHANCE * difficulty);
+        double chance = Math.min(1.0, MWConfig.get().ballBaseChance * difficulty);
 
         // 发布掉落触发事件：怪物被杀死即触发掉落机制
         AttributeBallDropEvent dropEvent = new AttributeBallDropEvent(entity, level,
@@ -179,7 +180,8 @@ public final class ModEventHandler {
         // 属性类型：事件指定（须合法）或随机
         String type = dropEvent.getAttributeType();
         if (type == null || !isValidBallType(type)) {
-            type = MWConfig.BALL_TYPES[entity.getRandom().nextInt(MWConfig.BALL_TYPES.length)];
+            java.util.List<String> types = MWConfig.get().ballTypes;
+            type = types.get(entity.getRandom().nextInt(types.size()));
         }
 
         // 生成属性球（数量按事件参数，至少 1）
@@ -190,12 +192,7 @@ public final class ModEventHandler {
     }
 
     private static boolean isValidBallType(String type) {
-        for (String t : MWConfig.BALL_TYPES) {
-            if (t.equals(type)) {
-                return true;
-            }
-        }
-        return false;
+        return MWConfig.get().ballTypes.contains(type);
     }
 
     private static void spawnBall(ServerLevel level, Vec3 pos, String type) {

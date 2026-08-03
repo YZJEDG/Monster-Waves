@@ -1,51 +1,86 @@
 package com.mcmod.monsterwaves.config;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.mcmod.monsterwaves.MonsterWavesMod;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * MVP 阶段的硬编码配置中心。
- * 字段路径与 v8.3 规格中的 Cloth Config 路径一一对应，后续阶段可直接迁移。
+ * 怪物狂潮配置（Cloth Config AutoConfig）。
+ * 存于 config/monsterwaves.json5，游戏内 Mods 列表 -> Config 按钮打开 GUI 编辑。
+ * 服务端逻辑通过 {@link #get()} 读取（每次读取最新值，修改即时生效）。
+ *
+ * <p>注：Cloth Config 11.1.136 的 @Config 仅有 name() 属性（无规格 v8.3 所述 ConfigType.SERVER），
+ * 采用标准 AutoConfig 单文件配置；如需 Forge serverconfig 可后续扩展 PartitioningSerializer。
  */
-public final class MWConfig {
-    private MWConfig() {
+@Config(name = MonsterWavesMod.MOD_ID)
+public class MWConfig implements ConfigData {
+
+    /** 便捷获取当前配置实例（每次返回最新值） */
+    public static MWConfig get() {
+        return AutoConfig.getConfigHolder(MWConfig.class).getConfig();
     }
 
-    // ===== 全局 =====
-    public static final boolean ENABLED = true;
+    // ===== 全局（general）=====
+    @ConfigEntry.Category("general")
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    public boolean enabled = true;
 
-    // ===== 生成设置（spawn.*）=====
-    public static final int SPAWN_INTERVAL = 40;          // 生成检测间隔（tick）
-    public static final int MIN_DISTANCE = 20;            // 距玩家最小距离
-    public static final int MAX_DISTANCE = 32;            // 距玩家最大距离
-    public static final int MAX_MOBS_PER_PLAYER = 30;     // 玩家周围本mod怪物数量上限
-    public static final int MOB_COUNT_MIN = 1;            // 每次波次最少生成数
-    public static final int MOB_COUNT_MAX = 2;            // 每次波次最多生成数
-    public static final double MOB_STAT_RADIUS = 48.0;    // 统计本mod怪物的半径
+    // ===== 生成设置（spawn）=====
+    @ConfigEntry.Category("spawn")
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    public int spawnInterval = 40;
 
-    /** 怪物池：生物注册名 -> 权重（MVP 硬编码，支持任意已注册生物） */
-    public static final Map<String, Integer> MOB_POOL = new LinkedHashMap<>();
+    @ConfigEntry.Category("spawn")
+    public int minDistance = 20;
 
-    static {
-        MOB_POOL.put("minecraft:zombie", 5);
-        MOB_POOL.put("minecraft:skeleton", 3);
-        MOB_POOL.put("minecraft:creeper", 2);
-    }
+    @ConfigEntry.Category("spawn")
+    public int maxDistance = 32;
 
-    // ===== 难度参数（spawn.difficulty.*）=====
-    public static final double HEALTH_BONUS_PER_LEVEL = 0.2; // 每点难度增加的生命百分比
-    public static final double ATTACK_BONUS_PER_LEVEL = 0.5; // 每点难度增加的攻击力（固定值）
+    @ConfigEntry.Category("spawn")
+    public int maxMobsPerPlayer = 30;
 
-    // ===== 属性球（drop.ball.*）=====
-    public static final double BALL_BASE_CHANCE = 0.2;    // 普通怪基础掉落率
-    public static final int BALL_VALUE = 1;               // 每个属性球的加成点数
+    @ConfigEntry.Category("spawn")
+    public int mobCountMin = 1;
 
-    /**
-     * 非本mod生成的怪物（敌对 Monster）死亡是否也触发属性球掉落。
-     * true=所有敌对怪物（原版自然刷怪/其他mod生成）都按概率掉落；false=仅本mod生成的怪（带 monsterwaves_spawned 标记）。
-     */
-    public static final boolean DROP_BALLS_FROM_ALL_MOBS = true;
+    @ConfigEntry.Category("spawn")
+    public int mobCountMax = 2;
 
-    /** 属性球类型（MVP 精简为攻击/生命/护甲三种） */
-    public static final String[] BALL_TYPES = {"ATTACK", "HEALTH", "ARMOR"};
+    @ConfigEntry.Category("spawn")
+    public double mobStatRadius = 48.0;
+
+    /** 怪物池：每项格式 "注册名:权重"，如 "minecraft:zombie:5" */
+    @ConfigEntry.Category("spawn")
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    public List<String> mobPool = new ArrayList<>(List.of(
+            "minecraft:zombie:5",
+            "minecraft:skeleton:3",
+            "minecraft:creeper:2"));
+
+    // ===== 难度参数（difficulty）=====
+    @ConfigEntry.Category("difficulty")
+    public double healthBonusPerLevel = 0.2;
+
+    @ConfigEntry.Category("difficulty")
+    public double attackBonusPerLevel = 0.5;
+
+    // ===== 属性球（ball）=====
+    @ConfigEntry.Category("ball")
+    public double ballBaseChance = 0.2;
+
+    @ConfigEntry.Category("ball")
+    public int ballValue = 1;
+
+    /** 非本mod生成的敌对怪物死亡是否也掉落属性球 */
+    @ConfigEntry.Category("ball")
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    public boolean dropBallsFromAllMobs = true;
+
+    /** 可用属性球类型（ATTACK/HEALTH/ARMOR 等） */
+    @ConfigEntry.Category("ball")
+    public List<String> ballTypes = new ArrayList<>(List.of("ATTACK", "HEALTH", "ARMOR"));
 }

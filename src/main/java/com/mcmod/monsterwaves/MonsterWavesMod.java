@@ -1,7 +1,10 @@
 package com.mcmod.monsterwaves;
 
+import com.mcmod.monsterwaves.config.MWConfig;
 import com.mcmod.monsterwaves.event.ModEventHandler;
 import com.mcmod.monsterwaves.item.ModItems;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -23,6 +26,8 @@ public class MonsterWavesMod {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModItems.ITEMS.register(modBus);
         MinecraftForge.EVENT_BUS.register(ModEventHandler.class);
+        // 注册 Cloth Config 配置（config/monsterwaves.json5，GUI 自动集成 Mods 列表）
+        AutoConfig.register(MWConfig.class, JanksonConfigSerializer::new);
         LOGGER.info("Monster Waves (怪物狂潮) MVP 已加载");
     }
 }
