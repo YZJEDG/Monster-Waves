@@ -30,6 +30,13 @@ public class MonsterWavesMod {
         MinecraftForge.EVENT_BUS.register(ModEventHandler.class);
         // 注册 Cloth Config 配置（config/monsterwaves.json5，GUI 自动集成 Mods 列表）
         AutoConfig.register(MWConfig.class, JanksonConfigSerializer::new);
+        // 条件显示：开启"传送到重生点"时隐藏自定义坐标字段（fallDestinationX/Y/Z）
+        AutoConfig.getGuiRegistry(MWConfig.class).registerPredicateTransformer(
+                (entries, key, field, config, defaults, registry) ->
+                        ((MWConfig) config).fallToRespawnPoint ? java.util.List.of() : entries,
+                field -> field.getName().equals("fallDestinationX")
+                        || field.getName().equals("fallDestinationY")
+                        || field.getName().equals("fallDestinationZ"));
         // 注册配置屏幕扩展点：供原版 Mods 列表与 Catalogue（模组目录）显示 Config 按钮
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
                 () -> new ConfigScreenHandler.ConfigScreenFactory((client, parent) ->

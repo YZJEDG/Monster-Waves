@@ -83,8 +83,8 @@ public final class SafeDimensionManager {
             return;
         }
 
-        // 按坠落传送方式分发
-        if (cfg.fallMode == MWConfig.FallMode.RESPAWN) {
+        // 传送到重生点开关：开启=主世界用玩家重生点/其他维度用目标出生点；关闭=自定义坐标
+        if (cfg.fallToRespawnPoint) {
             if (targetKey.equals(Level.OVERWORLD)) {
                 // 主世界：传送到玩家重生点（床/出生点），无重生点则世界出生点
                 BlockPos respawn = player.getRespawnPosition();
@@ -103,7 +103,7 @@ public final class SafeDimensionManager {
             return;
         }
 
-        // CUSTOM：自定义坐标
+        // 自定义坐标
         Vec3 dest = new Vec3(cfg.fallDestinationX + 0.5, cfg.fallDestinationY, cfg.fallDestinationZ + 0.5);
         player.teleportTo(target, dest.x, dest.y, dest.z, player.getYRot(), player.getXRot());
     }

@@ -126,10 +126,10 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("safe")
     public String fallDestinationDimension = "minecraft:overworld";
 
-    /** 坠落传送方式：RESPAWN=传送到重生点（主世界；其他维度用目标出生点），CUSTOM=自定义坐标 */
+    /** 传送到重生点（开启=主世界用玩家重生点/其他维度用目标出生点；关闭=用下方自定义坐标，开启时隐藏自定义坐标） */
     @ConfigEntry.Category("safe")
     @ConfigEntry.Gui.Tooltip()
-    public FallMode fallMode = FallMode.RESPAWN;
+    public boolean fallToRespawnPoint = true;
 
     @ConfigEntry.Category("safe")
     public int fallDestinationX = 0;
@@ -139,10 +139,4 @@ public class MWConfig implements ConfigData {
 
     @ConfigEntry.Category("safe")
     public int fallDestinationZ = 0;
-
-    /** 坠落传送方式：RESPAWN=玩家重生点，CUSTOM=自定义坐标 */
-    public enum FallMode {
-        RESPAWN,
-        CUSTOM
-    }
 }
