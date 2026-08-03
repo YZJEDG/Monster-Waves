@@ -92,7 +92,29 @@ public final class MonsterWavesCommand {
                                 .then(Commands.argument("player", EntityArgument.player())
                                         .then(Commands.argument("type", StringArgumentType.word()).suggests(SUGGEST_BALL_TYPES)
                                                 .then(Commands.argument("amount", com.mojang.brigadier.arguments.IntegerArgumentType.integer(1, 999))
-                                                        .executes(MonsterWavesCommand::ballGive))))))
+                                                        .executes(MonsterWavesCommand::ballGive)))))
+                        .then(Commands.literal("set")
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .then(Commands.argument("type", StringArgumentType.word()).suggests(SUGGEST_BALL_TYPES)
+                                                .then(Commands.argument("value", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, 99999))
+                                                        .executes(MonsterWavesCommand::ballSet))))))
+                .then(Commands.literal("player")
+                        .requires(src -> src.hasPermission(2))
+                        .then(Commands.literal("add")
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .then(Commands.argument("type", StringArgumentType.word()).suggests(SUGGEST_BALL_TYPES)
+                                                .then(Commands.argument("value", com.mojang.brigadier.arguments.IntegerArgumentType.integer(1, 99999))
+                                                        .executes(MonsterWavesCommand::playerAdd)))))
+                        .then(Commands.literal("set")
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .then(Commands.argument("type", StringArgumentType.word()).suggests(SUGGEST_BALL_TYPES)
+                                                .then(Commands.argument("value", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, 99999))
+                                                        .executes(MonsterWavesCommand::playerSet)))))
+                        .then(Commands.literal("reset")
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(MonsterWavesCommand::playerReset)))
+                        .then(Commands.literal("list")
+                                .executes(MonsterWavesCommand::playerList)))
         );
     }
 
@@ -196,17 +218,84 @@ public final class MonsterWavesCommand {
         return String.join("、", StageManager.STAGES.stream().map(StageManager.Stage::id).toList());
     }
 
+    /** 校验属性类型是否合法，非法时向执行者报错并返回 false */
+    private static boolean checkType(CommandContext<CommandSourceStack> ctx, String type) {
+        if (Arrays.stream(MWConfig.BALL_TYPES).noneMatch(t -> t.equals(type))) {
+            ctx.getSource().sendFailure(Component.literal("未知属性类型：" + type
+                    + "，可用：" + String.join(", ", MWConfig.BALL_TYPES)));
+            return false;
+        }
+        return true;
+    }
+
     private static int ballGive(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         ServerPlayer target = EntityArgument.getPlayer(ctx, "player");
         String type = StringArgumentType.getString(ctx, "type").toUpperCase();
         int amount = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "amount");
-        if (Arrays.stream(MWConfig.BALL_TYPES).noneMatch(t -> t.equals(type))) {
-            ctx.getSource().sendFailure(Component.literal("未知属性类型：" + type + "，可用：" + String.join(", ", MWConfig.BALL_TYPES)));
+        if (!checkType(ctx, type)) {
             return 0;
         }
         PlayerDataManager.add(target, type, amount);
         ctx.getSource().sendSuccess(() -> Component.literal("已给予 " + target.getScoreboardName() + " +" + amount + " ")
                 .append(PlayerDataManager.attributeDisplayName(type)), true);
+        return 1;
+    }
+
+    /** 直接设置玩家属性值（覆盖） */
+    private static int ballSet(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        ServerPlayer target = EntityArgument.getPlayer(ctx, "player");
+        String type = StringArgumentType.getString(ctx, "type").toUpperCase();
+        int value = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "value");
+        if (!checkType(ctx, type)) {
+            return 0;
+        }
+        PlayerDataManager.set(target, type, value);
+        ctx.getSource().sendSuccess(() -> Component.literal("已将 " + target.getScoreboardName() + " 的 ")
+                .append(PlayerDataManager.attributeDisplayName(type))
+                .append(Component.literal(" 设置为 " + value)), true);
+        return 1;
+    }
+
+    private static int playerAdd(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        ServerPlayer target = EntityArgument.getPlayer(ctx, "player");
+        String type = StringArgumentType.getString(ctx, "type").toUpperCase();
+        int value = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "value");
+        if (!checkType(ctx, type)) {
+            return 0;
+        }
+        PlayerDataManager.add(target, type, value);
+        ctx.getSource().sendSuccess(() -> Component.literal("已为 " + target.getScoreboardName() + " 增加 +" + value + " ")
+                .append(PlayerDataManager.attributeDisplayName(type)), true);
+        return 1;
+    }
+
+    private static int playerSet(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        ServerPlayer target = EntityArgument.getPlayer(ctx, "player");
+        String type = StringArgumentType.getString(ctx, "type").toUpperCase();
+        int value = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "value");
+        if (!checkType(ctx, type)) {
+            return 0;
+        }
+        PlayerDataManager.set(target, type, value);
+        ctx.getSource().sendSuccess(() -> Component.literal("已将 " + target.getScoreboardName() + " 的 ")
+                .append(PlayerDataManager.attributeDisplayName(type))
+                .append(Component.literal(" 设置为 " + value)), true);
+        return 1;
+    }
+
+    private static int playerReset(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        ServerPlayer target = EntityArgument.getPlayer(ctx, "player");
+        for (String type : MWConfig.BALL_TYPES) {
+            PlayerDataManager.set(target, type, 0);
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal("已重置 " + target.getScoreboardName() + " 的全部属性"), true);
+        return 1;
+    }
+
+    private static int playerList(CommandContext<CommandSourceStack> ctx) {
+        var players = ctx.getSource().getServer().getPlayerList().getPlayers();
+        ctx.getSource().sendSuccess(() -> Component.literal("在线玩家（" + players.size() + "）：")
+                .append(Component.literal(players.stream().map(ServerPlayer::getScoreboardName).toList().toString())), false);
         return 1;
     }
 }
