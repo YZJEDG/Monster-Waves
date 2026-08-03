@@ -385,13 +385,24 @@ public final class ModEventHandler {
         dropLoot(entity, level, difficulty);
     }
 
-    /** 统一掉落：按配置 normalLoot 生成掉落物（概率/数量受难度影响） */
+    /** 统一掉落：按配置 normalLoot（JSON 条目）生成掉落物（概率/数量受难度影响） */
     private static void dropLoot(LivingEntity entity, ServerLevel level, double difficulty) {
         MWConfig cfg = MWConfig.get();
         if (!cfg.lootEnabled || cfg.normalLoot.isEmpty()) {
             return;
         }
-        for (MWConfig.LootEntry entry : cfg.normalLoot) {
+        com.google.gson.Gson gson = new com.google.gson.Gson();
+        for (String json : cfg.normalLoot) {
+            MWConfig.LootEntry entry;
+            try {
+                entry = gson.fromJson(json, MWConfig.LootEntry.class);
+            } catch (Exception e) {
+                MonsterWavesMod.LOGGER.warn("MW 掉落条目 JSON 解析失败：{}", json);
+                continue;
+            }
+            if (entry == null || entry.item == null || entry.item.isEmpty()) {
+                continue;
+            }
             double chance = Math.min(1.0, entry.chance * difficulty * cfg.lootGlobalChanceMultiplier);
             if (entity.getRandom().nextDouble() >= chance) {
                 continue;
