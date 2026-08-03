@@ -35,10 +35,12 @@ import java.util.List;
  */
 public final class ModEventHandler {
 
-    /** 属性球接触检测间隔（tick） */
-    private static final int BALL_PICKUP_INTERVAL = 5;
-    /** 属性球吸附半径（格） */
-    private static final double BALL_PICKUP_RADIUS = 1.5;
+    /** 属性球吸附范围（格），参考经验球机制：范围内自动飞向玩家 */
+    private static final double BALL_ATTRACT_RANGE = 3.0;
+    /** 属性球被吸收的距离（格，中心距离） */
+    private static final double BALL_PICKUP_DISTANCE_SQ = 1.0;
+    /** 属性球飞向玩家的速度（格/tick） */
+    private static final double BALL_FLY_SPEED = 0.4;
     /** 属性球已被处理的标记（防同一 tick 内多玩家重复拾取） */
     private static final String BALL_CLAIMED = "monsterwaves_ball_claimed";
 
@@ -55,16 +57,29 @@ public final class ModEventHandler {
         }
     }
 
+    /**
+     * 属性球采用经验球式机制（服务端每 tick 处理）：
+     * - 进入吸附范围（3 格）后自动飞向玩家
+     * - 进入吸收距离（1 格）后立即应用属性并消失，永不进入背包
+     * （Forge 1.20.1 无拾取前事件，且自定义实体留待后续阶段，此方案最贴近经验球体验）
+     */
     private static void pickupBalls(ServerLevel level) {
-        if (level.getServer().getTickCount() % BALL_PICKUP_INTERVAL != 0) {
-            return;
-        }
         for (ServerPlayer player : level.players()) {
             List<ItemEntity> balls = level.getEntitiesOfClass(ItemEntity.class,
-                    player.getBoundingBox().inflate(BALL_PICKUP_RADIUS),
+                    player.getBoundingBox().inflate(BALL_ATTRACT_RANGE),
                     e -> e.getItem().getItem() instanceof AttributeBallItem);
             for (ItemEntity ball : balls) {
-                applyBall(player, ball);
+                if (ball.getPersistentData().getBoolean(BALL_CLAIMED)) {
+                    continue;
+                }
+                if (ball.distanceToSqr(player) <= BALL_PICKUP_DISTANCE_SQ) {
+                    applyBall(player, ball);
+                } else {
+                    // 经验球式自动飞向玩家
+                    net.minecraft.world.phys.Vec3 dir =
+                            player.position().subtract(ball.position()).normalize();
+                    ball.setDeltaMovement(dir.scale(BALL_FLY_SPEED));
+                }
             }
         }
     }
@@ -121,8 +136,10 @@ public final class ModEventHandler {
         ItemStack stack = new ItemStack(ModItems.getBall(type));
         ItemEntity ball = new ItemEntity(level,
                 entity.getX(), entity.getY() + 0.5, entity.getZ(), stack);
-        // 属性球永不进入背包，只由本模组的接触检测处理
+        // 属性球永不进入背包，只由本模组的接触检测处理；
+        // 不受重力，像经验球一样悬浮并飞向玩家
         ball.setNeverPickUp();
+        ball.setNoGravity(true);
         level.addFreshEntity(ball);
     }
 
