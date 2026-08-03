@@ -15,6 +15,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -39,8 +40,10 @@ public final class ModEventHandler {
     private static final double BALL_ATTRACT_RANGE = 3.0;
     /** 属性球被吸收的距离（格，中心距离） */
     private static final double BALL_PICKUP_DISTANCE_SQ = 1.0;
-    /** 属性球飞向玩家的速度（格/tick） */
-    private static final double BALL_FLY_SPEED = 0.4;
+    /** 属性球重力加速度（经验球为 0.04 格/tick²，用于抵消上飘并自然下落） */
+    private static final double BALL_GRAVITY = 0.04;
+    /** 属性球出生后不被吸引的时长（tick，经验球为 10 = 0.5 秒，防出生即吸） */
+    private static final int BALL_ATTRACT_DELAY = 10;
     /** 属性球已被处理的标记（防同一 tick 内多玩家重复拾取） */
     private static final String BALL_CLAIMED = "monsterwaves_ball_claimed";
 
@@ -59,7 +62,8 @@ public final class ModEventHandler {
 
     /**
      * 属性球采用经验球式机制（服务端每 tick 处理）：
-     * - 进入吸附范围（3 格）后自动飞向玩家
+     * - 出生 0.5 秒内只受重力自由下落，不被吸引
+     * - 进入吸附范围（3 格）后按距离衰减地加速飞向玩家（胸口高度）
      * - 进入吸收距离（1 格）后立即应用属性并消失，永不进入背包
      * （Forge 1.20.1 无拾取前事件，且自定义实体留待后续阶段，此方案最贴近经验球体验）
      */
@@ -75,13 +79,48 @@ public final class ModEventHandler {
                 if (ball.distanceToSqr(player) <= BALL_PICKUP_DISTANCE_SQ) {
                     applyBall(player, ball);
                 } else {
-                    // 经验球式自动飞向玩家
-                    net.minecraft.world.phys.Vec3 dir =
-                            player.position().subtract(ball.position()).normalize();
-                    ball.setDeltaMovement(dir.scale(BALL_FLY_SPEED));
+                    attractBall(ball, player);
                 }
             }
         }
+    }
+
+    /**
+     * 经验球式移动（对齐原版 ExperienceOrb.tick 逻辑）：
+     * 重力 + 空气阻力 + 向玩家加速（位移归一化到吸引范围，越近加速度越大），
+     * 而非直接设置速度，避免球无限上飘；目标高度为玩家胸口（eyeHeight/2）。
+     */
+    private static void attractBall(ItemEntity ball, ServerPlayer player) {
+        Vec3 motion = ball.getDeltaMovement();
+
+        // 出生延迟：0.5 秒内只受重力下落，不被吸引
+        if (ball.tickCount < BALL_ATTRACT_DELAY) {
+            motion = motion.add(0.0, -BALL_GRAVITY, 0.0).multiply(0.98, 0.98, 0.98);
+            ball.setDeltaMovement(motion);
+            ball.hasImpulse = true;
+            return;
+        }
+
+        // 重力 + 空气阻力（经验球：每 tick 减 0.04，速度乘 0.98）
+        motion = motion.add(0.0, -BALL_GRAVITY, 0.0).multiply(0.98, 0.98, 0.98);
+
+        // 向玩家胸口加速：位移归一化到吸引范围，d12=1-归一化距离，越近加速度越大
+        Vec3 toPlayer = new Vec3(
+                player.getX() - ball.getX(),
+                player.getY() + player.getEyeHeight() * 0.5 - ball.getY(),
+                player.getZ() - ball.getZ());
+        double dist = toPlayer.length();
+        if (dist > 0.01) {
+            Vec3 dir = toPlayer.scale(1.0 / dist);
+            double d12 = 1.0 - dist / BALL_ATTRACT_RANGE;
+            if (d12 > 0.0) {
+                double accel = d12 * d12 * 0.1;
+                motion = motion.add(dir.x * accel, dir.y * accel, dir.z * accel);
+            }
+        }
+
+        ball.setDeltaMovement(motion);
+        ball.hasImpulse = true; // 强制将速度同步到客户端，保证渲染跟随
     }
 
     private static void applyBall(ServerPlayer player, ItemEntity ball) {
@@ -137,7 +176,7 @@ public final class ModEventHandler {
         ItemEntity ball = new ItemEntity(level,
                 entity.getX(), entity.getY() + 0.5, entity.getZ(), stack);
         // 属性球永不进入背包，只由本模组的接触检测处理；
-        // 不受重力，像经验球一样悬浮并飞向玩家
+        // 关闭 ItemEntity 自带重力，由服务端按经验球式逻辑模拟重力与吸附
         ball.setNeverPickUp();
         ball.setNoGravity(true);
         level.addFreshEntity(ball);
