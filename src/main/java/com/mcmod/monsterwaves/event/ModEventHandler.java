@@ -324,12 +324,13 @@ public final class ModEventHandler {
         }
         ball.getPersistentData().putBoolean(BALL_CLAIMED, true);
         AttributeBallItem ballItem = (AttributeBallItem) ball.getItem().getItem();
+        String type = ballItem.getAttributeType(ball.getItem());
         int value = MWConfig.get().ballValue;
-        PlayerDataManager.add(player, ballItem.getAttributeType(), value);
-        int total = PlayerDataManager.get(player, ballItem.getAttributeType());
+        PlayerDataManager.add(player, type, value);
+        int total = PlayerDataManager.get(player, type);
         player.displayClientMessage(
                 Component.literal("你获得了 +" + value + " ")
-                        .append(PlayerDataManager.attributeDisplayName(ballItem.getAttributeType()))
+                        .append(PlayerDataManager.attributeDisplayName(type))
                         .append(Component.literal("！当前累计：" + total))
                         .withStyle(ChatFormatting.GREEN), true);
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
@@ -501,7 +502,8 @@ public final class ModEventHandler {
     }
 
     private static void spawnBall(ServerLevel level, Vec3 pos, String type, String owner) {
-        ItemStack stack = new ItemStack(ModItems.getBall(type));
+        ItemStack stack = new ItemStack(ModItems.ATTRIBUTE_BALL.get());
+        stack.getOrCreateTag().putString(AttributeBallItem.NBT_TYPE_KEY, type);
         ItemEntity ball = new ItemEntity(level, pos.x, pos.y, pos.z, stack);
         // 属性球永不进入背包，只由本模组的接触检测处理；保留原生重力，球自然落地不飘空
         ball.setNeverPickUp();

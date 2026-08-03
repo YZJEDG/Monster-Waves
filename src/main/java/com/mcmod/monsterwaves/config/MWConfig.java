@@ -173,6 +173,7 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("ball_cleanup")
     @ConfigEntry.Gui.Tooltip()
     public List<String> cleanupItemNames = new ArrayList<>(List.of(
+            "monsterwaves:attribute_ball",
             "monsterwaves:attack_ball", "monsterwaves:health_ball", "monsterwaves:armor_ball"));
 
     /** 清理时尝试将超限属性球吸向最近玩家 */

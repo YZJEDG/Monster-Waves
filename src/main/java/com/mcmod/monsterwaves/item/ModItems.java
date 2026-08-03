@@ -19,6 +19,10 @@ public final class ModItems {
     public static final RegistryObject<Item> ARMOR_BALL = ITEMS.register("armor_ball",
             () -> new AttributeBallItem(PlayerDataManager.ARMOR));
 
+    /** 通用属性球：NBT 存实际类型名（支持自定义属性球类型），默认类型 ATTACK 仅作兜底 */
+    public static final RegistryObject<Item> ATTRIBUTE_BALL = ITEMS.register("attribute_ball",
+            () -> new AttributeBallItem(PlayerDataManager.ATK));
+
     public static final RegistryObject<Item> RETURN_CHARM = ITEMS.register("return_charm",
             ReturnCharmItem::new);
 

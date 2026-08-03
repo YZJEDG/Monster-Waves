@@ -2,6 +2,7 @@
   "item.monsterwaves.attack_ball": "攻击属性球",
   "item.monsterwaves.health_ball": "生命属性球",
   "item.monsterwaves.armor_ball": "护甲属性球",
+  "item.monsterwaves.attribute_ball": "属性球",
   "item.monsterwaves.return_charm": "返回符咒",
   "item.monsterwaves.battle_charm": "战斗符咒",
   "attribute.monsterwaves.ATTACK": "攻击力",
