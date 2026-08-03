@@ -27,12 +27,12 @@ public class MWConfig implements ConfigData {
 
     // ===== 全局（general）=====
     @ConfigEntry.Category("general")
-    @ConfigEntry.Gui.Tooltip(count = 2)
+    @ConfigEntry.Gui.Tooltip()
     public boolean enabled = true;
 
     // ===== 生成设置（spawn）=====
     @ConfigEntry.Category("spawn")
-    @ConfigEntry.Gui.Tooltip(count = 2)
+    @ConfigEntry.Gui.Tooltip()
     public int spawnInterval = 40;
 
     @ConfigEntry.Category("spawn")
@@ -55,7 +55,7 @@ public class MWConfig implements ConfigData {
 
     /** 怪物池：每项格式 "注册名:权重"，如 "minecraft:zombie:5" */
     @ConfigEntry.Category("spawn")
-    @ConfigEntry.Gui.Tooltip(count = 2)
+    @ConfigEntry.Gui.Tooltip()
     public List<String> mobPool = new ArrayList<>(List.of(
             "minecraft:zombie:5",
             "minecraft:skeleton:3",
@@ -77,7 +77,7 @@ public class MWConfig implements ConfigData {
 
     /** 非本mod生成的敌对怪物死亡是否也掉落属性球 */
     @ConfigEntry.Category("ball")
-    @ConfigEntry.Gui.Tooltip(count = 2)
+    @ConfigEntry.Gui.Tooltip()
     public boolean dropBallsFromAllMobs = true;
 
     /** 可用属性球类型（ATTACK/HEALTH/ARMOR 等） */
