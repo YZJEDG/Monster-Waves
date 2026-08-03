@@ -45,11 +45,11 @@
   "text.autoconfig.monsterwaves.option.fallTeleportY": "Fall Teleport Y",
   "text.autoconfig.monsterwaves.option.safeSpawnY": "Island Spawn Y",
   "text.autoconfig.monsterwaves.option.fallDestinationDimension": "Fall Destination Dimension",
-  "text.autoconfig.monsterwaves.option.fallToRespawnPoint": "Fall Teleport To Respawn",
-  "text.autoconfig.monsterwaves.option.fallToRespawnPoint.@Tooltip": "When falling to overworld, teleport to the player's respawn point; off uses custom fall coordinates",
+  "text.autoconfig.monsterwaves.option.fallMode": "Fall Teleport Mode",
+  "text.autoconfig.monsterwaves.option.fallMode.@Tooltip": "Respawn: overworld uses player respawn point (or world spawn), other dimensions use target spawn; Custom: use X/Y/Z below",
+  "text.autoconfig.monsterwaves.option.fallMode.RESPAWN": "Respawn Point",
+  "text.autoconfig.monsterwaves.option.fallMode.CUSTOM": "Custom Coordinates",
   "text.autoconfig.monsterwaves.option.fallDestinationX": "Fall Destination X",
   "text.autoconfig.monsterwaves.option.fallDestinationY": "Fall Destination Y",
-  "text.autoconfig.monsterwaves.option.fallDestinationZ": "Fall Destination Z",
-  "text.autoconfig.monsterwaves.option.useCustomFallDestination": "Use Custom Fall Destination",
-  "text.autoconfig.monsterwaves.option.useCustomFallDestination.@Tooltip": "When off, use the target dimension's spawn point"
+  "text.autoconfig.monsterwaves.option.fallDestinationZ": "Fall Destination Z"
 }

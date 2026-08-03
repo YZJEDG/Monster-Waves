@@ -83,27 +83,28 @@ public final class SafeDimensionManager {
             return;
         }
 
-        // 目标为主世界且开关开启：传送到玩家重生点（床/出生点）
-        if (targetKey.equals(Level.OVERWORLD) && cfg.fallToRespawnPoint) {
-            BlockPos respawn = player.getRespawnPosition();
-            if (respawn != null && player.getRespawnDimension().equals(Level.OVERWORLD)) {
-                player.teleportTo(target, respawn.getX() + 0.5, respawn.getY(), respawn.getZ() + 0.5,
-                        player.getRespawnAngle(), 0.0F);
+        // 按坠落传送方式分发
+        if (cfg.fallMode == MWConfig.FallMode.RESPAWN) {
+            if (targetKey.equals(Level.OVERWORLD)) {
+                // 主世界：传送到玩家重生点（床/出生点），无重生点则世界出生点
+                BlockPos respawn = player.getRespawnPosition();
+                if (respawn != null && player.getRespawnDimension().equals(Level.OVERWORLD)) {
+                    player.teleportTo(target, respawn.getX() + 0.5, respawn.getY(), respawn.getZ() + 0.5,
+                            player.getRespawnAngle(), 0.0F);
+                } else {
+                    BlockPos spawn = target.getSharedSpawnPos();
+                    player.teleportTo(target, spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5, 0.0F, 0.0F);
+                }
             } else {
+                // 其他维度：目标维度出生点
                 BlockPos spawn = target.getSharedSpawnPos();
                 player.teleportTo(target, spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5, 0.0F, 0.0F);
             }
             return;
         }
 
-        // 其余维度：自定义坐标或目标维度出生点
-        Vec3 dest;
-        if (cfg.useCustomFallDestination) {
-            dest = new Vec3(cfg.fallDestinationX + 0.5, cfg.fallDestinationY, cfg.fallDestinationZ + 0.5);
-        } else {
-            BlockPos spawn = target.getSharedSpawnPos();
-            dest = new Vec3(spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5);
-        }
+        // CUSTOM：自定义坐标
+        Vec3 dest = new Vec3(cfg.fallDestinationX + 0.5, cfg.fallDestinationY, cfg.fallDestinationZ + 0.5);
         player.teleportTo(target, dest.x, dest.y, dest.z, player.getYRot(), player.getXRot());
     }
 
