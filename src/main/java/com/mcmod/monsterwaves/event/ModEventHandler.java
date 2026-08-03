@@ -39,6 +39,8 @@ public final class ModEventHandler {
     private static final int BALL_PICKUP_INTERVAL = 5;
     /** 属性球吸附半径（格） */
     private static final double BALL_PICKUP_RADIUS = 1.5;
+    /** 属性球已被处理的标记（防同一 tick 内多玩家重复拾取） */
+    private static final String BALL_CLAIMED = "monsterwaves_ball_claimed";
 
     @SubscribeEvent
     public static void onServerTick(TickEvent.ServerTickEvent event) {
@@ -68,6 +70,10 @@ public final class ModEventHandler {
     }
 
     private static void applyBall(ServerPlayer player, ItemEntity ball) {
+        if (ball.getPersistentData().getBoolean(BALL_CLAIMED)) {
+            return;
+        }
+        ball.getPersistentData().putBoolean(BALL_CLAIMED, true);
         AttributeBallItem ballItem = (AttributeBallItem) ball.getItem().getItem();
         PlayerDataManager.add(player, ballItem.getAttributeType(), MWConfig.BALL_VALUE);
         int total = PlayerDataManager.get(player, ballItem.getAttributeType());
@@ -113,8 +119,11 @@ public final class ModEventHandler {
         }
         String type = MWConfig.BALL_TYPES[entity.getRandom().nextInt(MWConfig.BALL_TYPES.length)];
         ItemStack stack = new ItemStack(ModItems.getBall(type));
-        level.addFreshEntity(new ItemEntity(level,
-                entity.getX(), entity.getY() + 0.5, entity.getZ(), stack));
+        ItemEntity ball = new ItemEntity(level,
+                entity.getX(), entity.getY() + 0.5, entity.getZ(), stack);
+        // 属性球永不进入背包，只由本模组的接触检测处理
+        ball.setNeverPickUp();
+        level.addFreshEntity(ball);
     }
 
     @SubscribeEvent

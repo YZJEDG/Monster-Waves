@@ -47,10 +47,16 @@ public final class PlayerDataManager {
     }
 
     public static void add(Player player, String type, int amount) {
+        if (player.level().isClientSide) {
+            return;
+        }
         set(player, type, get(player, type) + amount);
     }
 
     public static void set(Player player, String type, int amount) {
+        if (player.level().isClientSide) {
+            return;
+        }
         attrs(player).putInt(type, amount);
         applyAll(player);
     }

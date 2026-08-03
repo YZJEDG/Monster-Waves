@@ -94,15 +94,20 @@ public final class MobSpawnManager {
             if (!level.isLoaded(pos)) {
                 break;
             }
-            BlockState here = level.getBlockState(pos);
-            if (here.isAir() && level.getBlockState(pos.below()).isSolid()) {
-                return pos.immutable();
+            // 注意：在不可变副本上调用 below()，避免 MutableBlockPos 原地修改
+            BlockPos candidate = pos.immutable();
+            if (level.getBlockState(candidate).isAir()
+                    && level.getBlockState(candidate.below()).isSolid()) {
+                return candidate;
             }
         }
         return null;
     }
 
     private static EntityType<?> pickEntityType(RandomSource random) {
+        if (MOB_TYPES.isEmpty()) {
+            return null;
+        }
         int total = 0;
         for (int w : MOB_WEIGHTS) {
             total += w;
@@ -119,6 +124,9 @@ public final class MobSpawnManager {
 
     private static void spawnMob(ServerLevel level, BlockPos pos, double difficulty) {
         EntityType<?> type = pickEntityType(level.getRandom());
+        if (type == null) {
+            return;
+        }
         Mob mob = (Mob) type.spawn(level, pos, MobSpawnType.MOB_SUMMONED);
         if (mob == null) {
             return;

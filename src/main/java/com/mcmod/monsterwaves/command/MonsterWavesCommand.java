@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
@@ -84,14 +85,17 @@ public final class MonsterWavesCommand {
         double difficulty = StageManager.getDifficulty(level.getServer());
         int spawned = 0;
         for (int i = 0; i < count; i++) {
-            Mob mob = (Mob) type.spawn(level,
+            Entity entity = type.spawn(level,
                     player.blockPosition().offset(level.getRandom().nextInt(5) - 2, 0,
                             level.getRandom().nextInt(5) - 2),
                     MobSpawnType.COMMAND);
-            if (mob != null) {
+            if (entity instanceof Mob mob) {
                 mob.getPersistentData().putBoolean(MobSpawnManager.MARKER, true);
                 MobSpawnManager.applyDifficultyTo(mob, difficulty);
                 spawned++;
+            } else if (entity != null) {
+                // 非 Mob 实体（如物品/经验球）不适用本模组流程，直接移除
+                entity.discard();
             }
         }
         int finalSpawned = spawned;

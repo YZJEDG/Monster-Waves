@@ -41,6 +41,7 @@ public class StageData extends SavedData {
             return false;
         }
         timer++;
+        setDirty(); // 计时器持续变化，标记持久化以便跨重启保留阶段进度
         if (timer >= stage.durationTicks()) {
             index = Math.floorMod(index + 1, StageManager.STAGES.size());
             timer = 0;
