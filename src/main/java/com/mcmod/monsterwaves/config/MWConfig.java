@@ -170,7 +170,13 @@ public class MWConfig implements ConfigData {
 
         @Override
         public String toString() {
-            return item + " x" + minCount + "-" + maxCount + " (" + (int) (chance * 100) + "%)";
+            // 列表项显示本地化物品名（中文环境显示中文名）+ 数量/概率
+            net.minecraft.world.item.Item item = net.minecraftforge.registries.ForgeRegistries.ITEMS
+                    .getValue(net.minecraft.resources.ResourceLocation.tryParse(this.item));
+            String name = item == null
+                    ? this.item
+                    : item.getName(new net.minecraft.world.item.ItemStack(item)).getString();
+            return name + " ×" + minCount + "-" + maxCount + "（" + (int) (chance * 100) + "%）";
         }
     }
 
