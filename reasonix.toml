@@ -1,0 +1,2 @@
+[permissions]
+allow = ["Bash=java -version 2>&1; echo \"---\"; where java 2>/dev/null || which java 2>/dev/null; echo \"---\"; echo \"JAVA_HOME=$JAVA_HOME\"", "Bash=gradle -v 2>&1 | head -20; echo \"---\"; ls \"E:/Saved/MOD/MC MOD/\" 2>/dev/null | head -30"]

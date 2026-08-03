@@ -1,0 +1,8 @@
+{
+  "item.monsterwaves.attack_ball": "攻击属性球",
+  "item.monsterwaves.health_ball": "生命属性球",
+  "item.monsterwaves.armor_ball": "护甲属性球",
+  "attribute.monsterwaves.ATTACK": "攻击力",
+  "attribute.monsterwaves.HEALTH": "生命值上限",
+  "attribute.monsterwaves.ARMOR": "护甲值"
+}

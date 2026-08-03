@@ -1,0 +1,19 @@
+# Gradle / Forge
+build/
+.gradle/
+run/
+out/
+
+# 本地构建环境缓存（大文件，不入库）
+.jdk/
+.gradle_home/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+bin/
+
+# 系统
+Thumbs.db
+.DS_Store

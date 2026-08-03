@@ -1,0 +1,8 @@
+{
+  "item.monsterwaves.attack_ball": "Attack Ball",
+  "item.monsterwaves.health_ball": "Health Ball",
+  "item.monsterwaves.armor_ball": "Armor Ball",
+  "attribute.monsterwaves.ATTACK": "Attack Damage",
+  "attribute.monsterwaves.HEALTH": "Max Health",
+  "attribute.monsterwaves.ARMOR": "Armor"
+}

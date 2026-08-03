@@ -1,0 +1,129 @@
+buildscript {
+    repositories {
+        maven { url = "https://maven.aliyun.com/repository/public" }
+        maven { url = "https://maven.aliyun.com/repository/gradle-plugin" }
+        mavenCentral()
+        maven { url = "https://maven.minecraftforge.net/" }
+        maven { url = "https://maven.parchmentmc.org" }
+    }
+}
+
+plugins {
+    id "eclipse"
+    id "idea"
+    id "maven-publish"
+    id "net.minecraftforge.gradle" version "[6.0,6.2)"
+    id "org.parchmentmc.librarian.forgegradle" version "1.+"
+}
+
+version = "0.1.0"
+group = "com.mcmod.monsterwaves"
+
+base {
+    archivesName = "monsterwaves"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println "Java: ${System.getProperty("java.version")}  JVM: ${System.getProperty("java.vm.version")}(${System.getProperty("java.vendor")})  Arch: ${System.getProperty("os.arch")}"
+
+minecraft {
+    mappings channel: "parchment", version: "2023.09.03-1.20.1"
+    copyIdeResources = true
+    runs {
+        configureEach {
+            workingDirectory project.file("run")
+            property "forge.logging.markers", "REGISTRIES"
+            property "forge.logging.console.level", "debug"
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+        client {
+            property "forge.enabledGameTestNamespaces", mod_id
+        }
+        server {
+            property "forge.enabledGameTestNamespaces", mod_id
+            args "--nogui"
+        }
+        gameTestServer {
+            property "forge.enabledGameTestNamespaces", mod_id
+        }
+        data {
+            workingDirectory project.file("run")
+            args "--mod", mod_id, "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources/")
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir "src/generated/resources" }
+
+repositories {
+    maven { url = "https://maven.aliyun.com/repository/public" }
+    mavenCentral()
+    maven { url = "https://maven.minecraftforge.net/" }
+    maven { url = "https://maven.parchmentmc.org" }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:1.20.1-47.2.0"
+}
+
+tasks.named("processResources", ProcessResources).configure {
+    filteringCharset = "UTF-8"
+    var replaceProperties = [
+            minecraft_version: "1.20.1",
+            minecraft_version_range: "[1.20.1,1.21)",
+            forge_version: "47.2.0",
+            forge_version_range: "[47,)",
+            loader_version_range: "[47,)",
+            mod_id: "monsterwaves",
+            mod_name: "怪物狂潮 Monster Waves",
+            mod_license: "MIT",
+            mod_version: "0.1.0",
+            mod_authors: "MCModDev"
+    ]
+    inputs.properties replaceProperties
+    filesMatching(["META-INF/mods.toml"]) {
+        expand replaceProperties
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "monsterwaves",
+                "Specification-Vendor"    : "MCModDev",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : "MCModDev",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd HH:mm:ss")
+        ])
+    }
+}
+
+jar.finalizedBy("reobfJar")
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
