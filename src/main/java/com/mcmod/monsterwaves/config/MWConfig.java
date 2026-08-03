@@ -61,6 +61,31 @@ public class MWConfig implements ConfigData {
             "minecraft:skeleton:3",
             "minecraft:creeper:2"));
 
+    // ===== 阶段系统（stage）=====
+    /** 阶段列表（可分别调整各阶段难度/时长；字段 id/difficulty/duration 见开发手册"阶段字段"表） */
+    @ConfigEntry.Category("stage")
+    @ConfigEntry.Gui.Tooltip()
+    public List<StageConfig> stages = new ArrayList<>(List.of(
+            new StageConfig("萌芽期", 1.0, 6000),
+            new StageConfig("激战期", 2.5, 12000),
+            new StageConfig("终局之战", 5.0, -1)));
+
+    /** 阶段条目：id 名称 / difficulty 难度系数（参与各类运算）/ duration 时长 tick（-1 无限） */
+    public static class StageConfig {
+        public String id = "萌芽期";
+        public double difficulty = 1.0;
+        public int duration = 6000;
+
+        public StageConfig() {
+        }
+
+        public StageConfig(String id, double difficulty, int duration) {
+            this.id = id;
+            this.difficulty = difficulty;
+            this.duration = duration;
+        }
+    }
+
     // ===== 难度参数（difficulty）=====
     @ConfigEntry.Category("difficulty")
     public double healthBonusPerLevel = 0.2;

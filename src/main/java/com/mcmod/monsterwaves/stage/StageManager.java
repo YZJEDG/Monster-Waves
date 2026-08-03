@@ -17,13 +17,14 @@ public final class StageManager {
         }
     }
 
-    public static final List<Stage> STAGES = List.of(
-            new Stage("萌芽期", 1.0, 6000L),
-            new Stage("激战期", 2.5, 12000L),
-            new Stage("终局之战", 5.0, -1L)
-    );
-
     private StageManager() {
+    }
+
+    /** 从配置读取阶段列表（各阶段难度/时长可分别调整） */
+    public static java.util.List<Stage> getStages() {
+        return com.mcmod.monsterwaves.config.MWConfig.get().stages.stream()
+                .map(s -> new Stage(s.id, s.difficulty, s.duration))
+                .toList();
     }
 
     public static StageData getData(MinecraftServer server) {
@@ -50,6 +51,7 @@ public final class StageManager {
         server.getPlayerList().broadcastSystemMessage(msg, false);
     }
 
+    /** 当前生效的难度系数 = 当前阶段难度（各阶段分别配置），参与各类参数运算 */
     public static double getDifficulty(MinecraftServer server) {
         return getData(server).currentStage().difficulty();
     }

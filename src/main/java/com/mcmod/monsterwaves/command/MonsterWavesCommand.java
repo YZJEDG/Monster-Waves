@@ -60,7 +60,7 @@ public final class MonsterWavesCommand {
     /** Tab 补全：可用阶段 id */
     private static final SuggestionProvider<CommandSourceStack> SUGGEST_STAGE_IDS = (ctx, builder) ->
             SharedSuggestionProvider.suggest(
-                    StageManager.STAGES.stream().map(StageManager.Stage::id).toList(), builder);
+                    StageManager.getStages().stream().map(StageManager.Stage::id).toList(), builder);
 
     /** Tab 补全：属性球类型 */
     private static final SuggestionProvider<CommandSourceStack> SUGGEST_BALL_TYPES = (ctx, builder) ->
@@ -239,8 +239,9 @@ public final class MonsterWavesCommand {
         String id = StringArgumentType.getString(ctx, "id");
         MinecraftServer server = ctx.getSource().getServer();
         StageData data = StageManager.getData(server);
-        for (int i = 0; i < StageManager.STAGES.size(); i++) {
-            if (StageManager.STAGES.get(i).id().equals(id)) {
+        java.util.List<StageManager.Stage> stages = StageManager.getStages();
+        for (int i = 0; i < stages.size(); i++) {
+            if (stages.get(i).id().equals(id)) {
                 data.setStage(i);
                 StageManager.broadcastSwitch(server, "手动切换");
                 return 1;
@@ -251,7 +252,7 @@ public final class MonsterWavesCommand {
     }
 
     private static String stageIds() {
-        return String.join("、", StageManager.STAGES.stream().map(StageManager.Stage::id).toList());
+        return String.join("、", StageManager.getStages().stream().map(StageManager.Stage::id).toList());
     }
 
     /** 校验属性类型是否合法，非法时向执行者报错并返回 false */
