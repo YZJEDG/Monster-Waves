@@ -68,8 +68,26 @@ public final class SafeDimensionManager {
         return true;
     }
 
-    /** 跳下空岛传送：safe 维度玩家 Y 低于阈值时传送至目标维度（主世界则传玩家重生点） */
-    public static void handleFall(ServerPlayer player) {
+    /** 返回主世界（任意维度可用，`/monsterwaves leave`）：优先玩家重生点（床），否则主世界出生点 */
+    public static boolean teleportToSpawn(ServerPlayer player) {
+        MinecraftServer server = player.getServer();
+        if (server == null) {
+            return false;
+        }
+        ServerLevel overworld = server.overworld();
+        BlockPos respawn = player.getRespawnPosition();
+        if (respawn != null && Level.OVERWORLD.equals(player.getRespawnDimension())) {
+            player.teleportTo(overworld, respawn.getX() + 0.5, respawn.getY(), respawn.getZ() + 0.5,
+                    player.getRespawnAngle(), 0.0F);
+        } else {
+            BlockPos spawn = overworld.getSharedSpawnPos();
+            player.teleportTo(overworld, spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5, 0.0F, 0.0F);
+        }
+        player.displayClientMessage(Component.literal("已返回主世界"), true);
+        return true;
+    }
+
+    /** 跳下空岛传送：safe 维度玩家 Y 低于阈值时传送至目标维度（主世界则传玩家重生点） */    public static void handleFall(ServerPlayer player) {
         MWConfig cfg = MWConfig.get();
         MinecraftServer server = player.getServer();
         if (server == null) {

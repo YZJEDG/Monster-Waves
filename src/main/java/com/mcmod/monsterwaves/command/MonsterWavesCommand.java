@@ -94,6 +94,8 @@ public final class MonsterWavesCommand {
                 .then(Commands.literal("battle")
                         .requires(src -> src.hasPermission(2))
                         .executes(MonsterWavesCommand::battle))
+                .then(Commands.literal("leave")
+                        .executes(MonsterWavesCommand::leave))
                 .then(Commands.literal("stage")
                         .then(Commands.literal("info").executes(MonsterWavesCommand::stageInfo))
                         .then(Commands.literal("next").requires(src -> src.hasPermission(2))
@@ -285,6 +287,12 @@ public final class MonsterWavesCommand {
     private static int battle(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         return ArenaDimensionManager.teleportToArena(player) ? 1 : 0;
+    }
+
+    /** 返回主世界（全员）：优先玩家重生点（床），否则主世界出生点；从安全/战斗维度返回的常规手段 */
+    private static int leave(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        return SafeDimensionManager.teleportToSpawn(player) ? 1 : 0;
     }
 
     /** 重置并重建空岛（调试/刷新景观用） */
