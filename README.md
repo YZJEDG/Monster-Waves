@@ -1,6 +1,6 @@
 # 怪物狂潮（Monster Waves）
 
-**Minecraft 1.20.1 · Forge 47.4.x** · 正式版 **v1.0.0**
+**Minecraft 1.20.1 · Forge 47.4.x** · 正式版 **v1.0.0** · **MIT License**
 
 以怪物波次生存为核心的整合包增强 Mod：阶段难度递进、精英/Boss、技能点加点、枪械属性加成（TaCZ）、统一掉落、大范围拾取、专属维度与传送符咒。
 
