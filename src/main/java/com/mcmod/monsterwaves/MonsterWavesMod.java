@@ -5,7 +5,6 @@ import com.mcmod.monsterwaves.event.ModEventHandler;
 import com.mcmod.monsterwaves.item.ModItems;
 import com.mcmod.monsterwaves.network.NetworkHandler;
 import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -56,10 +55,10 @@ public class MonsterWavesMod {
                 MonsterWavesMod.LOGGER.warn("TaCZ 事件注册失败，枪械苦痛传递不可用（其余功能正常）", t);
             }
         }
-        // 注册 Cloth Config 配置（config/monsterwaves.json5 标准 JSON5，支持注释/尾逗号，手编友好；GUI 自动集成 Mods 列表）
-        // JSON5 配置（config/monsterwaves.json5）：Jankson 序列化器，保留全部结构与 GUI，且允许玩家手编时写注释；
-        // Forge 原生 serverconfig(TOML) 不支持 Map/嵌套对象（attributeConfigs），故用 Cloth + Jankson 序列化器。
-        AutoConfig.register(MWConfig.class, JanksonConfigSerializer::new);
+        // 注册 Cloth Config 配置（config/monsterwaves.json5 JSON5，支持注释/尾逗号，手编友好；GUI 自动集成 Mods 列表）
+        // 自定义 Json5ConfigSerializer：Jankson 解析（容忍注释）+ Gson 覆盖反序列化（避免 Jankson 默认 List/Map 追加语义叠加默认值）；
+        // Forge 原生 serverconfig(TOML) 不支持 Map/嵌套对象（attributeConfigs），故用 Cloth + 自定义 JSON5 序列化器。
+        AutoConfig.register(MWConfig.class, com.mcmod.monsterwaves.config.Json5ConfigSerializer::new);
         // 条件显示：开启"传送到重生点"时隐藏自定义坐标字段（fallDestinationX/Y/Z）
         AutoConfig.getGuiRegistry(MWConfig.class).registerPredicateTransformer(
                 (entries, key, field, config, defaults, registry) ->
