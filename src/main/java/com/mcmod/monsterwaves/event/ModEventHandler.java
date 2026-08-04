@@ -381,7 +381,7 @@ public final class ModEventHandler {
         event.setDroppedExperience(newXp);
     }
 
-    /** 统一掉落：普通表所有怪；精英追加精英表；Boss 再追加 Boss 表（概率/数量受难度影响） */
+    /** 统一掉落：普通表所有怪；精英追加精英表；Boss 再追加 Boss 表；再加阶段掉落表（概率/数量受难度影响） */
     private static void dropLoot(LivingEntity entity, ServerLevel level, double difficulty, String owner) {
         MWConfig cfg = MWConfig.get();
         if (!cfg.lootEnabled) {
@@ -394,6 +394,35 @@ public final class ModEventHandler {
         } else if (EliteBossHandler.isElite(entity)) {
             dropTable(entity, level, difficulty, owner, cfg.eliteLoot);
         }
+        // v1.0.7 阶段掉落表（追加）：匹配当前阶段 id + 怪物等级（tier）
+        String stageId = StageManager.getData(level.getServer()).currentStage().id();
+        for (MWConfig.StageLoot sl : cfg.stageLoot) {
+            if (sl == null || sl.entries == null) {
+                continue;
+            }
+            if (!sl.stageId.isEmpty() && !sl.stageId.equals(stageId)) {
+                continue;
+            }
+            if (!matchesTier(sl.tier, entity)) {
+                continue;
+            }
+            dropTable(entity, level, difficulty, owner, sl.entries);
+        }
+    }
+
+    /** 阶段掉落 tier 匹配：any=全部 / normal=普通 / elite=精英(不含Boss) / boss=Boss */
+    private static boolean matchesTier(String tier, LivingEntity entity) {
+        boolean boss = EliteBossHandler.isBoss(entity);
+        boolean elite = EliteBossHandler.isElite(entity);
+        if (tier == null) {
+            return true;
+        }
+        return switch (tier) {
+            case "normal" -> !elite && !boss;
+            case "elite" -> elite && !boss;
+            case "boss" -> boss;
+            default -> true; // any
+        };
     }
 
     /** 掉落一张掉落表 */

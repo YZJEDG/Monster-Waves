@@ -68,6 +68,8 @@
   "text.autoconfig.monsterwaves.option.eliteLoot.@Tooltip": "仅精英怪掉落（Boss 也会掉落本表）",
   "text.autoconfig.monsterwaves.option.bossLoot": "Boss掉落表",
   "text.autoconfig.monsterwaves.option.bossLoot.@Tooltip": "仅Boss掉落",
+  "text.autoconfig.monsterwaves.option.stageLoot": "阶段掉落表",
+  "text.autoconfig.monsterwaves.option.stageLoot.@Tooltip": "按阶段+怪物等级追加掉落：stageId=阶段id（空=所有阶段）、tier=any/normal/elite/boss、entries=掉落条目；与普通/精英/Boss表叠加",
   "text.autoconfig.monsterwaves.option.normalLoot.@Tooltip": "每条：物品注册名、NBT（可空）、数量范围、概率、是否受抢夺影响（字段详见开发手册）",
   "text.autoconfig.monsterwaves.option.normalLoot.item": "物品",
   "text.autoconfig.monsterwaves.option.normalLoot.nbt": "NBT",

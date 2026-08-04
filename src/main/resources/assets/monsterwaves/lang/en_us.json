@@ -69,6 +69,8 @@
   "text.autoconfig.monsterwaves.option.eliteLoot.@Tooltip": "Only elites drop this (bosses also drop it)",
   "text.autoconfig.monsterwaves.option.bossLoot": "Boss Loot Table",
   "text.autoconfig.monsterwaves.option.bossLoot.@Tooltip": "Only bosses drop this",
+  "text.autoconfig.monsterwaves.option.stageLoot": "Stage Loot Table",
+  "text.autoconfig.monsterwaves.option.stageLoot.@Tooltip": "Per-stage bonus loot: stageId (empty=all stages), tier (any/normal/elite/boss), entries; stacked on top of normal/elite/boss tables",
   "text.autoconfig.monsterwaves.option.normalLoot.@Tooltip": "Each: item id, NBT (optional), count range, chance, looting-affected (fields see dev manual)",
   "text.autoconfig.monsterwaves.option.normalLoot.item": "Item",
   "text.autoconfig.monsterwaves.option.normalLoot.nbt": "NBT",

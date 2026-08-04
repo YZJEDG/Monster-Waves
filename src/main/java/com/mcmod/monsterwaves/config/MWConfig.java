@@ -82,6 +82,19 @@ public class MWConfig implements ConfigData {
                 e.maxCount = Math.max(e.minCount, Math.min(4096, e.maxCount));
             }
         }
+        // v1.0.7 阶段掉落表校验：tier 非法回退 any、stageId 判空、entries 同掉落条目规则
+        if (stageLoot == null) stageLoot = new ArrayList<>();
+        stageLoot.removeIf(s -> s == null || s.entries == null);
+        for (StageLoot s : stageLoot) {
+            if (s.stageId == null) s.stageId = "";
+            if (s.tier == null || !s.tier.matches("any|normal|elite|boss")) s.tier = "any";
+            s.entries.removeIf(e -> e == null || e.item == null || e.item.isBlank());
+            for (LootEntry e : s.entries) {
+                e.chance = Math.max(0.0, Math.min(1.0, e.chance));
+                e.minCount = Math.max(1, e.minCount);
+                e.maxCount = Math.max(e.minCount, Math.min(4096, e.maxCount));
+            }
+        }
 
         // ===== experience =====
         experienceMultiplier = Math.max(0.0, experienceMultiplier);
@@ -454,6 +467,18 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("loot")
     @ConfigEntry.Gui.Tooltip()
     public List<LootEntry> bossLoot = new ArrayList<>();
+
+    /** 阶段掉落表（v1.0.7）：按阶段 + 怪物等级（普通/精英/Boss）追加掉落；stageId 空=所有阶段、tier=any/normal/elite/boss */
+    @ConfigEntry.Category("loot")
+    @ConfigEntry.Gui.Tooltip()
+    public List<StageLoot> stageLoot = new ArrayList<>();
+
+    /** 阶段掉落条目：stageId 阶段id（空=所有阶段）/ tier 怪物等级（any=全部、normal=普通、elite=精英(不含Boss)、boss=Boss）/ entries 掉落条目 */
+    public static class StageLoot {
+        public String stageId = "";
+        public String tier = "any";
+        public List<LootEntry> entries = new ArrayList<>();
+    }
 
     /** 掉落条目：item 注册名 / nbt（可选）/ min-max 数量 / 概率（0~1）/ 是否受抢夺影响 */
     public static class LootEntry {
