@@ -3,7 +3,7 @@
   "pattern": [" P ", "PXP", " P "],
   "key": {
     "P": { "item": "minecraft:ender_pearl" },
-    "X": { "item": "minecraft:golden_apple" }
+    "X": { "item": "minecraft:compass" }
   },
-  "result": { "item": "monsterwaves:return_charm", "count": 1 }
+  "result": { "item": "monsterwaves:home_charm", "count": 1 }
 }

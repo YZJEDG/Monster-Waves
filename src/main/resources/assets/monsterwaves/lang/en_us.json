@@ -1,6 +1,7 @@
 {
   "item.monsterwaves.return_charm": "Return Charm",
   "item.monsterwaves.battle_charm": "Battle Charm",
+  "item.monsterwaves.home_charm": "Home Charm",
   "key.categories.monsterwaves": "Monster Waves",
   "key.monsterwaves.skill_gui": "Open Skill GUI",
   "text.autoconfig.monsterwaves.title": "Monster Waves Config",

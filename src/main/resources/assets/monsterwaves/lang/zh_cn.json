@@ -1,6 +1,7 @@
 {
   "item.monsterwaves.return_charm": "返回符咒",
   "item.monsterwaves.battle_charm": "战斗符咒",
+  "item.monsterwaves.home_charm": "回归符咒",
   "key.categories.monsterwaves": "怪物狂潮 Monster Waves",
   "key.monsterwaves.skill_gui": "打开技能加点界面",
   "text.autoconfig.monsterwaves.title": "怪物狂潮 Monster Waves 配置",

@@ -17,6 +17,10 @@ public final class ModItems {
     public static final RegistryObject<Item> BATTLE_CHARM = ITEMS.register("battle_charm",
             BattleCharmItem::new);
 
+    /** 回归符咒：右键回主世界重生点 */
+    public static final RegistryObject<Item> HOME_CHARM = ITEMS.register("home_charm",
+            HomeCharmItem::new);
+
     private ModItems() {
     }
 }
