@@ -35,7 +35,12 @@ public final class ModAttributes {
 
     /** 将测试属性挂到玩家属性表（mod 事件总线，EntityAttributeModificationEvent） */
     public static void onAttributeModification(EntityAttributeModificationEvent event) {
-        event.add(EntityType.PLAYER, GUN_FIRE_RATE.get());
-        event.add(EntityType.PLAYER, GUN_RELOAD_SPEED.get());
+        try {
+            event.add(EntityType.PLAYER, GUN_FIRE_RATE.get());
+            event.add(EntityType.PLAYER, GUN_RELOAD_SPEED.get());
+            com.mcmod.monsterwaves.MonsterWavesMod.LOGGER.info("[MonsterWaves] tacz 测试属性已挂载到玩家（gun_fire_rate / gun_reload_speed）");
+        } catch (Exception e) {
+            com.mcmod.monsterwaves.MonsterWavesMod.LOGGER.error("[MonsterWaves] tacz 属性挂载失败", e);
+        }
     }
 }

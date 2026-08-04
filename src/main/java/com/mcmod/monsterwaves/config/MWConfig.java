@@ -176,6 +176,8 @@ public class MWConfig implements ConfigData {
             "minecraft:generic.movement_speed", new AttributeConfig(true, true, 50),
             "minecraft:generic.attack_speed", new AttributeConfig(true, true, 50),
             "minecraft:generic.block_break_speed", new AttributeConfig(true, true, 50),
+            "minecraft:generic.luck", new AttributeConfig(true, true, 50),
+            "minecraft:generic.armor_toughness", new AttributeConfig(true, true, 50),
             // 额外属性（tacz 测试）：百分比型
             "tacz:gun_fire_rate", new AttributeConfig(true, true, 50),
             "tacz:gun_reload_speed", new AttributeConfig(true, true, 50)));
