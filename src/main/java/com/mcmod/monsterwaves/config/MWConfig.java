@@ -198,16 +198,16 @@ public class MWConfig implements ConfigData {
      */
     private static List<StageConfig> buildDefaultStages() {
         List<StageConfig> list = new ArrayList<>();
-        list.add(new StageConfig("🌱 萌芽期", 1.0, 3000, 1.0, 1.0, 1.0));
-        list.add(new StageConfig("🌿 成长期", 2.0, 6000, 2.5, 1.5, 1.5));
-        list.add(new StageConfig("⚔️ 激战期", 5.0, 6000, 8.0, 3.0, 3.0));
-        list.add(new StageConfig("💀 鏖战期", 12.0, 9000, 30.0, 6.0, 6.0));
-        StageConfig abyss = new StageConfig("🌑 深渊期", 30.0, 9000, 100.0, 12.0, 12.0);
+        list.add(new StageConfig("萌芽期", 1.0, 3000, 1.0, 1.0, 1.0));
+        list.add(new StageConfig("成长期", 2.0, 6000, 2.5, 1.5, 1.5));
+        list.add(new StageConfig("激战期", 5.0, 6000, 8.0, 3.0, 3.0));
+        list.add(new StageConfig("鏖战期", 12.0, 9000, 30.0, 6.0, 6.0));
+        StageConfig abyss = new StageConfig("深渊期", 30.0, 9000, 100.0, 12.0, 12.0);
         abyss.mobEffects = new ArrayList<>(List.of(
                 new StageConfig.EffectEntry("minecraft:speed", 0, -1, 0.5),
                 new StageConfig.EffectEntry("minecraft:resistance", 0, -1, 0.5)));
         list.add(abyss);
-        StageConfig finale = new StageConfig("🔥 终局之战", 60.0, -1, 400.0, 25.0, 20.0);
+        StageConfig finale = new StageConfig("终局之战", 60.0, -1, 400.0, 25.0, 20.0);
         finale.mobEffects = new ArrayList<>(List.of(
                 new StageConfig.EffectEntry("minecraft:speed", 0, -1, 0.8),
                 new StageConfig.EffectEntry("minecraft:resistance", 0, -1, 0.8)));

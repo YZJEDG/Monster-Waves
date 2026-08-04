@@ -61,9 +61,9 @@ public class SkillScreen extends ButtonListBaseScreen {
     private static Component headerTitle() {
         Minecraft mc = Minecraft.getInstance();
         int level = mc.player == null ? 0 : mc.player.experienceLevel;
-        return Component.literal("技能加点  ⚡等级 " + level
-                + "  🎯技能点 " + SkillDataCache.getPoints()
-                + "  📊已分配 " + SkillDataCache.getTotalAllocated());
+        return Component.literal("技能加点  等级 " + level
+                + "  技能点 " + SkillDataCache.getPoints()
+                + "  已分配 " + SkillDataCache.getTotalAllocated());
     }
 
     // ===== 按钮构建（ButtonListBaseScreen 回调，每次 refreshWidgets 重建） =====
