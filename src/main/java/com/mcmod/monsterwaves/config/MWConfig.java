@@ -118,79 +118,91 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("difficulty")
     public double armorBonusPerLevel = 0.5;
 
-    // ===== 属性球（ball）=====
-    /** 属性球掉落总开关（关闭则不再掉落属性球，统一掉落不受影响） */
-    @ConfigEntry.Category("ball")
+    // ===== 技能点系统（skillSystem）=====
+    /** 技能点系统总开关 */
+    @ConfigEntry.Category("skillSystem")
     @ConfigEntry.Gui.Tooltip()
-    public boolean ballDropEnabled = true;
+    public boolean skillEnabled = true;
 
-    @ConfigEntry.Category("ball")
-    public double ballBaseChance = 0.2;
-
-    @ConfigEntry.Category("ball")
-    public int ballValue = 1;
-
-    /** 非本mod生成的敌对怪物死亡是否也掉落属性球 */
-    @ConfigEntry.Category("ball")
+    /** 每升一级获得的技能点 */
+    @ConfigEntry.Category("skillSystem")
     @ConfigEntry.Gui.Tooltip()
-    public boolean dropBallsFromAllMobs = true;
+    public int pointsPerLevel = 1;
 
-    /** 可用属性球类型（默认用 MC 属性注册名，如 minecraft:generic.attack_damage；也可自定义名如 MANA） */
-    @ConfigEntry.Category("ball")
-    public List<String> ballTypes = new ArrayList<>(List.of(
-            "minecraft:generic.attack_damage",
-            "minecraft:generic.max_health",
-            "minecraft:generic.armor"));
-
-    /** 属性球类型掉落权重（类型名→权重，0=不掉落该类型） */
-    @ConfigEntry.Category("ball")
+    /** 技能点获取模式：LEVEL=升级获得 / XP=每积累指定经验获得 / DISABLED=仅指令与API（开发者可监听 SkillPointGainEvent 自定义算法） */
+    @ConfigEntry.Category("skillSystem")
     @ConfigEntry.Gui.Tooltip()
-    public Map<String, Integer> attributeWeights = new java.util.HashMap<>(Map.of(
-            "minecraft:generic.attack_damage", 20,
-            "minecraft:generic.max_health", 20,
-            "minecraft:generic.armor", 15));
+    public String gainMode = "LEVEL";
 
-    /** 属性映射：属性球类型名 → 原版/模组属性注册名（可加自定义类型映射任意模组属性，如 "MANA"→"my_mod:mana"） */
-    @ConfigEntry.Category("ball")
+    /** XP 模式下每获得多少经验给 1 技能点 */
+    @ConfigEntry.Category("skillSystem")
     @ConfigEntry.Gui.Tooltip()
-    public Map<String, String> attributeMapping = new java.util.HashMap<>(Map.of(
-            "minecraft:generic.attack_damage", "minecraft:generic.attack_damage",
-            "minecraft:generic.max_health", "minecraft:generic.max_health",
-            "minecraft:generic.armor", "minecraft:generic.armor"));
+    public int xpPerPoint = 100;
 
-    // ===== 属性球清理（ball_cleanup）=====
-    /** 是否启用属性球自动清理（防堆积） */
-    @ConfigEntry.Category("ball_cleanup")
+    /** 总技能点上限（-1=无限） */
+    @ConfigEntry.Category("skillSystem")
     @ConfigEntry.Gui.Tooltip()
-    public boolean cleanupEnable = true;
+    public int maxTotalPoints = -1;
 
-    /** 清理检测间隔（tick） */
-    @ConfigEntry.Category("ball_cleanup")
-    public int cleanupInterval = 1200;
-
-    /** 单个维度属性球数量上限，超过清理最早的 */
-    @ConfigEntry.Category("ball_cleanup")
-    public int cleanupMaxCount = 500;
-
-    /** 属性球存在时间上限（tick），超时消失 */
-    @ConfigEntry.Category("ball_cleanup")
-    public int cleanupDespawnTime = 12000;
-
-    /** 仅清理已加载区块中的属性球（性能优化） */
-    @ConfigEntry.Category("ball_cleanup")
-    public boolean cleanupIgnoreChunkLoad = false;
-
-    /** 参与清理的掉落物物品名（注册名）；按名字匹配，符合的才清理 */
-    @ConfigEntry.Category("ball_cleanup")
+    /** 单属性加点上限 */
+    @ConfigEntry.Category("skillSystem")
     @ConfigEntry.Gui.Tooltip()
-    public List<String> cleanupItemNames = new ArrayList<>(List.of(
-            "monsterwaves:attribute_ball",
-            "monsterwaves:attack_ball", "monsterwaves:health_ball", "monsterwaves:armor_ball"));
+    public int perAttributeMaxPoints = 50;
 
-    /** 清理时尝试将超限属性球吸向最近玩家 */
-    @ConfigEntry.Category("ball_cleanup")
+    /** 打开加点界面的按键（KeyMapping 名称，如 key.keyboard.p） */
+    @ConfigEntry.Category("skillSystem")
+    public String keyBinding = "key.keyboard.p";
+
+    /** 属性显示名（属性注册名→显示名；缺省用原版属性名） */
+    @ConfigEntry.Category("skillSystem")
+    public Map<String, String> attributeDisplayNames = new java.util.HashMap<>(Map.of(
+            "minecraft:generic.attack_damage", "攻击力",
+            "minecraft:generic.max_health", "最大生命",
+            "minecraft:generic.armor", "护甲",
+            "minecraft:generic.armor_toughness", "盔甲韧性",
+            "minecraft:generic.movement_speed", "移动速度",
+            "minecraft:generic.attack_speed", "攻击速度",
+            "minecraft:generic.luck", "幸运"));
+
+    /** 禁用加点的属性（注册名→false）；空=全部可加 */
+    @ConfigEntry.Category("skillSystem")
+    public Map<String, Boolean> attributeEnabled = new java.util.HashMap<>();
+
+    /** 百分比属性（注册名）：每点按百分比加成，避免基础值极低属性被数值加点破坏 */
+    @ConfigEntry.Category("skillSystem")
     @ConfigEntry.Gui.Tooltip()
-    public boolean cleanupAutoAttract = true;
+    public List<String> percentageAttributes = new ArrayList<>(List.of("minecraft:generic.movement_speed"));
+
+    /** 百分比属性每点加成比例（0.1 = +10%） */
+    @ConfigEntry.Category("skillSystem")
+    @ConfigEntry.Gui.Tooltip()
+    public double percentagePerPoint = 0.1;
+
+    /** 重置消耗的技能点（0=免费） */
+    @ConfigEntry.Category("skillSystem")
+    @ConfigEntry.Gui.Tooltip()
+    public int resetCostPoints = 5;
+
+    /** 是否允许重置加点 */
+    @ConfigEntry.Category("skillSystem")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean resetEnabled = true;
+
+    // ===== 经验加成（drop.experience）=====
+    /** 经验加成开关（替代原属性球掉落，加速技能点获取） */
+    @ConfigEntry.Category("drop.experience")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean experienceEnabled = true;
+
+    /** 击杀怪物经验倍率 */
+    @ConfigEntry.Category("drop.experience")
+    @ConfigEntry.Gui.Tooltip()
+    public double experienceMultiplier = 1.0;
+
+    /** 每点难度额外经验加成（0.2 = 每点难度 +20%） */
+    @ConfigEntry.Category("drop.experience")
+    @ConfigEntry.Gui.Tooltip()
+    public double experienceBonusPerDifficulty = 0.2;
 
     // ===== 维度开关（dimensions）=====
     /** 启用本模组刷怪的维度列表；空列表 = 全部维度启用（休息维度始终不刷怪） */
@@ -289,10 +301,6 @@ public class MWConfig implements ConfigData {
     /** 是否拾取普通物品实体 */
     @ConfigEntry.Category("pickup")
     public boolean pickupItems = true;
-
-    /** 是否拾取属性球 */
-    @ConfigEntry.Category("pickup")
-    public boolean pickupAttributeBalls = true;
 
     /** 拾取检测间隔（tick） */
     @ConfigEntry.Category("pickup")

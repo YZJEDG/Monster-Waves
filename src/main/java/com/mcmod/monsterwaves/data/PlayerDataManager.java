@@ -1,141 +1,322 @@
 package com.mcmod.monsterwaves.data;
 
+import com.mcmod.monsterwaves.api.SkillPointGainEvent;
+import com.mcmod.monsterwaves.api.SkillPointResetEvent;
 import com.mcmod.monsterwaves.config.MWConfig;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
- * 玩家属性存储与应用。
- * 数据存于玩家持久化 NBT 的 "monsterwaves_data" 中，跨维度、跨会话保留。
- * 属性类型通过配置 attributeMapping 直接映射到**原版/模组属性注册名**（如 minecraft:generic.attack_damage），
- * 支持任意 mod 注册的自定义属性，动态解析并应用 AttributeModifier。
+ * v9.0 技能点数据管理（替代原属性球系统）：
+ * - 技能点存玩家持久 NBT（monsterwaves_data.skillPoints）
+ * - 已分配点数存 monsterwaves_data.allocated（属性注册名 → 点数）
+ * - 旧属性球数据（attributes 段）首次访问时一次性迁移：
+ *   每属性值/2 → 已分配点数（向下取整），另补偿"原属性球拾取数量 × 20%"技能点
+ * - 属性应用：每点 +1（ADDITION）；百分比属性（配置 percentageAttributes）每点 +percentagePerPoint（MULTIPLY_TOTAL）
+ * - 获取模式：LEVEL（升级得点）/ XP（积累经验得点）/ DISABLED，均由事件驱动；外部可监听 SkillPointGainEvent 自定义算法
  */
 public final class PlayerDataManager {
     public static final String DATA_KEY = "monsterwaves_data";
-    public static final String ATTRS_KEY = "attributes";
-
-    public static final String ATK = "ATTACK";
-    public static final String HP = "HEALTH";
-    public static final String ARMOR = "ARMOR";
-
-    /** 历史固定 UUID（兼容已存档玩家旧 modifier，避免重复叠加） */
-    private static final UUID ATK_UUID = UUID.fromString("1a2b3c4d-5e6f-4a8b-9c0d-1e2f3a4b5c6d");
-    private static final UUID HP_UUID = UUID.fromString("2b3c4d5e-6f7a-4b9c-8d0e-2f3a4b5c6d7e");
-    private static final UUID ARMOR_UUID = UUID.fromString("3c4d5e6f-7a8b-4c0d-9e1f-3a4b5c6d7e8f");
+    private static final String POINTS_KEY = "skillPoints";
+    private static final String ALLOCATED_KEY = "allocated";
+    private static final String MIGRATED_KEY = "skillMigrated";
+    private static final String XP_BUFFER_KEY = "xpBuffer";
+    private static final String OLD_ATTRIBUTES_KEY = "attributes";
 
     private PlayerDataManager() {
     }
 
-    private static CompoundTag attrs(Player player) {
+    // ===== NBT 访问 =====
+
+    private static CompoundTag data(Player player) {
+        return player.getPersistentData().getCompound(DATA_KEY);
+    }
+
+    private static CompoundTag mutable(Player player) {
         CompoundTag root = player.getPersistentData();
         if (!root.contains(DATA_KEY)) {
             root.put(DATA_KEY, new CompoundTag());
         }
-        CompoundTag data = root.getCompound(DATA_KEY);
-        if (!data.contains(ATTRS_KEY)) {
-            data.put(ATTRS_KEY, new CompoundTag());
-        }
-        return data.getCompound(ATTRS_KEY);
+        return root.getCompound(DATA_KEY);
     }
 
-    public static int get(Player player, String type) {
-        return attrs(player).getInt(type);
-    }
-
-    public static void add(Player player, String type, int amount) {
+    /** 首次访问迁移旧属性球数据（一次性；无旧数据则仅打迁移标记） */
+    public static void migrateIfNeeded(Player player) {
         if (player.level().isClientSide) {
             return;
         }
-        set(player, type, get(player, type) + amount);
-    }
-
-    public static void set(Player player, String type, int amount) {
-        if (player.level().isClientSide) {
+        CompoundTag root = player.getPersistentData();
+        if (!root.contains(DATA_KEY)) {
             return;
         }
-        attrs(player).putInt(type, amount);
+        CompoundTag d = root.getCompound(DATA_KEY);
+        if (d.getBoolean(MIGRATED_KEY)) {
+            return;
+        }
+        CompoundTag old = d.getCompound(OLD_ATTRIBUTES_KEY);
+        if (!old.isEmpty()) {
+            CompoundTag allocated = d.getCompound(ALLOCATED_KEY);
+            int total = 0;
+            for (String k : old.getAllKeys()) {
+                int v = old.getInt(k);
+                total += v;
+                int points = v / 2;
+                if (points > 0) {
+                    allocated.putInt(k, allocated.getInt(k) + points);
+                }
+            }
+            d.put(ALLOCATED_KEY, allocated);
+            // 补偿：原属性球拾取数量（=各属性值总和）的 20%
+            int bonus = (int) Math.floor(total * 0.2);
+            d.putInt(POINTS_KEY, d.getInt(POINTS_KEY) + bonus);
+            d.remove(OLD_ATTRIBUTES_KEY);
+        }
+        d.putBoolean(MIGRATED_KEY, true);
         applyAll(player);
     }
 
-    /** 按当前存储值重建全部属性 modifier（登录/重生/换维度/变更时调用） */
+    // ===== 技能点 =====
+
+    public static int getPoints(Player player) {
+        return data(player).getInt(POINTS_KEY);
+    }
+
+    public static void setPoints(Player player, int amount) {
+        mutable(player).putInt(POINTS_KEY, Math.max(0, amount));
+    }
+
+    /** 发放技能点（触发 SkillPointGainEvent，可被取消/修改数量） */
+    public static void grantPoints(Player player, int amount) {
+        if (player.level().isClientSide || amount <= 0) {
+            return;
+        }
+        SkillPointGainEvent event = new SkillPointGainEvent(player, amount);
+        if (MinecraftForge.EVENT_BUS.post(event)) {
+            return;
+        }
+        int granted = Math.max(0, event.getAmount());
+        if (granted > 0) {
+            mutable(player).putInt(POINTS_KEY, getPoints(player) + granted);
+        }
+    }
+
+    /** 扣除技能点（返回是否成功） */
+    public static boolean spendPoints(Player player, int amount) {
+        if (amount < 0 || getPoints(player) < amount) {
+            return false;
+        }
+        mutable(player).putInt(POINTS_KEY, getPoints(player) - amount);
+        return true;
+    }
+
+    // ===== 已分配点数 =====
+
+    public static int getAllocated(Player player, String attrId) {
+        return data(player).getCompound(ALLOCATED_KEY).getInt(attrId);
+    }
+
+    public static Map<String, Integer> getAllAllocated(Player player) {
+        Map<String, Integer> map = new HashMap<>();
+        CompoundTag a = data(player).getCompound(ALLOCATED_KEY);
+        for (String k : a.getAllKeys()) {
+            map.put(k, a.getInt(k));
+        }
+        return map;
+    }
+
+    public static int totalAllocated(Player player) {
+        int total = 0;
+        for (int v : getAllAllocated(player).values()) {
+            total += v;
+        }
+        return total;
+    }
+
+    // ===== 加点 =====
+
+    /** 为玩家给指定属性加 1 点（校验：开关/属性存在/上限/可用点数；触发 SkillPointSpentEvent） */
+    public static boolean addPoint(Player player, String attrId) {
+        if (player.level().isClientSide) {
+            return false;
+        }
+        MWConfig cfg = MWConfig.get();
+        if (!cfg.skillEnabled) {
+            return false;
+        }
+        Attribute attr = resolveAttribute(attrId);
+        if (attr == null) {
+            return false;
+        }
+        if (!isEnabled(attrId)) {
+            return false;
+        }
+        int allocated = getAllocated(player, attrId);
+        if (cfg.perAttributeMaxPoints >= 0 && allocated >= cfg.perAttributeMaxPoints) {
+            return false;
+        }
+        if (cfg.maxTotalPoints >= 0 && totalAllocated(player) >= cfg.maxTotalPoints) {
+            return false;
+        }
+        if (getPoints(player) <= 0) {
+            return false;
+        }
+        com.mcmod.monsterwaves.api.SkillPointSpentEvent spent =
+                new com.mcmod.monsterwaves.api.SkillPointSpentEvent(player, attrId, 1);
+        if (MinecraftForge.EVENT_BUS.post(spent)) {
+            return false;
+        }
+        if (!spendPoints(player, spent.getAmount())) {
+            return false;
+        }
+        mutable(player).getCompound(ALLOCATED_KEY).putInt(attrId, allocated + 1);
+        applyModifier(player, attr, allocated + 1);
+        return true;
+    }
+
+    // ===== 重置 =====
+
+    /** 重置全部属性分配；charge=true（GUI）时从返还点数中扣 resetCostPoints，charge=false（指令）免费 */
+    public static int resetAll(Player player, boolean charge) {
+        if (player.level().isClientSide) {
+            return 0;
+        }
+        MWConfig cfg = MWConfig.get();
+        if (charge && !cfg.resetEnabled) {
+            return 0;
+        }
+        SkillPointResetEvent event = new SkillPointResetEvent(player, null);
+        if (MinecraftForge.EVENT_BUS.post(event)) {
+            return 0;
+        }
+        int refund = totalAllocated(player);
+        mutable(player).remove(ALLOCATED_KEY);
+        int net = Math.max(0, refund - (charge ? Math.max(0, cfg.resetCostPoints) : 0));
+        if (net > 0) {
+            mutable(player).putInt(POINTS_KEY, getPoints(player) + net);
+        }
+        applyAll(player);
+        return net;
+    }
+
+    /** 重置单属性（免费返还该属性点数） */
+    public static int resetAttribute(Player player, String attrId) {
+        if (player.level().isClientSide) {
+            return 0;
+        }
+        int allocated = getAllocated(player, attrId);
+        if (allocated <= 0) {
+            return 0;
+        }
+        SkillPointResetEvent event = new SkillPointResetEvent(player, attrId);
+        if (MinecraftForge.EVENT_BUS.post(event)) {
+            return 0;
+        }
+        mutable(player).getCompound(ALLOCATED_KEY).remove(attrId);
+        mutable(player).putInt(POINTS_KEY, getPoints(player) + allocated);
+        Attribute attr = resolveAttribute(attrId);
+        if (attr != null) {
+            removeModifier(player, attr);
+        }
+        return allocated;
+    }
+
+    // ===== 属性应用 =====
+
+    /** 重新应用玩家全部技能点属性 modifier（登录/重生/换维度时调用） */
     public static void applyAll(Player player) {
         if (player.level().isClientSide) {
             return;
         }
-        CompoundTag a = attrs(player);
-        for (String type : MWConfig.get().ballTypes) {
-            int value = a.getInt(type);
-            Attribute attribute = resolveAttribute(type);
-            if (attribute == null) {
-                continue;
+        migrateIfNeeded(player);
+        for (Map.Entry<String, Integer> entry : getAllAllocated(player).entrySet()) {
+            Attribute attr = resolveAttribute(entry.getKey());
+            if (attr != null) {
+                applyModifier(player, attr, entry.getValue());
             }
-            applyModifier(player, attribute, uuidFor(type), value);
         }
         if (player.getHealth() > player.getMaxHealth()) {
             player.setHealth(player.getMaxHealth());
         }
     }
 
-    /** 按类型名从配置 attributeMapping 解析属性；无映射时 fallback 将类型名本身当作属性注册名（如类型直接写 minecraft:generic.movement_speed） */
-    private static Attribute resolveAttribute(String type) {
-        String id = MWConfig.get().attributeMapping.get(type);
-        if (id == null || id.isEmpty()) {
-            id = type;
-        }
-        return ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.tryParse(id));
-    }
-
-    /** 速度类属性：基础值很小（如 movement_speed=0.1），用比例加成避免 ADDITION 爆炸 */
-    private static boolean isSpeedAttribute(Attribute attribute) {
-        var key = ForgeRegistries.ATTRIBUTES.getKey(attribute);
-        return key != null && key.getPath().contains("movement_speed");
-    }
-
-    /** 按类型名生成稳定 UUID：保留历史 3 类型固定 UUID（兼容旧存档），自定义类型用名称哈希（跨会话一致） */
-    private static UUID uuidFor(String type) {
-        return switch (type) {
-            case ATK -> ATK_UUID;
-            case HP -> HP_UUID;
-            case ARMOR -> ARMOR_UUID;
-            default -> UUID.nameUUIDFromBytes(("monsterwaves:" + type).getBytes(StandardCharsets.UTF_8));
-        };
-    }
-
-    private static void applyModifier(Player player, Attribute attribute, UUID uuid, int value) {
-        AttributeInstance instance = player.getAttribute(attribute);
-        if (instance == null) {
+    /** 应用/更新指定属性的技能点 modifier（固定 UUID = 属性注册名 hash，跨会话稳定） */
+    private static void applyModifier(Player player, Attribute attr, int allocated) {
+        if (allocated <= 0) {
+            removeModifier(player, attr);
             return;
         }
-        if (instance.getModifier(uuid) != null) {
-            instance.removeModifier(uuid);
+        AttributeInstance inst = player.getAttribute(attr);
+        if (inst == null) {
+            return;
         }
-        if (value != 0) {
-            // 速度类属性用比例加成（每点 +1% 基础速度），其余属性用绝对值（每点 +N）
-            boolean speed = isSpeedAttribute(attribute);
-            AttributeModifier.Operation op = speed
-                    ? AttributeModifier.Operation.MULTIPLY_BASE
-                    : AttributeModifier.Operation.ADDITION;
-            double amount = speed ? value * 0.01 : value;
-            instance.addTransientModifier(new AttributeModifier(
-                    uuid, "monsterwaves_" + attribute.getDescriptionId(), amount, op));
+        UUID uuid = uuidFor(attr);
+        inst.removeModifier(uuid);
+        MWConfig cfg = MWConfig.get();
+        boolean percentage = cfg.percentageAttributes.contains(
+                ForgeRegistries.ATTRIBUTES.getKey(attr).toString());
+        AttributeModifier mod;
+        if (percentage) {
+            mod = new AttributeModifier(uuid, "monsterwaves_skill",
+                    allocated * cfg.percentagePerPoint, AttributeModifier.Operation.MULTIPLY_TOTAL);
+        } else {
+            mod = new AttributeModifier(uuid, "monsterwaves_skill",
+                    allocated, AttributeModifier.Operation.ADDITION);
+        }
+        inst.addPermanentModifier(mod);
+    }
+
+    private static void removeModifier(Player player, Attribute attr) {
+        AttributeInstance inst = player.getAttribute(attr);
+        if (inst != null) {
+            inst.removeModifier(uuidFor(attr));
         }
     }
 
-    /** 属性显示名：类型能解析为属性时用原版/模组属性本地化名（中文），否则用自定义键 */
-    public static Component attributeDisplayName(String type) {
-        Attribute attr = resolveAttribute(type);
-        if (attr != null) {
-            return Component.translatable(attr.getDescriptionId());
+    private static UUID uuidFor(Attribute attr) {
+        return UUID.nameUUIDFromBytes(
+                ("monsterwaves:" + ForgeRegistries.ATTRIBUTES.getKey(attr)).getBytes(StandardCharsets.UTF_8));
+    }
+
+    // ===== 属性工具 =====
+
+    public static Attribute resolveAttribute(String attrId) {
+        return ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.tryParse(attrId));
+    }
+
+    /** 属性是否可加点（配置 attributeEnabled 为空=全部可加） */
+    public static boolean isEnabled(String attrId) {
+        Map<String, Boolean> m = MWConfig.get().attributeEnabled;
+        return m.isEmpty() || m.getOrDefault(attrId, true);
+    }
+
+    /** 属性显示名：配置 attributeDisplayNames > 原版属性名 > 注册名 */
+    public static String displayName(String attrId) {
+        String custom = MWConfig.get().attributeDisplayNames.get(attrId);
+        if (custom != null && !custom.isEmpty()) {
+            return custom;
         }
-        return Component.translatable("attribute.monsterwaves." + type);
+        Attribute attr = resolveAttribute(attrId);
+        return attr == null ? attrId : attr.getDescriptionId().replace("attribute.name.", "");
+    }
+
+    // ===== XP 模式缓冲 =====
+
+    public static int getXpBuffer(Player player) {
+        return data(player).getInt(XP_BUFFER_KEY);
+    }
+
+    public static void setXpBuffer(Player player, int value) {
+        mutable(player).putInt(XP_BUFFER_KEY, value);
     }
 }

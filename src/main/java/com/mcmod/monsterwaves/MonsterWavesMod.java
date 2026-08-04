@@ -3,6 +3,7 @@ package com.mcmod.monsterwaves;
 import com.mcmod.monsterwaves.config.MWConfig;
 import com.mcmod.monsterwaves.event.ModEventHandler;
 import com.mcmod.monsterwaves.item.ModItems;
+import com.mcmod.monsterwaves.network.NetworkHandler;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.minecraft.network.chat.Component;
@@ -12,6 +13,8 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +32,11 @@ public class MonsterWavesMod {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModItems.ITEMS.register(modBus);
         MinecraftForge.EVENT_BUS.register(ModEventHandler.class);
+        // 技能点网络通信（v9.0）
+        NetworkHandler.register();
+        // 客户端：技能点按键与加点界面
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
+                MinecraftForge.EVENT_BUS.register(com.mcmod.monsterwaves.client.ClientEvents.class));
         // 注册 Cloth Config 配置（config/monsterwaves.json5，GUI 自动集成 Mods 列表）
         AutoConfig.register(MWConfig.class, JanksonConfigSerializer::new);
         // 条件显示：开启"传送到重生点"时隐藏自定义坐标字段（fallDestinationX/Y/Z）
