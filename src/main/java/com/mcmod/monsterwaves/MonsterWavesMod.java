@@ -5,6 +5,7 @@ import com.mcmod.monsterwaves.event.ModEventHandler;
 import com.mcmod.monsterwaves.item.ModItems;
 import com.mcmod.monsterwaves.network.NetworkHandler;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -54,12 +55,11 @@ public class MonsterWavesMod {
                 MonsterWavesMod.LOGGER.warn("TaCZ 事件注册失败，枪械苦痛传递不可用（其余功能正常）", t);
             }
         }
-        // 注册 Cloth Config 配置层（config/monsterwaves.json5 JSON5，支持注释/尾逗号，手编友好；v1.3.4 移除 GUI，直接改文件 + 指令）
-        // 自定义 Json5ConfigSerializer：Jankson 解析（容忍注释）+ Gson 覆盖反序列化（避免 Jankson 默认 List/Map 追加语义叠加默认值）；
-        // Forge 原生 serverconfig(TOML) 不支持 Map/嵌套对象（attributeConfigs），故用 Cloth + 自定义 JSON5 序列化器。
-        // 说明：不再注册 ConfigScreen（Cloth GUI 对嵌套 POJO/Map 支持差且保存按钮有兼容问题），配置全部走 json5 文件：
-        //   改文件后 /monsterwaves reload 重载；改标量可用 /monsterwaves config set <字段> <值>；config save 写回文件。
-        AutoConfig.register(MWConfig.class, com.mcmod.monsterwaves.config.Json5ConfigSerializer::new);
-        LOGGER.info("Monster Waves (怪物狂潮) MVP 已加载（配置：config/monsterwaves.json5）");
+        // 注册 Cloth Config 配置层（config/monsterwaves.json 标准 JSON，v1.3.5 改回 Gson——JSON5/Jankson 在用户环境保存异常且写回丢注释）
+        // GsonConfigSerializer：gson.fromJson 覆盖反序列化（List/Map 不叠加默认值）；输出标准 JSON（无注释，GUI 已移除）；
+        // Forge 原生 serverconfig(TOML) 不支持 Map/嵌套对象（attributeConfigs），故用 Cloth + Gson 序列化器。
+        // 配置入口：手编 config/monsterwaves.json 后 /monsterwaves reload 重载；标量用 /monsterwaves config set <字段> <值>；config save 写回。
+        AutoConfig.register(MWConfig.class, GsonConfigSerializer::new);
+        LOGGER.info("Monster Waves (怪物狂潮) MVP 已加载（配置：config/monsterwaves.json）");
     }
 }
