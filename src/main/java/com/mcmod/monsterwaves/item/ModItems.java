@@ -21,13 +21,12 @@ public final class ModItems {
     public static final RegistryObject<Item> HOME_CHARM = ITEMS.register("home_charm",
             HomeCharmItem::new);
 
-    /** 三个符咒加入原版创造物品栏「战斗用品（Combat）」；苦痛传递附魔书加入「材料（Ingredients，与原版附魔书同页）」 */
+    /** 三个符咒 + 苦痛传递附魔书加入原版创造物品栏「战斗用品（Combat）」 */
     public static void onBuildCreativeTab(net.minecraftforge.event.BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == net.minecraft.world.item.CreativeModeTabs.COMBAT) {
             event.accept(RETURN_CHARM.get());
             event.accept(BATTLE_CHARM.get());
             event.accept(HOME_CHARM.get());
-        } else if (event.getTabKey() == net.minecraft.world.item.CreativeModeTabs.INGREDIENTS) {
             // 苦痛传递附魔书（等级 1）
             event.accept(net.minecraft.world.item.EnchantedBookItem.createForEnchantment(
                     new net.minecraft.world.item.enchantment.EnchantmentInstance(
