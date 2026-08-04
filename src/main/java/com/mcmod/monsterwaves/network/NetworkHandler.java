@@ -9,6 +9,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -32,18 +33,21 @@ public final class NetworkHandler {
 
     public static void register() {
         int id = 0;
-        registerMessage(id++, C2SRequestSync.class, C2SRequestSync::encode, C2SRequestSync::decode, C2SRequestSync::handle);
-        registerMessage(id++, C2SAddPoint.class, C2SAddPoint::encode, C2SAddPoint::decode, C2SAddPoint::handle);
-        registerMessage(id++, C2SResetAll.class, C2SResetAll::encode, C2SResetAll::decode, C2SResetAll::handle);
-        registerMessage(id++, S2CSyncData.class, S2CSyncData::encode, S2CSyncData::decode, S2CSyncData::handle);
-        registerMessage(id++, S2COpenGui.class, S2COpenGui::encode, S2COpenGui::decode, S2COpenGui::handle);
+        // 带方向注册（v1.0.2）：C2S 只接受 PLAY_TO_SERVER、S2C 只接受 PLAY_TO_CLIENT，
+        // 防止作弊客户端伪造 S2C 包发往服务端（触发客户端类加载 NoClassDefFoundError 崩溃 / DoS）
+        registerMessage(id++, C2SRequestSync.class, C2SRequestSync::encode, C2SRequestSync::decode, C2SRequestSync::handle, NetworkDirection.PLAY_TO_SERVER);
+        registerMessage(id++, C2SAddPoint.class, C2SAddPoint::encode, C2SAddPoint::decode, C2SAddPoint::handle, NetworkDirection.PLAY_TO_SERVER);
+        registerMessage(id++, C2SResetAll.class, C2SResetAll::encode, C2SResetAll::decode, C2SResetAll::handle, NetworkDirection.PLAY_TO_SERVER);
+        registerMessage(id++, S2CSyncData.class, S2CSyncData::encode, S2CSyncData::decode, S2CSyncData::handle, NetworkDirection.PLAY_TO_CLIENT);
+        registerMessage(id++, S2COpenGui.class, S2COpenGui::encode, S2COpenGui::decode, S2COpenGui::handle, NetworkDirection.PLAY_TO_CLIENT);
     }
 
     private static <T> void registerMessage(int id, Class<T> type,
                                             BiConsumer<T, FriendlyByteBuf> encoder,
                                             Function<FriendlyByteBuf, T> decoder,
-                                            BiConsumer<T, Supplier<net.minecraftforge.network.NetworkEvent.Context>> handler) {
-        CHANNEL.registerMessage(id, type, encoder, decoder, handler);
+                                            BiConsumer<T, Supplier<net.minecraftforge.network.NetworkEvent.Context>> handler,
+                                            NetworkDirection direction) {
+        CHANNEL.registerMessage(id, type, encoder, decoder, handler, Optional.of(direction));
     }
 
     public static SimpleChannel channel() {

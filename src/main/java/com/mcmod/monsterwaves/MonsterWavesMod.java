@@ -49,7 +49,12 @@ public class MonsterWavesMod {
         MinecraftForge.EVENT_BUS.register(com.mcmod.monsterwaves.enchant.PainTransferenceHandler.class);
         // TaCZ 枪械触发：仅在 tacz 加载时注册（GunPainTransferenceHandler 方法签名引用 tacz 事件类，缺失时不能加载）
         if (net.minecraftforge.fml.ModList.get().isLoaded("tacz")) {
-            MinecraftForge.EVENT_BUS.register(com.mcmod.monsterwaves.enchant.GunPainTransferenceHandler.class);
+            try {
+                MinecraftForge.EVENT_BUS.register(com.mcmod.monsterwaves.enchant.GunPainTransferenceHandler.class);
+            } catch (Throwable t) {
+                // v1.0.2：tacz 版本不兼容（事件类缺失/改名）时注册反射会抛异常，降级为不可用而非崩溃
+                MonsterWavesMod.LOGGER.warn("TaCZ 事件注册失败，枪械苦痛传递不可用（其余功能正常）", t);
+            }
         }
         // 注册 Cloth Config 配置（config/monsterwaves.json5，GUI 自动集成 Mods 列表）
         // JSON 配置（config/monsterwaves.json）：贴合主流配置格式（其他 mod 多用 toml/json）；

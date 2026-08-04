@@ -84,8 +84,15 @@ public final class SafeDimensionManager {
         if (server == null) {
             return;
         }
-        ResourceKey<Level> targetKey = ResourceKey.create(Registries.DIMENSION,
-                ResourceLocation.tryParse(cfg.fallDestinationDimension));
+        ResourceLocation fallLoc = ResourceLocation.tryParse(cfg.fallDestinationDimension);
+        if (fallLoc == null) {
+            // v1.0.2 配置非法防护：避免 ResourceKey 含 null location 导致每 tick NPE 崩溃
+            fallLoc = new ResourceLocation(com.mcmod.monsterwaves.MonsterWavesMod.MOD_ID, "arena");
+            com.mcmod.monsterwaves.MonsterWavesMod.LOGGER.warn(
+                    "MW fallDestinationDimension 配置非法（{}），回退 monsterwaves:arena",
+                    cfg.fallDestinationDimension);
+        }
+        ResourceKey<Level> targetKey = ResourceKey.create(Registries.DIMENSION, fallLoc);
         ServerLevel target = server.getLevel(targetKey);
         if (target == null) {
             player.displayClientMessage(Component.literal("坠落目标维度不可用"), true);

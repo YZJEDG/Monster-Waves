@@ -400,7 +400,7 @@ public final class ModEventHandler {
                 continue;
             }
             int min = Math.max(1, entry.minCount);
-            int max = Math.max(min, entry.maxCount);
+            int max = Math.min(4096, Math.max(min, entry.maxCount)); // v1.0.2 clamp：防 nextInt 整数溢出与堆叠爆炸
             int count = min + entity.getRandom().nextInt(max - min + 1);
             count += (int) Math.floor(cfg.lootExtraCountPerLevel * (difficulty - 1));
             Item item = ForgeRegistries.ITEMS.getValue(net.minecraft.resources.ResourceLocation.tryParse(entry.item));
