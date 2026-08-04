@@ -192,6 +192,12 @@ public final class ModEventHandler {
                     sp.getInventory().add(new ItemStack(ModItems.BATTLE_CHARM.get()));
                 }
             }
+            if (cfg.giveHomeCharmOnJoin) {
+                boolean hasHome = sp.getInventory().hasAnyMatching(s -> s.getItem() == ModItems.HOME_CHARM.get());
+                if (!hasHome) {
+                    sp.getInventory().add(new ItemStack(ModItems.HOME_CHARM.get()));
+                }
+            }
         }
     }
 

@@ -83,6 +83,8 @@
   "text.autoconfig.monsterwaves.option.islandRadius": "空岛半径",
   "text.autoconfig.monsterwaves.option.islandBlock": "空岛顶部方块",
   "text.autoconfig.monsterwaves.option.giveOnJoin": "开局给予返回符咒",
+  "text.autoconfig.monsterwaves.option.giveHomeCharmOnJoin": "开局给予回归符咒",
+  "text.autoconfig.monsterwaves.option.giveHomeCharmOnJoin.@Tooltip": "首次进入时给予回归符咒（右键回主世界重生点）",
   "text.autoconfig.monsterwaves.option.giveOnJoin.@Tooltip": "首次加入时自动发放返回符咒",
   "text.autoconfig.monsterwaves.option.safeCooldown": "符咒冷却",
   "text.autoconfig.monsterwaves.option.safeCooldown.@Tooltip": "返回符咒使用冷却（tick，20 tick = 1 秒）",

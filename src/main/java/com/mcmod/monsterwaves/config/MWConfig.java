@@ -381,6 +381,11 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public boolean giveOnJoin = true;
 
+    /** 开局给予回归符咒（回主世界） */
+    @ConfigEntry.Category("safe")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean giveHomeCharmOnJoin = true;
+
     /** 返回符咒冷却（tick） */
     @ConfigEntry.Category("safe")
     @ConfigEntry.Gui.Tooltip()

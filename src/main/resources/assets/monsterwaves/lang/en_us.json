@@ -84,6 +84,8 @@
   "text.autoconfig.monsterwaves.option.islandRadius": "Island Radius",
   "text.autoconfig.monsterwaves.option.islandBlock": "Island Top Block",
   "text.autoconfig.monsterwaves.option.giveOnJoin": "Give on Join",
+  "text.autoconfig.monsterwaves.option.giveHomeCharmOnJoin": "Give Home Charm on Join",
+  "text.autoconfig.monsterwaves.option.giveHomeCharmOnJoin.@Tooltip": "Grant home charm (teleport back to overworld respawn) on first join",
   "text.autoconfig.monsterwaves.option.giveOnJoin.@Tooltip": "Grant return charm on first join",
   "text.autoconfig.monsterwaves.option.safeCooldown": "Charm Cooldown",
   "text.autoconfig.monsterwaves.option.safeCooldown.@Tooltip": "Return charm cooldown in ticks (20 = 1s)",

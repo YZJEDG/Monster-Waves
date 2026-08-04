@@ -21,6 +21,15 @@ public final class ModItems {
     public static final RegistryObject<Item> HOME_CHARM = ITEMS.register("home_charm",
             HomeCharmItem::new);
 
+    /** 三个符咒加入原版创造物品栏「战斗用品（Combat）」 */
+    public static void onBuildCreativeTab(net.minecraftforge.event.BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == net.minecraft.world.item.CreativeModeTabs.COMBAT) {
+            event.accept(RETURN_CHARM.get());
+            event.accept(BATTLE_CHARM.get());
+            event.accept(HOME_CHARM.get());
+        }
+    }
+
     private ModItems() {
     }
 }

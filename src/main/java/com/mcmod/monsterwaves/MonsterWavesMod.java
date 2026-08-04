@@ -41,6 +41,8 @@ public class MonsterWavesMod {
             MinecraftForge.EVENT_BUS.register(com.mcmod.monsterwaves.client.ClientEvents.class);
             modBus.register(com.mcmod.monsterwaves.client.KeyBindings.class);
         });
+        // 符咒加入创造物品栏「战斗用品」（mod 总线事件）
+        modBus.addListener(com.mcmod.monsterwaves.item.ModItems::onBuildCreativeTab);
         // 注册 Cloth Config 配置（config/monsterwaves.json5，GUI 自动集成 Mods 列表）
         // JSON 配置（config/monsterwaves.json）：贴合主流配置格式（其他 mod 多用 toml/json）；
         // Forge 原生 serverconfig(TOML) 不支持 Map/嵌套对象（attributeConfigs），故用 Cloth + Gson 序列化器保留全部结构与 GUI。
