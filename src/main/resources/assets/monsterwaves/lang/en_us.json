@@ -150,8 +150,6 @@
   "text.autoconfig.monsterwaves.option.teleportThreshold.@Tooltip": "Teleport mob to nearest player when farther than this (blocks)",
   "text.autoconfig.monsterwaves.option.teleportMinDistance": "Teleport Min Distance",
   "text.autoconfig.monsterwaves.option.teleportMaxDistance": "Teleport Max Distance",
-  "text.autoconfig.monsterwaves.option.teleportCooldown": "Teleport Cooldown",
-  "text.autoconfig.monsterwaves.option.teleportCooldown.@Tooltip": "Cooldown per mob after teleport (ticks, 20 = 1s)",
   "text.autoconfig.monsterwaves.option.teleportCheckInterval": "Check Interval",
   "text.autoconfig.monsterwaves.option.teleportCheckInterval.@Tooltip": "Check every N ticks (20 = 1s)",
   "text.autoconfig.monsterwaves.option.maxElitesPerPlayer": "Max Elites per Player",

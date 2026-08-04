@@ -150,8 +150,6 @@
   "text.autoconfig.monsterwaves.option.teleportThreshold.@Tooltip": "怪与最近玩家超过此距离（格）时传送到玩家附近",
   "text.autoconfig.monsterwaves.option.teleportMinDistance": "传送最小距离",
   "text.autoconfig.monsterwaves.option.teleportMaxDistance": "传送最大距离",
-  "text.autoconfig.monsterwaves.option.teleportCooldown": "传送冷却",
-  "text.autoconfig.monsterwaves.option.teleportCooldown.@Tooltip": "每只怪传送后冷却（tick，20=1秒）",
   "text.autoconfig.monsterwaves.option.teleportCheckInterval": "检测间隔",
   "text.autoconfig.monsterwaves.option.teleportCheckInterval.@Tooltip": "每隔多少 tick 检测一次（20=1秒）",
   "text.autoconfig.monsterwaves.option.maxElitesPerPlayer": "精英数量上限",

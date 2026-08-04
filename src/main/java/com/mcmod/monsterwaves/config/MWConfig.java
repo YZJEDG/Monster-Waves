@@ -521,11 +521,6 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public double teleportMaxDistance = 20.0;
 
-    /** 每只怪传送冷却（tick，20=1s） */
-    @ConfigEntry.Category("mobTeleport")
-    @ConfigEntry.Gui.Tooltip()
-    public int teleportCooldown = 600;
-
     /** 检测间隔（tick，20=1s） */
     @ConfigEntry.Category("mobTeleport")
     @ConfigEntry.Gui.Tooltip()

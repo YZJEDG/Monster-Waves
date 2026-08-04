@@ -15,10 +15,9 @@ import java.util.List;
  * - 在**任何启用生成引擎的维度**生效（与 MobSpawnManager 维度开关一致）
  * - 仅影响本 mod 生成的怪（MobSpawnManager.MARKER 标记）
  * - 怪与最近玩家距离超过 teleportThreshold → 传送到玩家附近（min~max 距离、随机角度）
- * - 每只怪传送后进入 teleportCooldown 冷却（NBT 存 gameTime），每 teleportCheckInterval tick 检测一次
+ * - **无冷却**：每次检测超距即传送（防止玩家快速移动导致怪物溢出），每 teleportCheckInterval tick 检测一次
  */
 public final class MobTeleportHandler {
-    public static final String COOLDOWN_KEY = "monsterwaves_teleport_cooldown";
     private static int tickCounter = 0;
 
     private MobTeleportHandler() {
@@ -48,7 +47,6 @@ public final class MobTeleportHandler {
         if (players.isEmpty()) {
             return;
         }
-        long now = level.getGameTime();
         // 全维度扫描（box 覆盖整个维度）
         var box = new AABB(-3.0E7, level.getMinBuildHeight(), -3.0E7,
                 3.0E7, level.getMaxBuildHeight(), 3.0E7);
@@ -57,9 +55,6 @@ public final class MobTeleportHandler {
                 continue;
             }
             if (!mob.isAlive()) {
-                continue;
-            }
-            if (now < mob.getPersistentData().getLong(COOLDOWN_KEY)) {
                 continue;
             }
             ServerPlayer nearest = null;
@@ -77,7 +72,6 @@ public final class MobTeleportHandler {
             double dist = Math.sqrt(best);
             if (dist > cfg.teleportThreshold) {
                 teleportNear(mob, nearest, cfg);
-                mob.getPersistentData().putLong(COOLDOWN_KEY, now + cfg.teleportCooldown);
             }
         }
     }
