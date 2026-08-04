@@ -188,30 +188,37 @@ public final class MobSpawnManager {
         MonsterWavesMod.LOGGER.debug("MW 已生成 {} 于 {}", type, pos);
     }
 
+    /** 属性难度算法：multiply=乘算 / add=加算（未知值回退加算） */
+    private static double applyAlgorithm(double base, double difficulty, double perLevel, double stageMult, String algo) {
+        if ("multiply".equalsIgnoreCase(algo)) {
+            return base * (1 + (difficulty - 1) * perLevel) * stageMult;
+        }
+        return base + (difficulty - 1) * perLevel * stageMult;
+    }
+
     /**
-     * 按难度系数与阶段配置调整生物属性并应用阶段 BUFF（供生成引擎与指令共用）：
-     * 生命 = 基础 × (1 + (难度-1)×生命加成) × 阶段生命倍率
-     * 攻击 = 基础 + (难度-1)×攻击加成 × 阶段攻击倍率
-     * 护甲 = 基础 + (难度-1)×护甲加成 × 阶段护甲倍率
+     * 按难度系数与阶段配置调整生物属性并应用阶段 BUFF（供生成引擎与指令共用）。
+     * 算法（v10.1 可配置，每属性独立）：
+     * - multiply：基础 × (1 + (难度-1)×系数) × 阶段倍率
+     * - add：基础 + (难度-1)×系数 × 阶段倍率
      */
     public static void applyDifficultyTo(Mob mob, double difficulty, StageManager.Stage stage) {
         MWConfig cfg = MWConfig.get();
-        double healthMult = 1 + (difficulty - 1) * cfg.healthBonusPerLevel;
-        healthMult *= stage.healthMultiplier();
         var hpAttr = mob.getAttribute(Attributes.MAX_HEALTH);
         if (hpAttr != null) {
-            hpAttr.setBaseValue(hpAttr.getBaseValue() * healthMult);
+            hpAttr.setBaseValue(applyAlgorithm(hpAttr.getBaseValue(), difficulty,
+                    cfg.healthBonusPerLevel, stage.healthMultiplier(), cfg.healthAlgorithm));
             mob.setHealth(mob.getMaxHealth());
         }
         var atkAttr = mob.getAttribute(Attributes.ATTACK_DAMAGE);
         if (atkAttr != null) {
-            atkAttr.setBaseValue(atkAttr.getBaseValue()
-                    + (difficulty - 1) * cfg.attackBonusPerLevel * stage.attackMultiplier());
+            atkAttr.setBaseValue(applyAlgorithm(atkAttr.getBaseValue(), difficulty,
+                    cfg.attackBonusPerLevel, stage.attackMultiplier(), cfg.attackAlgorithm));
         }
         var armorAttr = mob.getAttribute(Attributes.ARMOR);
         if (armorAttr != null) {
-            armorAttr.setBaseValue(armorAttr.getBaseValue()
-                    + (difficulty - 1) * cfg.armorBonusPerLevel * stage.armorMultiplier());
+            armorAttr.setBaseValue(applyAlgorithm(armorAttr.getBaseValue(), difficulty,
+                    cfg.armorBonusPerLevel, stage.armorMultiplier(), cfg.armorAlgorithm));
         }
         // 阶段 BUFF
         for (var e : stage.effects()) {

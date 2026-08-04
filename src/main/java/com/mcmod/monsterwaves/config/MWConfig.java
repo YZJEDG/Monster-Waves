@@ -118,6 +118,21 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("difficulty")
     public double armorBonusPerLevel = 0.5;
 
+    /** 生命难度算法：multiply=乘算（基础×(1+(难度-1)×系数)×阶段倍率）/ add=加算（基础+(难度-1)×系数×阶段倍率） */
+    @ConfigEntry.Category("difficulty")
+    @ConfigEntry.Gui.Tooltip()
+    public String healthAlgorithm = "multiply";
+
+    /** 攻击难度算法：add=加算（默认）/ multiply=乘算 */
+    @ConfigEntry.Category("difficulty")
+    @ConfigEntry.Gui.Tooltip()
+    public String attackAlgorithm = "add";
+
+    /** 护甲难度算法：add=加算（默认）/ multiply=乘算 */
+    @ConfigEntry.Category("difficulty")
+    @ConfigEntry.Gui.Tooltip()
+    public String armorAlgorithm = "add";
+
     // ===== 技能点系统（skillSystem）=====
     /** 技能点系统总开关 */
     @ConfigEntry.Category("skillSystem")

@@ -136,5 +136,11 @@
   "text.autoconfig.monsterwaves.option.bossArmorMultiplier": "Boss Armor Multiplier",
   "text.autoconfig.monsterwaves.option.bossXpMultiplier": "Boss XP Multiplier",
   "text.autoconfig.monsterwaves.option.difficultyAffectsChance": "Chance Scales with Difficulty",
-  "text.autoconfig.monsterwaves.option.difficultyAffectsChance.@Tooltip": "Higher difficulty makes Elite/Boss more common (chance x current difficulty)"
+  "text.autoconfig.monsterwaves.option.difficultyAffectsChance.@Tooltip": "Higher difficulty makes Elite/Boss more common (chance x current difficulty)",
+  "text.autoconfig.monsterwaves.option.healthAlgorithm": "Health Difficulty Algorithm",
+  "text.autoconfig.monsterwaves.option.healthAlgorithm.@Tooltip": "multiply=base x (1 + (diff-1) x perLevel) x stageMult; add=base + (diff-1) x perLevel x stageMult",
+  "text.autoconfig.monsterwaves.option.attackAlgorithm": "Attack Difficulty Algorithm",
+  "text.autoconfig.monsterwaves.option.attackAlgorithm.@Tooltip": "add=additive (default); multiply=multiplicative",
+  "text.autoconfig.monsterwaves.option.armorAlgorithm": "Armor Difficulty Algorithm",
+  "text.autoconfig.monsterwaves.option.armorAlgorithm.@Tooltip": "add=additive (default); multiply=multiplicative"
 }

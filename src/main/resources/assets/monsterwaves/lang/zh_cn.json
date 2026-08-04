@@ -136,5 +136,11 @@
   "text.autoconfig.monsterwaves.option.bossArmorMultiplier": "Boss护甲倍率",
   "text.autoconfig.monsterwaves.option.bossXpMultiplier": "Boss经验倍率",
   "text.autoconfig.monsterwaves.option.difficultyAffectsChance": "概率随难度提升",
-  "text.autoconfig.monsterwaves.option.difficultyAffectsChance.@Tooltip": "难度越高精英/Boss越常见（概率 × 当前难度）"
+  "text.autoconfig.monsterwaves.option.difficultyAffectsChance.@Tooltip": "难度越高精英/Boss越常见（概率 × 当前难度）",
+  "text.autoconfig.monsterwaves.option.healthAlgorithm": "生命难度算法",
+  "text.autoconfig.monsterwaves.option.healthAlgorithm.@Tooltip": "multiply=乘算（基础×(1+(难度-1)×系数)×阶段倍率）；add=加算（基础+(难度-1)×系数×阶段倍率）",
+  "text.autoconfig.monsterwaves.option.attackAlgorithm": "攻击难度算法",
+  "text.autoconfig.monsterwaves.option.attackAlgorithm.@Tooltip": "add=加算（默认）；multiply=乘算",
+  "text.autoconfig.monsterwaves.option.armorAlgorithm": "护甲难度算法",
+  "text.autoconfig.monsterwaves.option.armorAlgorithm.@Tooltip": "add=加算（默认）；multiply=乘算"
 }
