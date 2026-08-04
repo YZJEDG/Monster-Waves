@@ -48,10 +48,8 @@ public class MWConfig implements ConfigData {
         if (stages == null) stages = new ArrayList<>();
         stages.removeIf(s -> s == null || s.id == null || s.id.isBlank());
         if (stages.isEmpty()) {
-            // 全被清理时回退默认三阶段，避免 StageManager 空列表崩溃
-            stages.add(new StageConfig("萌芽期", 1.0, 6000));
-            stages.add(new StageConfig("激战期", 2.5, 12000));
-            stages.add(new StageConfig("终局之战", 5.0, -1));
+            // 全被清理时回退默认六阶段，避免 StageManager 空列表崩溃
+            stages.addAll(buildDefaultStages());
         }
         for (StageConfig s : stages) {
             s.difficulty = Math.max(0.1, s.difficulty);
@@ -169,10 +167,33 @@ public class MWConfig implements ConfigData {
     /** 阶段列表（可分别调整各阶段难度/时长/怪物池/属性倍率/BUFF；字段见开发手册"阶段字段"表） */
     @ConfigEntry.Category("stage")
     @ConfigEntry.Gui.Tooltip()
-    public List<StageConfig> stages = new ArrayList<>(List.of(
-            new StageConfig("萌芽期", 1.0, 6000),
-            new StageConfig("激战期", 2.5, 12000),
-            new StageConfig("终局之战", 5.0, -1)));
+    public List<StageConfig> stages = buildDefaultStages();
+
+    /**
+     * v1.1 默认阶段表（6 阶段，适配加了 MOD 后后期 DPS 10 万级别的数值膨胀）。
+     * 生命总倍率 = (1+(难度-1)×healthBonusPerLevel) × 阶段生命倍率，终局约 5120x（僵尸 20 血 → ≈10.2 万血，
+     * 玩家 DPS 10 万 ≈ 1 秒击杀，割草节奏；精英 ×3 ≈ 3 秒，Boss ×50 ≈ 51 秒）。
+     * 攻击算法默认 multiply（attackBonusPerLevel=0.1）：终局攻击 ≈ 20×6.9×25 ≈ 3450。
+     * 时长合计 27.5 分钟推进到终局（3000/6000/6000/9000/9000 tick + 无限）。
+     */
+    private static List<StageConfig> buildDefaultStages() {
+        List<StageConfig> list = new ArrayList<>();
+        list.add(new StageConfig("🌱 萌芽期", 1.0, 3000, 1.0, 1.0, 1.0));
+        list.add(new StageConfig("🌿 成长期", 2.0, 6000, 2.5, 1.5, 1.5));
+        list.add(new StageConfig("⚔️ 激战期", 5.0, 6000, 8.0, 3.0, 3.0));
+        list.add(new StageConfig("💀 鏖战期", 12.0, 9000, 30.0, 6.0, 6.0));
+        StageConfig abyss = new StageConfig("🌑 深渊期", 30.0, 9000, 100.0, 12.0, 12.0);
+        abyss.mobEffects = new ArrayList<>(List.of(
+                new EffectEntry("minecraft:speed", 0, -1, 0.5),
+                new EffectEntry("minecraft:resistance", 0, -1, 0.5)));
+        list.add(abyss);
+        StageConfig finale = new StageConfig("🔥 终局之战", 60.0, -1, 400.0, 25.0, 20.0);
+        finale.mobEffects = new ArrayList<>(List.of(
+                new EffectEntry("minecraft:speed", 0, -1, 0.8),
+                new EffectEntry("minecraft:resistance", 0, -1, 0.8)));
+        list.add(finale);
+        return list;
+    }
 
     /** 阶段条目：id 名称 / difficulty 难度系数 / duration 时长 / mobListOverride 专属怪物池 / attributeMultipliers 属性倍率 / mobEffects 自带BUFF */
     public static class StageConfig {
@@ -195,6 +216,18 @@ public class MWConfig implements ConfigData {
             this.duration = duration;
         }
 
+        /** 全参构造（默认阶段表用）：difficulty + 属性三倍率 */
+        public StageConfig(String id, double difficulty, int duration,
+                           double healthMultiplier, double attackMultiplier, double armorMultiplier) {
+            this.id = id;
+            this.difficulty = difficulty;
+            this.duration = duration;
+            this.attributeMultipliers = new AttributeMultipliers();
+            this.attributeMultipliers.healthMultiplier = healthMultiplier;
+            this.attributeMultipliers.attackMultiplier = attackMultiplier;
+            this.attributeMultipliers.armorMultiplier = armorMultiplier;
+        }
+
         public static class AttributeMultipliers {
             public double healthMultiplier = 1.0;
             public double attackMultiplier = 1.0;
@@ -208,6 +241,17 @@ public class MWConfig implements ConfigData {
             public double chance = 1.0;
             public boolean showParticles = true;
             public boolean showIcon = true;
+
+            public EffectEntry() {
+            }
+
+            /** 便利构造（默认阶段表用） */
+            public EffectEntry(String effect, int amplifier, int duration, double chance) {
+                this.effect = effect;
+                this.amplifier = amplifier;
+                this.duration = duration;
+                this.chance = chance;
+            }
         }
     }
 
@@ -216,7 +260,7 @@ public class MWConfig implements ConfigData {
     public double healthBonusPerLevel = 0.2;
 
     @ConfigEntry.Category("difficulty")
-    public double attackBonusPerLevel = 0.5;
+    public double attackBonusPerLevel = 0.1;
 
     @ConfigEntry.Category("difficulty")
     public double armorBonusPerLevel = 0.5;
@@ -226,10 +270,10 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public String healthAlgorithm = "multiply";
 
-    /** 攻击难度算法：add=加算（默认）/ multiply=乘算 */
+    /** 攻击难度算法：multiply=乘算（默认，配合阶段攻击倍率曲线更平滑）/ add=加算 */
     @ConfigEntry.Category("difficulty")
     @ConfigEntry.Gui.Tooltip()
-    public String attackAlgorithm = "add";
+    public String attackAlgorithm = "multiply";
 
     /** 护甲难度算法：add=加算（默认）/ multiply=乘算 */
     @ConfigEntry.Category("difficulty")

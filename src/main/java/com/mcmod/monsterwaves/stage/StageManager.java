@@ -52,9 +52,22 @@ public final class StageManager {
         return StageData.get(server);
     }
 
-    /** 每 tick 调用一次：推进阶段计时器 */
+    /** 每 tick 调用一次：推进阶段计时器（v1.0.6 仅当有玩家处于启用刷怪引擎的维度时计时） */
     public static void serverTick(MinecraftServer server) {
         if (server == null || server.overworld() == null) {
+            return;
+        }
+        // v1.0.6：无玩家在启用维度（enabledDimensions 白名单内）→ 暂停阶段计时；
+        // 玩家全部离开（如都回主世界/休息维度）阶段冻结，回到启用维度后继续推进
+        boolean anyActivePlayer = false;
+        for (net.minecraft.server.level.ServerPlayer p : server.getPlayerList().getPlayers()) {
+            if (p.level() instanceof net.minecraft.server.level.ServerLevel lv
+                    && com.mcmod.monsterwaves.spawn.MobSpawnManager.isDimensionEnabled(lv)) {
+                anyActivePlayer = true;
+                break;
+            }
+        }
+        if (!anyActivePlayer) {
             return;
         }
         StageData data = getData(server);
