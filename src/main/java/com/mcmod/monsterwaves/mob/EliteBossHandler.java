@@ -60,20 +60,23 @@ public final class EliteBossHandler {
     public static void makeElite(Mob mob) {
         MWConfig cfg = MWConfig.get();
         upgrade(mob, ELITE_KEY, PREFIX_ELITE,
-                cfg.eliteHealthMultiplier, cfg.eliteAttackMultiplier, cfg.eliteArmorMultiplier);
+                cfg.eliteHealthMultiplier, cfg.eliteAttackMultiplier, cfg.eliteArmorMultiplier,
+                (float) cfg.eliteScale);
     }
 
-    /** 升级为 Boss（含 Boss 血条） */
+    /** 升级为 Boss（含 Boss 血条；碰撞箱从精英基础上放大到 bossScale） */
     public static void makeBoss(Mob mob) {
         MWConfig cfg = MWConfig.get();
         upgrade(mob, BOSS_KEY, PREFIX_BOSS,
-                cfg.bossHealthMultiplier, cfg.bossAttackMultiplier, cfg.bossArmorMultiplier);
+                cfg.bossHealthMultiplier, cfg.bossAttackMultiplier, cfg.bossArmorMultiplier,
+                (float) (cfg.bossScale / Math.max(0.1, cfg.eliteScale)));
         BossManager.show(mob);
     }
 
-    /** 属性乘算 + 名字变色 + 发光（幂等：已有标记则跳过） */
+    /** 属性乘算 + 名字变色 + 发光 + 碰撞箱缩放（幂等：已有标记则跳过） */
     private static void upgrade(Mob mob, String key, String prefix,
-                                double hpMult, double atkMult, double armMult) {
+                                double hpMult, double atkMult, double armMult,
+                                float collisionFactor) {
         var data = mob.getPersistentData();
         if (data.getBoolean(key)) {
             return;
@@ -103,6 +106,24 @@ public final class EliteBossHandler {
         mob.setCustomNameVisible(true);
         // 发光（长期，无粒子）
         mob.addEffect(new MobEffectInstance(MobEffects.GLOWING, 999999, 0, false, false, false));
+        // 碰撞箱缩放（服务端权威；Boss 传 bossScale/eliteScale 从精英基础上放大）
+        scaleCollision(mob, collisionFactor);
+    }
+
+    /** 按因子缩放实体碰撞箱（反射改 Entity.dimensions + refreshDimensions；1.20.1 无公开 API） */
+    private static void scaleCollision(Mob mob, float factor) {
+        if (factor <= 0 || Math.abs(factor - 1.0f) < 0.001f) {
+            return;
+        }
+        try {
+            java.lang.reflect.Field f = net.minecraft.world.entity.Entity.class.getDeclaredField("dimensions");
+            f.setAccessible(true);
+            net.minecraft.world.entity.EntityDimensions d = (net.minecraft.world.entity.EntityDimensions) f.get(mob);
+            f.set(mob, d.scale(factor));
+            mob.refreshDimensions();
+        } catch (Exception e) {
+            com.mcmod.monsterwaves.MonsterWavesMod.LOGGER.warn("MW 碰撞箱缩放失败: {}", e.toString());
+        }
     }
 
     public static boolean isElite(LivingEntity e) {
@@ -123,5 +144,17 @@ public final class EliteBossHandler {
             return cfg.eliteXpMultiplier;
         }
         return 1.0;
+    }
+
+    /** 体型缩放（渲染倍率，供客户端 RenderLivingEvent 缩放）：Boss > 精英 > 1.0 */
+    public static float getScale(LivingEntity e) {
+        MWConfig cfg = MWConfig.get();
+        if (isBoss(e)) {
+            return (float) cfg.bossScale;
+        }
+        if (isElite(e)) {
+            return (float) cfg.eliteScale;
+        }
+        return 1.0f;
     }
 }
