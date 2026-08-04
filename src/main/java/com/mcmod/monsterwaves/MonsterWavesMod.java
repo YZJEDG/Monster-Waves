@@ -4,13 +4,9 @@ import com.mcmod.monsterwaves.config.MWConfig;
 import com.mcmod.monsterwaves.event.ModEventHandler;
 import com.mcmod.monsterwaves.item.ModItems;
 import com.mcmod.monsterwaves.network.NetworkHandler;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.api.distmarker.Dist;
@@ -56,22 +52,9 @@ public class MonsterWavesMod {
                 MonsterWavesMod.LOGGER.warn("TaCZ 事件注册失败，枪械苦痛传递不可用（其余功能正常）", t);
             }
         }
-        // 注册 Cloth Config 配置层（config/monsterwaves.json 标准 JSON，v1.3.5 改回 Gson——JSON5/Jankson 在用户环境保存异常且写回丢注释）
-        // GsonConfigSerializer：gson.fromJson 覆盖反序列化（List/Map 不叠加默认值）；输出标准 JSON（无注释）；
-        // Forge 原生 serverconfig(TOML) 不支持 Map/嵌套对象（attributeConfigs），故用 Cloth + Gson 序列化器。
-        // 配置入口：GUI（v1.4 恢复，仅显示标量+字符串列表，嵌套表改 json 文件）；手编 config/monsterwaves.json + /monsterwaves reload；config set/save 指令。
-        AutoConfig.register(MWConfig.class, GsonConfigSerializer::new);
-        // 条件显示：开启"传送到重生点"时隐藏自定义坐标字段（fallDestinationX/Y/Z）
-        AutoConfig.getGuiRegistry(MWConfig.class).registerPredicateTransformer(
-                (entries, key, field, config, defaults, registry) ->
-                        ((MWConfig) config).fallToRespawnPoint ? java.util.List.of() : entries,
-                field -> field.getName().equals("fallDestinationX")
-                        || field.getName().equals("fallDestinationY")
-                        || field.getName().equals("fallDestinationZ"));
-        // 注册配置屏幕扩展点：供原版 Mods 列表与 Catalogue（模组目录）显示 Config 按钮（v1.4 恢复）
-        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
-                () -> new ConfigScreenHandler.ConfigScreenFactory((client, parent) ->
-                        AutoConfig.getConfigScreen(MWConfig.class, parent).get()));
+        // 配置层（v1.5 移除 Cloth Config 依赖）：自写 MWConfigManager，Gson 读写 config/monsterwaves.json
+        // 无 GUI、无自动热更新：改文件后 /monsterwaves reload 重载；config set/save 指令写回。
+        com.mcmod.monsterwaves.config.MWConfigManager.load();
         LOGGER.info("Monster Waves (怪物狂潮) MVP 已加载（配置：config/monsterwaves.json）");
     }
 }

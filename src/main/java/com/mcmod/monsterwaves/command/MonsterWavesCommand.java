@@ -293,7 +293,7 @@ public final class MonsterWavesCommand {
     /** 重新加载 JSON 配置并重新应用全部在线玩家属性（改完 config/monsterwaves.json 后无需重启） */
     private static int reloadConfig(CommandContext<CommandSourceStack> ctx) {
         try {
-            me.shedaniel.autoconfig.AutoConfig.getConfigHolder(MWConfig.class).load();
+            com.mcmod.monsterwaves.config.MWConfigManager.load();
             com.mcmod.monsterwaves.config.LootConfigLoader.reload(); // v1.0.18 独立掉落配置一并重载
         } catch (Exception e) {
             ctx.getSource().sendFailure(Component.literal("配置重载失败：" + e.getMessage()));
@@ -309,7 +309,7 @@ public final class MonsterWavesCommand {
     /** 将当前内存配置（含 GUI 已修改但未点保存的值）写入 config/monsterwaves.json */
     private static int configSave(CommandContext<CommandSourceStack> ctx) {
         try {
-            me.shedaniel.autoconfig.AutoConfig.getConfigHolder(MWConfig.class).save();
+            com.mcmod.monsterwaves.config.MWConfigManager.save();
             ctx.getSource().sendSuccess(() -> Component.literal("配置已保存到 config/monsterwaves.json5（重启后生效）"), true);
             return 1;
         } catch (Exception e) {
@@ -362,7 +362,7 @@ public final class MonsterWavesCommand {
             }
             f.set(cfg, parsed);
             cfg.validatePostLoad(); // clamp/清理（与配置加载同规则）
-            me.shedaniel.autoconfig.AutoConfig.getConfigHolder(MWConfig.class).save();
+            com.mcmod.monsterwaves.config.MWConfigManager.save();
             for (ServerPlayer p : ctx.getSource().getServer().getPlayerList().getPlayers()) {
                 PlayerDataManager.applyAll(p);
             }

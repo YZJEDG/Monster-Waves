@@ -1,31 +1,26 @@
 package com.mcmod.monsterwaves.config;
 
 import com.mcmod.monsterwaves.MonsterWavesMod;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 怪物狂潮配置（Cloth Config AutoConfig）。
+ * 怪物狂潮配置（v1.5 起自写 MWConfigManager + Gson，无 Cloth Config 依赖）。
  * 存于 config/monsterwaves.json5（JSON5 格式，支持注释/尾逗号，JanksonConfigSerializer 输出；
  * GUI 保存/指令 load/save 均读写该文件；手编时可写注释，读取宽松）
  * 游戏内 Mods 列表 -> Config 按钮打开 GUI 编辑。
  * 服务端逻辑通过 {@link #get()} 读取（每次读取最新值，修改即时生效）。
  *
  * <p>注：Cloth Config 11.1.136 的 @Config 仅有 name() 属性（无规格 v8.3 所述 ConfigType.SERVER），
- * 采用标准 AutoConfig 单文件配置；如需 Forge serverconfig 可后续扩展 PartitioningSerializer。
+ * 文件 config/monsterwaves.json（标准 JSON，Gson 序列化）；加载/保存走 MWConfigManager。
  */
-@Config(name = MonsterWavesMod.MOD_ID)
-public class MWConfig implements ConfigData {
+public class MWConfig {
 
     /** 便捷获取当前配置实例（每次返回最新值） */
     public static MWConfig get() {
-        return AutoConfig.getConfigHolder(MWConfig.class).getConfig();
+        return MWConfigManager.get();
     }
 
     /**
@@ -33,7 +28,6 @@ public class MWConfig implements ConfigData {
      * 所有数值 clamp、null 列表/元素兜底、非法条目清理——避免手编 JSON 导致崩溃或行为异常
      * （负概率必掉、难度 0 吞精英、maxMobsPerPlayer=0 不刷怪、null 元素 NPE 等）。
      */
-    @Override
     public void validatePostLoad() {
         // ===== spawn =====
         spawnInterval = Math.max(1, spawnInterval);
@@ -121,36 +115,24 @@ public class MWConfig implements ConfigData {
     }
 
     // ===== 全局（general）=====
-    @ConfigEntry.Category("general")
-    @ConfigEntry.Gui.Tooltip()
     public boolean enabled = true;
 
     // ===== 生成设置（spawn）=====
-    @ConfigEntry.Category("spawn")
-    @ConfigEntry.Gui.Tooltip()
     public int spawnInterval = 40;
 
-    @ConfigEntry.Category("spawn")
     public int minDistance = 20;
 
-    @ConfigEntry.Category("spawn")
     public int maxDistance = 32;
 
-    @ConfigEntry.Category("spawn")
     public int maxMobsPerPlayer = 30;
 
-    @ConfigEntry.Category("spawn")
     public int mobCountMin = 1;
 
-    @ConfigEntry.Category("spawn")
     public int mobCountMax = 2;
 
-    @ConfigEntry.Category("spawn")
     public double mobStatRadius = 48.0;
 
     /** 怪物池：每项格式 "注册名:权重"，如 "minecraft:zombie:5" */
-    @ConfigEntry.Category("spawn")
-    @ConfigEntry.Gui.Tooltip()
     public List<String> mobPool = new ArrayList<>(List.of(
             "minecraft:zombie:5",
             "minecraft:skeleton:3",
@@ -158,7 +140,6 @@ public class MWConfig implements ConfigData {
 
     // ===== 阶段系统（stage）=====
     /** 阶段列表（可分别调整各阶段难度/时长/怪物池/属性倍率/BUFF；字段见开发手册"阶段字段"表；v1.3.1 移出 GUI——嵌套 AttributeMultipliers 无 GUI provider 导致打开配置界面卡死，请直接改 json5，阶段切换用指令 stage set） */
-    @ConfigEntry.Gui.Excluded
     public List<StageConfig> stages = buildDefaultStages();
 
     /**
@@ -248,62 +229,41 @@ public class MWConfig implements ConfigData {
     }
 
     // ===== 难度参数（difficulty）=====
-    @ConfigEntry.Category("difficulty")
     public double healthBonusPerLevel = 0.2;
 
-    @ConfigEntry.Category("difficulty")
     public double attackBonusPerLevel = 0.1;
 
-    @ConfigEntry.Category("difficulty")
     public double armorBonusPerLevel = 0.5;
 
     /** 生命难度算法：multiply=乘算（基础×(1+(难度-1)×系数)×阶段倍率）/ add=加算（基础+(难度-1)×系数×阶段倍率） */
-    @ConfigEntry.Category("difficulty")
-    @ConfigEntry.Gui.Tooltip()
     public String healthAlgorithm = "multiply";
 
     /** 攻击难度算法：multiply=乘算（默认，配合阶段攻击倍率曲线更平滑）/ add=加算 */
-    @ConfigEntry.Category("difficulty")
-    @ConfigEntry.Gui.Tooltip()
     public String attackAlgorithm = "multiply";
 
     /** 护甲难度算法：add=加算（默认）/ multiply=乘算 */
-    @ConfigEntry.Category("difficulty")
-    @ConfigEntry.Gui.Tooltip()
     public String armorAlgorithm = "add";
 
     // ===== 技能点系统（skillSystem）=====
     /** 技能点系统总开关 */
-    @ConfigEntry.Category("skillSystem")
-    @ConfigEntry.Gui.Tooltip()
     public boolean skillEnabled = true;
 
     /** 每升一级获得的技能点 */
-    @ConfigEntry.Category("skillSystem")
-    @ConfigEntry.Gui.Tooltip()
     public int pointsPerLevel = 1;
 
     /** 技能点获取模式：LEVEL=升级获得 / XP=每积累指定经验获得 / DISABLED=仅指令与API（开发者可监听 SkillPointGainEvent 自定义算法） */
-    @ConfigEntry.Category("skillSystem")
-    @ConfigEntry.Gui.Tooltip()
     public String gainMode = "LEVEL";
 
     /** XP 模式下每获得多少经验给 1 技能点 */
-    @ConfigEntry.Category("skillSystem")
-    @ConfigEntry.Gui.Tooltip()
     public int xpPerPoint = 100;
 
     /** 总技能点上限（-1=无限） */
-    @ConfigEntry.Category("skillSystem")
-    @ConfigEntry.Gui.Tooltip()
     public int maxTotalPoints = -1;
 
     /** 打开加点界面的按键（KeyMapping 名称，如 key.keyboard.p） */
-    @ConfigEntry.Category("skillSystem")
     public String keyBinding = "key.keyboard.p";
 
     /** 属性显示名（属性注册名→显示名；缺省用原版属性名；v1.3.1 移出 GUI——Map 无 GUI provider，直接改 json5） */
-    @ConfigEntry.Gui.Excluded
     public Map<String, String> attributeDisplayNames = new java.util.HashMap<>(Map.ofEntries(
             Map.entry("minecraft:generic.attack_damage", "攻击力"),
             Map.entry("minecraft:generic.max_health", "最大生命"),
@@ -322,7 +282,6 @@ public class MWConfig implements ConfigData {
      * 默认：攻击/护甲/生命/速度/挖掘速度/攻击速度 + **额外属性** tacz 射速/换弹（百分比型，测试 TaCZ 对接）。
      * 注：1.20.1 原版无 block_break_speed（挖掘速度）属性（1.21+），模组提供同名属性则自动生效。
      */
-    @ConfigEntry.Gui.Excluded
     public Map<String, AttributeConfig> attributeConfigs = new java.util.HashMap<>(Map.ofEntries(
             // 默认全部百分比加成（每点 +percentagePerPoint；每属性可单独改回数值/幅度/上限）
             Map.entry("minecraft:generic.attack_damage", new AttributeConfig(true, true, 50)),
@@ -367,34 +326,22 @@ public class MWConfig implements ConfigData {
     }
 
     /** 百分比属性每点加成比例（0.1 = +10%） */
-    @ConfigEntry.Category("skillSystem")
-    @ConfigEntry.Gui.Tooltip()
     public double percentagePerPoint = 0.1;
 
     /** 重置消耗的技能点（0=免费） */
-    @ConfigEntry.Category("skillSystem")
-    @ConfigEntry.Gui.Tooltip()
     public int resetCostPoints = 5;
 
     /** 是否允许重置加点 */
-    @ConfigEntry.Category("skillSystem")
-    @ConfigEntry.Gui.Tooltip()
     public boolean resetEnabled = true;
 
     // ===== 经验加成（drop.experience）=====
     /** 经验加成开关（替代原属性球掉落，加速技能点获取） */
-    @ConfigEntry.Category("drop")
-    @ConfigEntry.Gui.Tooltip()
     public boolean experienceEnabled = true;
 
     /** 击杀怪物经验倍率 */
-    @ConfigEntry.Category("drop")
-    @ConfigEntry.Gui.Tooltip()
     public double experienceMultiplier = 1.0;
 
     /** 每点难度额外经验加成（0.2 = 每点难度 +20%） */
-    @ConfigEntry.Category("drop")
-    @ConfigEntry.Gui.Tooltip()
     public double experienceBonusPerDifficulty = 0.2;
 
     // ===== 维度开关（dimensions）=====
@@ -402,8 +349,6 @@ public class MWConfig implements ConfigData {
      * 启用本模组刷怪的维度列表；**留空 = 默认仅刷怪维度（monsterwaves:arena）**（v1.3 修正：原空=全部维度启用导致主世界也刷怪）。
      * 填维度 id（如 minecraft:overworld）则仅这些维度刷怪；休息维度始终不刷怪。
      */
-    @ConfigEntry.Category("dimensions")
-    @ConfigEntry.Gui.Tooltip()
     public List<String> enabledDimensions = new ArrayList<>(List.of("monsterwaves:arena"));
 
     /** 默认启用维度（列表留空时的回退值）：仅本模组刷怪维度 arena */
@@ -411,294 +356,188 @@ public class MWConfig implements ConfigData {
 
     // ===== 统一掉落（loot）=====
     /** 拦截 mod 生成怪的原版/其他 mod 掉落，只使用本 mod 掉落表（v1.0.4） */
-    @ConfigEntry.Category("loot")
-    @ConfigEntry.Gui.Tooltip()
     public boolean lootOverrideVanilla = true;
 
     /** 统一掉落开关（与属性球掉落并行） */
-    @ConfigEntry.Category("loot")
-    @ConfigEntry.Gui.Tooltip()
     public boolean lootEnabled = true;
 
     /** 全局概率倍率（再乘难度） */
-    @ConfigEntry.Category("loot")
-    @ConfigEntry.Gui.Tooltip()
     public double lootGlobalChanceMultiplier = 1.0;
 
     /** 每点难度额外数量（物品掉落） */
-    @ConfigEntry.Category("loot")
-    @ConfigEntry.Gui.Tooltip()
     public double lootExtraCountPerLevel = 0.0;
 
     // ===== 战斗符咒（battle）=====
     /** 战斗符咒开关 */
-    @ConfigEntry.Category("battle")
-    @ConfigEntry.Gui.Tooltip()
     public boolean battleCharmEnabled = true;
 
     /** 首次加入是否给予战斗符咒 */
-    @ConfigEntry.Category("battle")
-    @ConfigEntry.Gui.Tooltip()
     public boolean battleCharmGiveOnJoin = true;
 
     // ===== 刷怪维度（arena）=====
     /** 是否启用刷怪维度 */
-    @ConfigEntry.Category("arena")
-    @ConfigEntry.Gui.Tooltip()
     public boolean arenaEnabled = true;
 
     /** 刷怪维度出生点 Y（X/Z 固定为 0；配合超平坦地表 y=159（stone×158+dirt+grass），海平面以上避免光影把低处当地下而变暗） */
-    @ConfigEntry.Category("arena")
     public int arenaSpawnY = 160;
 
     // ===== 大范围拾取（pickup）=====
     /** 大范围拾取总开关 */
-    @ConfigEntry.Category("pickup")
-    @ConfigEntry.Gui.Tooltip()
     public boolean pickupEnable = true;
 
     /** 拾取半径（格） */
-    @ConfigEntry.Category("pickup")
     public double pickupRange = 6.0;
 
     /** 是否拾取普通物品实体 */
-    @ConfigEntry.Category("pickup")
     public boolean pickupItems = true;
 
     /** 是否拾取经验球（拉到玩家身边，原版接触自动吸收） */
-    @ConfigEntry.Category("pickup")
-    @ConfigEntry.Gui.Tooltip()
     public boolean pickupXp = true;
 
     /** 拾取检测间隔（tick） */
-    @ConfigEntry.Category("pickup")
     public int pickupInterval = 5;
 
     /** 是否只拾取自己击杀产生的掉落物 */
-    @ConfigEntry.Category("pickup")
-    @ConfigEntry.Gui.Tooltip()
     public boolean pickupOnlyOwnDrops = false;
 
     /** 黑名单物品（注册名），不被拾取 */
-    @ConfigEntry.Category("pickup")
-    @ConfigEntry.Gui.Tooltip()
     public List<String> pickupBlacklist = new ArrayList<>();
 
     // ===== 休息维度（safe）=====
     /** 是否启用休息维度与休息符咒 */
-    @ConfigEntry.Category("safe")
-    @ConfigEntry.Gui.Tooltip()
     public boolean safeEnabled = true;
 
     /** 空岛半径（格，自中心向外） */
-    @ConfigEntry.Category("safe")
     public int islandRadius = 20;
 
     /** 空岛顶部方块 */
-    @ConfigEntry.Category("safe")
     public String islandBlock = "minecraft:grass_block";
 
     /** 首次加入是否给予休息符咒 */
-    @ConfigEntry.Category("safe")
-    @ConfigEntry.Gui.Tooltip()
     public boolean giveOnJoin = true;
 
     /** 开局给予回归符咒（回主世界） */
-    @ConfigEntry.Category("safe")
-    @ConfigEntry.Gui.Tooltip()
     public boolean giveHomeCharmOnJoin = true;
 
     /** 跳下传送触发 Y 坐标（低于此值传送） */
-    @ConfigEntry.Category("safe")
     public int fallTeleportY = -10;
 
     /** 休息维度出生点 Y（X/Z 固定为 0） */
-    @ConfigEntry.Category("safe")
     public int safeSpawnY = 65;
 
     /** 坠落传送目标维度（arena 已建立，默认改为刷怪维度） */
-    @ConfigEntry.Category("safe")
     public String fallDestinationDimension = "monsterwaves:arena";
 
     /** 传送到重生点（开启=主世界用玩家重生点/其他维度用目标出生点；关闭=用下方自定义坐标，开启时隐藏自定义坐标） */
-    @ConfigEntry.Category("safe")
-    @ConfigEntry.Gui.Tooltip()
     public boolean fallToRespawnPoint = true;
 
-    @ConfigEntry.Category("safe")
     public int fallDestinationX = 0;
 
-    @ConfigEntry.Category("safe")
     public int fallDestinationY = 64;
 
-    @ConfigEntry.Category("safe")
     public int fallDestinationZ = 0;
 
     // ===== 精英怪 / Boss（第三阶段）=====
 
     /** 精英怪开关 */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public boolean eliteEnabled = true;
 
     /** 精英怪概率（每只生成怪；随难度提升） */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public double eliteChance = 0.02;
 
     /** 精英生命倍率 */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public double eliteHealthMultiplier = 3.0;
 
     /** 精英攻击倍率 */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public double eliteAttackMultiplier = 2.0;
 
     /** 精英护甲倍率 */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public double eliteArmorMultiplier = 2.0;
 
     /** 精英经验倍率 */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public double eliteXpMultiplier = 2.0;
 
     /** Boss 开关 */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public boolean bossEnabled = true;
 
     /** Boss 概率（远小于精英；随难度提升） */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public double bossChance = 0.002;
 
     /** Boss 生命倍率 */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public double bossHealthMultiplier = 50.0;
 
     /** Boss 攻击倍率 */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public double bossAttackMultiplier = 10.0;
 
     /** Boss 护甲倍率 */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public double bossArmorMultiplier = 10.0;
 
     /** Boss 经验倍率 */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public double bossXpMultiplier = 20.0;
 
     /** 概率随当前难度提升（难度越高精英/Boss 越常见） */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public boolean difficultyAffectsChance = true;
 
     /** 统计范围内精英数量上限（-1=不限；范围同 mobStatRadius） */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public int maxElitesPerPlayer = 5;
 
     /** 统计范围内 Boss 数量上限（-1=不限；范围同 mobStatRadius） */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
     public int maxBossesPerPlayer = 1;
 
     // ===== 怪物传送（mobTeleport，仅本 mod 生成的维度生效）=====
 
     /** 怪物传送开关（怪远离玩家时拉回，防溢出；任何启用生成引擎的维度 + 仅本 mod 生成的怪） */
-    @ConfigEntry.Category("mobTeleport")
-    @ConfigEntry.Gui.Tooltip()
     public boolean teleportEnabled = true;
 
     /** 距离阈值：怪与最近玩家超过此距离（格）时传送 */
-    @ConfigEntry.Category("mobTeleport")
-    @ConfigEntry.Gui.Tooltip()
     public double teleportThreshold = 80.0;
 
     /** 传送落点距玩家最小距离 */
-    @ConfigEntry.Category("mobTeleport")
-    @ConfigEntry.Gui.Tooltip()
     public double teleportMinDistance = 5.0;
 
     /** 传送落点距玩家最大距离 */
-    @ConfigEntry.Category("mobTeleport")
-    @ConfigEntry.Gui.Tooltip()
     public double teleportMaxDistance = 20.0;
 
     /** 检测间隔（tick，20=1s） */
-    @ConfigEntry.Category("mobTeleport")
-    @ConfigEntry.Gui.Tooltip()
     public int teleportCheckInterval = 10;
 
     // ===== 苦痛传递附魔（enchantment，v10.5，设计见 mod概述.md 第 13 节）=====
 
     /** 苦痛传递附魔总开关 */
-    @ConfigEntry.Category("enchantment")
-    @ConfigEntry.Gui.Tooltip()
     public boolean painTransferenceEnabled = true;
 
     /** 苦痛传递最大等级 */
-    @ConfigEntry.Category("enchantment")
-    @ConfigEntry.Gui.Tooltip()
     public int painTransferenceMaxLevel = 5;
 
     /** 传递范围基础半径（格） */
-    @ConfigEntry.Category("enchantment")
-    @ConfigEntry.Gui.Tooltip()
     public double painTransferenceBaseRadius = 4.0;
 
     /** 每级半径加成 */
-    @ConfigEntry.Category("enchantment")
-    @ConfigEntry.Gui.Tooltip()
     public double painTransferenceRadiusPerLevel = 1.0;
 
     /** 传递伤害基础百分比（0.30 = 主伤害的 30%） */
-    @ConfigEntry.Category("enchantment")
-    @ConfigEntry.Gui.Tooltip()
     public double painTransferenceBaseDamagePercent = 0.30;
 
     /** 每级伤害百分比加成 */
-    @ConfigEntry.Category("enchantment")
-    @ConfigEntry.Gui.Tooltip()
     public double painTransferenceDamagePercentPerLevel = 0.05;
 
     /** 只传递给同类型怪物 */
-    @ConfigEntry.Category("enchantment")
-    @ConfigEntry.Gui.Tooltip()
     public boolean painTransferenceAffectSameTypeOnly = false;
 
     /** 传递伤害是否作用于精英/Boss */
-    @ConfigEntry.Category("enchantment")
-    @ConfigEntry.Gui.Tooltip()
     public boolean painTransferenceAffectEliteBoss = true;
 
     /** 排除目标自身（不传递给被直接命中的目标） */
-    @ConfigEntry.Category("enchantment")
-    @ConfigEntry.Gui.Tooltip()
     public boolean painTransferenceExcludeSource = true;
 
     /** 伤害源标识（调试用，自定义伤害源 msgId） */
-    @ConfigEntry.Category("enchantment")
-    @ConfigEntry.Gui.Tooltip()
     public String painTransferenceDamageSourceMessage = "pain_transference";
 
     // ===== 状态播报（stage，聊天栏周期提示，替代 HUD）=====
 
     /** 状态播报开关（每 statusNoticeInterval tick 在聊天栏提示当前阶段/难度） */
-    @ConfigEntry.Category("stage")
-    @ConfigEntry.Gui.Tooltip()
     public boolean statusNoticeEnabled = true;
 
     /** 状态播报间隔（tick，600=30 秒） */
-    @ConfigEntry.Category("stage")
-    @ConfigEntry.Gui.Tooltip()
     public int statusNoticeInterval = 600;
 }

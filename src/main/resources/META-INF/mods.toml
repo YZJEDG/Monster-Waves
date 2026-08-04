@@ -37,13 +37,6 @@ description='''
     side="BOTH"
 
 [[dependencies.${mod_id}]]
-    modId="cloth_config"
-    mandatory=true
-    versionRange="[11.1.118,)"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.${mod_id}]]
     modId="ftblibrary"
     mandatory=true
     versionRange="[2001,2002)"

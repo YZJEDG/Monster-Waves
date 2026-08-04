@@ -58,28 +58,6 @@ public final class ModEventHandler {
     /** 掉落物归属标记（击杀者 UUID，供 onlyOwnDrops 使用） */
     private static final String DROP_OWNER = "monsterwaves_owner";
 
-    /** 客户端轮询：配置界面中"传送到重生点"开关变化时立即重建界面（实时条件显示）；首次 tick 同步实际值（v1.4 恢复 GUI） */
-    private static boolean lastFallToRespawn = true;
-
-    /** 客户端 tick：检测配置开关变化并实时重建 Cloth Config 界面 */
-    @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) {
-            return;
-        }
-        net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
-        if (mc.screen == null) {
-            lastFallToRespawn = MWConfig.get().fallToRespawnPoint;
-            return;
-        }
-        if (mc.screen instanceof me.shedaniel.clothconfig2.gui.ClothConfigScreen
-                && MWConfig.get().fallToRespawnPoint != lastFallToRespawn) {
-            lastFallToRespawn = MWConfig.get().fallToRespawnPoint;
-            mc.setScreen(me.shedaniel.autoconfig.AutoConfig.getConfigScreen(
-                    MWConfig.class, mc.screen).get());
-        }
-    }
-
     /** 聊天栏状态播报：向启用生成引擎维度内的玩家提示当前阶段/难度（替代 HUD 界面，默认每 30 秒） */
     private static void broadcastStatus(MinecraftServer server) {
         if (!MWConfig.get().statusNoticeEnabled) {
@@ -104,8 +82,6 @@ public final class ModEventHandler {
         }
         MinecraftServer server = event.getServer();
         StageManager.serverTick(server);
-        // 独立掉落配置热重载检查（v1.0.18：config/monsterwaves_loot.json5 mtime 轮询）
-        com.mcmod.monsterwaves.config.LootConfigLoader.tick();
         // Boss 血条进度更新/清理
         com.mcmod.monsterwaves.mob.BossManager.tick(server);
         // 怪物传送（防溢出，仅 mod 维度）
