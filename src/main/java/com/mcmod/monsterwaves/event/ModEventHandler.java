@@ -296,9 +296,13 @@ public final class ModEventHandler {
     /** 原版掉落拦截 + 归属标记：只追踪本 mod 生成的怪（UUID 集合 + NBT 双判断，兼容任意 mod 生物） */
     @SubscribeEvent
     public static void onLivingDrops(net.minecraftforge.event.entity.living.LivingDropsEvent event) {
-        // v1.0.9：只拦截本 mod 生成的生物（MobSpawnManager.isTracked），其他 mod/原版生物掉落完全不受影响
+        // v1.0.9/1.0.10：只拦截本 mod 生成的生物（MobSpawnManager.isTracked），其他 mod/原版生物掉落完全不受影响
         if (MobSpawnManager.isTracked(event.getEntity()) && MWConfig.get().lootOverrideVanilla) {
             event.setCanceled(true);
+            // v1.0.10 双保险：清空已收集的掉落物（防其他 mod 在 cancel 后仍塞入物品）
+            event.getDrops().clear();
+            MonsterWavesMod.LOGGER.debug("MW 掉落拦截：{} 的原版掉落已取消，只走 mod 掉落表",
+                    event.getEntity());
             return;
         }
         if (event.getSource().getEntity() instanceof net.minecraft.world.entity.player.Player p) {
