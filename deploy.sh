@@ -4,7 +4,7 @@
 # 2. 复制最新构建产物（mod 本体）到测试环境 mods 目录
 set -euo pipefail
 
-SRC="build/libs/monsterwaves-0.1.0.jar"
+SRC="build/libs/monsterwaves-1.0.0.jar"
 MODS="D:/game/mc/.minecraft/versions/测试MOD/mods"
 BACKUP="D:/game/mc/.minecraft/versions/测试MOD/mods_backup"
 
@@ -27,4 +27,4 @@ done
 
 # 复制新版（只复制 mod 本体 jar，不含日志等其他文件）
 cp "$SRC" "$MODS/"
-echo "[完成] 已部署 monsterwaves-0.1.0.jar -> $MODS/"
+echo "[完成] 已部署 monsterwaves-1.0.0.jar -> $MODS/"
