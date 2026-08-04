@@ -161,8 +161,7 @@ public class MWConfig implements ConfigData {
             Map.entry("gunsmithlib:rpm", "射速"),
             Map.entry("gunsmithlib:reload_speed", "换弹速度"),
             Map.entry("gunsmithlib:bullet_damage", "子弹伤害"),
-            Map.entry("gunsmithlib:bullet_speed", "子弹速度"),
-            Map.entry("gunsmithlib:ammo_capacity", "弹匣容量")));
+            Map.entry("gunsmithlib:bullet_speed", "子弹速度")));
 
     /**
      * 属性加点白名单（属性注册名 → 配置）。**未列出的属性不可加点**，开发者可自行增删。
@@ -187,8 +186,7 @@ public class MWConfig implements ConfigData {
             Map.entry("gunsmithlib:rpm", new AttributeConfig(true, true, 50)),
             Map.entry("gunsmithlib:reload_speed", new AttributeConfig(true, true, 50)),
             Map.entry("gunsmithlib:bullet_damage", new AttributeConfig(true, true, 50)),
-            Map.entry("gunsmithlib:bullet_speed", new AttributeConfig(true, true, 50)),
-            Map.entry("gunsmithlib:ammo_capacity", new AttributeConfig(true, true, 50))));
+            Map.entry("gunsmithlib:bullet_speed", new AttributeConfig(true, true, 50))));
 
     /** 单属性加点配置（白名单内每个属性独立配置） */
     public static class AttributeConfig {
