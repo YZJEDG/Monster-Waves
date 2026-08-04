@@ -167,5 +167,9 @@
   "text.autoconfig.monsterwaves.option.painTransferenceAffectSameTypeOnly": "只传递同类型怪",
   "text.autoconfig.monsterwaves.option.painTransferenceAffectEliteBoss": "传递作用于精英/Boss",
   "text.autoconfig.monsterwaves.option.painTransferenceExcludeSource": "排除目标自身",
-  "text.autoconfig.monsterwaves.option.painTransferenceDamageSourceMessage": "伤害源标识"
+  "text.autoconfig.monsterwaves.option.painTransferenceDamageSourceMessage": "伤害源标识",
+  "text.autoconfig.monsterwaves.option.statusNoticeEnabled": "状态播报开关",
+  "text.autoconfig.monsterwaves.option.statusNoticeEnabled.@Tooltip": "每 statusNoticeInterval tick 在聊天栏提示当前阶段/难度（替代 HUD 界面）",
+  "text.autoconfig.monsterwaves.option.statusNoticeInterval": "状态播报间隔",
+  "text.autoconfig.monsterwaves.option.statusNoticeInterval.@Tooltip": "tick（600=30 秒）"
 }

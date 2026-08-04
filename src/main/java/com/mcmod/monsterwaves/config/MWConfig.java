@@ -577,4 +577,16 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("enchantment")
     @ConfigEntry.Gui.Tooltip()
     public String painTransferenceDamageSourceMessage = "pain_transference";
+
+    // ===== 状态播报（stage，聊天栏周期提示，替代 HUD）=====
+
+    /** 状态播报开关（每 statusNoticeInterval tick 在聊天栏提示当前阶段/难度） */
+    @ConfigEntry.Category("stage")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean statusNoticeEnabled = true;
+
+    /** 状态播报间隔（tick，600=30 秒） */
+    @ConfigEntry.Category("stage")
+    @ConfigEntry.Gui.Tooltip()
+    public int statusNoticeInterval = 600;
 }

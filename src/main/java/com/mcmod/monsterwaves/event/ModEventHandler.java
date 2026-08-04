@@ -47,6 +47,9 @@ import java.util.List;
  */
 public final class ModEventHandler {
 
+    /** 状态播报计数器（每 statusNoticeInterval tick 一次聊天栏提示） */
+    private static int statusTicker = 0;
+
     /** 掉落物归属标记（击杀者 UUID，供 onlyOwnDrops 使用） */
     private static final String DROP_OWNER = "monsterwaves_owner";
 
@@ -72,9 +75,28 @@ public final class ModEventHandler {
         }
     }
 
+    /** 聊天栏状态播报：向启用生成引擎维度内的玩家提示当前阶段/难度（替代 HUD 界面，默认每 30 秒） */
+    private static void broadcastStatus(MinecraftServer server) {
+        if (!MWConfig.get().statusNoticeEnabled) {
+            return;
+        }
+        var stage = StageManager.getData(server).currentStage();
+        double diff = StageManager.getDifficulty(server);
+        net.minecraft.network.chat.Component msg = net.minecraft.network.chat.Component.literal(
+                "§e【怪物狂潮】§r 当前阶段: §b" + stage.id() + "§r 难度: §c"
+                        + String.format("%.1f", diff) + "§r" + (stage.isInfinite() ? " §7(无限)" : ""));
+        for (ServerLevel lv : server.getAllLevels()) {
+            if (!com.mcmod.monsterwaves.spawn.MobSpawnManager.isDimensionEnabled(lv)) {
+                continue;
+            }
+            for (ServerPlayer p : lv.players()) {
+                p.displayClientMessage(msg, false);
+            }
+        }
+    }
+
     @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) {
+    public static void onServerTick(TickEvent.ServerTickEvent event) {        if (event.phase != TickEvent.Phase.END) {
             return;
         }
         MinecraftServer server = event.getServer();
@@ -83,6 +105,10 @@ public final class ModEventHandler {
         com.mcmod.monsterwaves.mob.BossManager.tick(server);
         // 怪物传送（防溢出，仅 mod 维度）
         com.mcmod.monsterwaves.mob.MobTeleportHandler.tick(server);
+        // 状态播报：聊天栏每 statusNoticeInterval tick 提示阶段/难度（替代 HUD 界面）
+        if (++statusTicker % Math.max(1, MWConfig.get().statusNoticeInterval) == 0) {
+            broadcastStatus(server);
+        }
         // 休息维度玩家规则：锁饥饿 + 跳下传送
         ServerLevel safeLevel = SafeDimensionManager.getSafeLevel(server);
         if (safeLevel != null) {

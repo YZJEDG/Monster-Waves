@@ -167,5 +167,9 @@
   "text.autoconfig.monsterwaves.option.painTransferenceAffectSameTypeOnly": "Affect Same Type Only",
   "text.autoconfig.monsterwaves.option.painTransferenceAffectEliteBoss": "Affect Elite/Boss",
   "text.autoconfig.monsterwaves.option.painTransferenceExcludeSource": "Exclude Source",
-  "text.autoconfig.monsterwaves.option.painTransferenceDamageSourceMessage": "Damage Source Message"
+  "text.autoconfig.monsterwaves.option.painTransferenceDamageSourceMessage": "Damage Source Message",
+  "text.autoconfig.monsterwaves.option.statusNoticeEnabled": "Status Notice Enabled",
+  "text.autoconfig.monsterwaves.option.statusNoticeEnabled.@Tooltip": "Announce current stage/difficulty in chat every statusNoticeInterval ticks (replaces HUD)",
+  "text.autoconfig.monsterwaves.option.statusNoticeInterval": "Status Notice Interval",
+  "text.autoconfig.monsterwaves.option.statusNoticeInterval.@Tooltip": "Ticks (600 = 30 seconds)"
 }
