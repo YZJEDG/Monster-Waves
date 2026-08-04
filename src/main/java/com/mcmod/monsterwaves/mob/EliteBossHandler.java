@@ -111,27 +111,33 @@ public final class EliteBossHandler {
     }
 
     /** 按因子缩放实体碰撞箱（反射改 Entity.dimensions + refreshDimensions；1.20.1 无公开 API）。
-     * 字段名兼容开发环境（parchment: dimensions）与生产（srg: f_19789_）。 */
+     * 字段按**类型查找**（Entity 中唯一的 EntityDimensions 字段），兼容 parchment/srg/任何映射，不依赖字段名。 */
+    private static final java.lang.reflect.Field DIMENSIONS_FIELD = findDimensionsField();
+
+    private static java.lang.reflect.Field findDimensionsField() {
+        try {
+            for (java.lang.reflect.Field ff : net.minecraft.world.entity.Entity.class.getDeclaredFields()) {
+                if (ff.getType() == net.minecraft.world.entity.EntityDimensions.class) {
+                    ff.setAccessible(true);
+                    return ff;
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
+
     private static void scaleCollision(Mob mob, float factor) {
         if (factor <= 0 || Math.abs(factor - 1.0f) < 0.001f) {
             return;
         }
         try {
-            java.lang.reflect.Field f = null;
-            for (String n : new String[]{"dimensions", "f_19789_"}) {
-                try {
-                    f = net.minecraft.world.entity.Entity.class.getDeclaredField(n);
-                    break;
-                } catch (NoSuchFieldException ignored) {
-                }
-            }
-            if (f == null) {
-                com.mcmod.monsterwaves.MonsterWavesMod.LOGGER.warn("MW 找不到 Entity.dimensions 字段（srg/parchment 均试过），碰撞箱缩放跳过");
+            if (DIMENSIONS_FIELD == null) {
+                com.mcmod.monsterwaves.MonsterWavesMod.LOGGER.warn("MW 未找到 EntityDimensions 字段（类型查找失败），碰撞箱缩放跳过");
                 return;
             }
-            f.setAccessible(true);
-            net.minecraft.world.entity.EntityDimensions d = (net.minecraft.world.entity.EntityDimensions) f.get(mob);
-            f.set(mob, d.scale(factor));
+            net.minecraft.world.entity.EntityDimensions d = (net.minecraft.world.entity.EntityDimensions) DIMENSIONS_FIELD.get(mob);
+            DIMENSIONS_FIELD.set(mob, d.scale(factor));
             mob.refreshDimensions();
         } catch (Exception e) {
             com.mcmod.monsterwaves.MonsterWavesMod.LOGGER.warn("MW 碰撞箱缩放失败: {}", e.toString());
