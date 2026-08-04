@@ -56,7 +56,7 @@ public class MonsterWavesMod {
                 MonsterWavesMod.LOGGER.warn("TaCZ 事件注册失败，枪械苦痛传递不可用（其余功能正常）", t);
             }
         }
-        // 注册 Cloth Config 配置（config/monsterwaves.json5，GUI 自动集成 Mods 列表）
+        // 注册 Cloth Config 配置（config/monsterwaves.json 标准 JSON，GUI 自动集成 Mods 列表）
         // JSON 配置（config/monsterwaves.json）：贴合主流配置格式（其他 mod 多用 toml/json）；
         // Forge 原生 serverconfig(TOML) 不支持 Map/嵌套对象（attributeConfigs），故用 Cloth + Gson 序列化器保留全部结构与 GUI。
         AutoConfig.register(MWConfig.class, GsonConfigSerializer::new);

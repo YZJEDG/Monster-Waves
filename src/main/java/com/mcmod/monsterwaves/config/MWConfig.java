@@ -12,7 +12,8 @@ import java.util.Map;
 
 /**
  * 怪物狂潮配置（Cloth Config AutoConfig）。
- * 存于 config/monsterwaves.json5，游戏内 Mods 列表 -> Config 按钮打开 GUI 编辑。
+ * 存于 config/monsterwaves.json（标准 JSON，GsonConfigSerializer 输出，无注释；GUI 保存/指令 load/save 均写该文件）
+ * 游戏内 Mods 列表 -> Config 按钮打开 GUI 编辑。
  * 服务端逻辑通过 {@link #get()} 读取（每次读取最新值，修改即时生效）。
  *
  * <p>注：Cloth Config 11.1.136 的 @Config 仅有 name() 属性（无规格 v8.3 所述 ConfigType.SERVER），
