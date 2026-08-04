@@ -106,40 +106,25 @@ public final class EliteBossHandler {
         mob.setCustomNameVisible(true);
         // 发光（长期，无粒子）
         mob.addEffect(new MobEffectInstance(MobEffects.GLOWING, 999999, 0, false, false, false));
-        // 碰撞箱缩放（服务端权威；Boss 传 bossScale/eliteScale 从精英基础上放大）
-        scaleCollision(mob, collisionFactor);
+        // 碰撞箱缩放（CustomHitboxLib；Boss 传 bossScale/eliteScale 从精英基础上放大）
+        applyHitboxScale(mob, collisionFactor);
     }
 
-    /** 按因子缩放实体碰撞箱（反射改 Entity.dimensions + refreshDimensions；1.20.1 无公开 API）。
-     * 字段按**类型查找**（Entity 中唯一的 EntityDimensions 字段），兼容 parchment/srg/任何映射，不依赖字段名。 */
-    private static final java.lang.reflect.Field DIMENSIONS_FIELD = findDimensionsField();
-
-    private static java.lang.reflect.Field findDimensionsField() {
-        try {
-            for (java.lang.reflect.Field ff : net.minecraft.world.entity.Entity.class.getDeclaredFields()) {
-                if (ff.getType() == net.minecraft.world.entity.EntityDimensions.class) {
-                    ff.setAccessible(true);
-                    return ff;
-                }
-            }
-        } catch (Exception ignored) {
-        }
-        return null;
-    }
-
-    private static void scaleCollision(Mob mob, float factor) {
-        if (factor <= 0 || Math.abs(factor - 1.0f) < 0.001f) {
+    /** 碰撞箱缩放（v10.3）：改用 CustomHitboxLib——附加放大尺寸的子碰撞箱（伤害自动转发主体，库处理同步）。
+     * 底部对齐（怪变大脚不离地）；Boss 从精英基础上放大（比例法，见 makeBoss）。 */
+    private static void applyHitboxScale(Mob mob, float scale) {
+        if (scale <= 0 || Math.abs(scale - 1.0f) < 0.001f) {
             return;
         }
         try {
-            if (DIMENSIONS_FIELD == null) {
-                com.mcmod.monsterwaves.MonsterWavesMod.LOGGER.warn("MW 未找到 EntityDimensions 字段（类型查找失败），碰撞箱缩放跳过");
-                return;
-            }
-            net.minecraft.world.entity.EntityDimensions d = (net.minecraft.world.entity.EntityDimensions) DIMENSIONS_FIELD.get(mob);
-            DIMENSIONS_FIELD.set(mob, d.scale(factor));
-            mob.refreshDimensions();
-        } catch (Exception e) {
+            net.minecraft.world.entity.EntityDimensions base = mob.getDimensions(mob.getPose());
+            net.minecraft.world.entity.EntityDimensions scaled = new net.minecraft.world.entity.EntityDimensions(
+                    base.width * scale, base.height * scale, base.fixed);
+            double yOffset = (scaled.height - base.height) / 2.0; // 底部对齐
+            dev.customhitboxlib.api.MultipartHelper.removePart(mob, "monsterwaves_scale");
+            dev.customhitboxlib.api.MultipartHelper.addPart(mob, "monsterwaves_scale", scaled,
+                    dev.customhitboxlib.api.PartPositioners.relativeTo(mob, 0, yOffset, 0));
+        } catch (Throwable e) {
             com.mcmod.monsterwaves.MonsterWavesMod.LOGGER.warn("MW 碰撞箱缩放失败: {}", e.toString());
         }
     }
