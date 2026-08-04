@@ -26,15 +26,14 @@ public class S2CSyncData {
 
     public static S2CSyncData from(ServerPlayer player) {
         Map<String, Integer> allocated = PlayerDataManager.getAllAllocated(player);
+        // 携带**全部白名单属性**的服务端当前值（而非仅已分配项）：
+        // 重置/清零后 allocated 为空时界面仍能拿到正确的服务端值，避免退回本地旧值导致显示错乱
         Map<String, Double> values = new HashMap<>();
-        for (Map.Entry<String, Integer> e : allocated.entrySet()) {
-            if (e.getValue() <= 0) {
-                continue;
-            }
-            var attr = PlayerDataManager.resolveAttribute(e.getKey());
+        for (String id : com.mcmod.monsterwaves.config.MWConfig.get().attributeConfigs.keySet()) {
+            var attr = PlayerDataManager.resolveAttribute(id);
             var inst = attr == null ? null : player.getAttribute(attr);
             if (inst != null) {
-                values.put(e.getKey(), inst.getValue());
+                values.put(id, inst.getValue());
             }
         }
         return new S2CSyncData(
