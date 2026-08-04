@@ -31,6 +31,8 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Map;
 
 /**
@@ -73,6 +75,24 @@ public final class MonsterWavesCommand {
     /** Tab 补全：白名单属性注册名（attributeConfigs 键，含 tacz 等模组属性） */
     private static final SuggestionProvider<CommandSourceStack> SUGGEST_ATTRIBUTES = (ctx, builder) ->
             SharedSuggestionProvider.suggest(MWConfig.get().attributeConfigs.keySet(), builder);
+
+    /** Tab 补全：config set 可改字段（标量 + List<String>；嵌套 POJO/Map 不支持，提示用文件改） */
+    private static final SuggestionProvider<CommandSourceStack> SUGGEST_CONFIG_FIELDS = (ctx, builder) ->
+            SharedSuggestionProvider.suggest(
+                    java.util.Arrays.stream(MWConfig.class.getFields())
+                            .filter(f -> !Modifier.isStatic(f.getModifiers()))
+                            .filter(f -> {
+                                Class<?> t = f.getType();
+                                if (t == int.class || t == double.class || t == boolean.class || t == String.class) {
+                                    return true;
+                                }
+                                return t == java.util.List.class
+                                        && f.getGenericType() instanceof java.lang.reflect.ParameterizedType pt
+                                        && pt.getActualTypeArguments()[0] == String.class;
+                            })
+                            .map(Field::getName)
+                            .sorted(),
+                    builder);
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("monsterwaves")
@@ -146,7 +166,12 @@ public final class MonsterWavesCommand {
                 .then(Commands.literal("config")
                         .requires(src -> src.hasPermission(2))
                         .then(Commands.literal("save")
-                                .executes(MonsterWavesCommand::configSave)))
+                                .executes(MonsterWavesCommand::configSave))
+                        .then(Commands.literal("set")
+                                .then(Commands.argument("field", StringArgumentType.word())
+                                        .suggests(SUGGEST_CONFIG_FIELDS)
+                                        .then(Commands.argument("value", StringArgumentType.greedyString())
+                                                .executes(MonsterWavesCommand::configSet)))))
                 .then(Commands.literal("player")
                         .then(Commands.literal("list")
                                 .executes(MonsterWavesCommand::playerList)))
@@ -283,10 +308,74 @@ public final class MonsterWavesCommand {
     private static int configSave(CommandContext<CommandSourceStack> ctx) {
         try {
             me.shedaniel.autoconfig.AutoConfig.getConfigHolder(MWConfig.class).save();
-            ctx.getSource().sendSuccess(() -> Component.literal("配置已保存到 config/monsterwaves.json（重启后生效）"), true);
+            ctx.getSource().sendSuccess(() -> Component.literal("配置已保存到 config/monsterwaves.json5（重启后生效）"), true);
             return 1;
         } catch (Exception e) {
             ctx.getSource().sendFailure(Component.literal("配置保存失败：" + e.getMessage()));
+            return 0;
+        }
+    }
+
+    /**
+     * 通用配置修改：/monsterwaves config set <字段> <值>（v1.2）。
+     * 支持标量字段（int/double/boolean/String）与 List&lt;String&gt;（逗号分隔，整体替换）；
+     * 改完自动 validatePostLoad + 写回 json5 文件 + 重应用全部在线玩家属性（热更新）。
+     * 嵌套 POJO 列表（stages/掉落表）与 Map 不支持，提示手编文件。
+     */
+    private static int configSet(CommandContext<CommandSourceStack> ctx) {
+        String fieldName = StringArgumentType.getString(ctx, "field");
+        String value = StringArgumentType.getString(ctx, "value");
+        try {
+            Field f = MWConfig.class.getField(fieldName);
+            if (Modifier.isStatic(f.getModifiers())) {
+                ctx.getSource().sendFailure(Component.literal("不可修改静态字段：" + fieldName));
+                return 0;
+            }
+            MWConfig cfg = MWConfig.get();
+            Class<?> t = f.getType();
+            Object parsed;
+            if (t == int.class) {
+                parsed = Integer.parseInt(value.trim());
+            } else if (t == double.class) {
+                parsed = Double.parseDouble(value.trim());
+            } else if (t == boolean.class) {
+                parsed = Boolean.parseBoolean(value.trim());
+            } else if (t == String.class) {
+                parsed = value;
+            } else if (t == java.util.List.class
+                    && f.getGenericType() instanceof java.lang.reflect.ParameterizedType pt
+                    && pt.getActualTypeArguments()[0] == String.class) {
+                java.util.List<String> list = new java.util.ArrayList<>();
+                for (String s : value.split(",")) {
+                    String v = s.trim();
+                    if (!v.isEmpty()) {
+                        list.add(v);
+                    }
+                }
+                parsed = list;
+            } else {
+                ctx.getSource().sendFailure(Component.literal("字段 " + fieldName
+                        + " 不支持指令修改（类型 " + t.getSimpleName() + "），请手编 config/monsterwaves.json5"));
+                return 0;
+            }
+            f.set(cfg, parsed);
+            cfg.validatePostLoad(); // clamp/清理（与配置加载同规则）
+            me.shedaniel.autoconfig.AutoConfig.getConfigHolder(MWConfig.class).save();
+            for (ServerPlayer p : ctx.getSource().getServer().getPlayerList().getPlayers()) {
+                PlayerDataManager.applyAll(p);
+            }
+            Object shown = f.get(cfg);
+            ctx.getSource().sendSuccess(() -> Component.literal("已设置 " + fieldName + " = " + shown
+                    + "（已保存到 config/monsterwaves.json5 并热更新生效）"), true);
+            return 1;
+        } catch (NoSuchFieldException e) {
+            ctx.getSource().sendFailure(Component.literal("未知配置字段：" + fieldName + "（Tab 补全可看全部可用字段）"));
+            return 0;
+        } catch (NumberFormatException e) {
+            ctx.getSource().sendFailure(Component.literal("数值格式错误：" + value + "（期望数字）"));
+            return 0;
+        } catch (Exception e) {
+            ctx.getSource().sendFailure(Component.literal("设置失败：" + e.getMessage()));
             return 0;
         }
     }
