@@ -314,11 +314,6 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public boolean battleCharmGiveOnJoin = true;
 
-    /** 战斗符咒冷却（tick） */
-    @ConfigEntry.Category("battle")
-    @ConfigEntry.Gui.Tooltip()
-    public int battleCharmCooldown = 600;
-
     // ===== 刷怪维度（arena）=====
     /** 是否启用刷怪维度 */
     @ConfigEntry.Category("arena")
@@ -385,11 +380,6 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("safe")
     @ConfigEntry.Gui.Tooltip()
     public boolean giveHomeCharmOnJoin = true;
-
-    /** 休息符咒冷却（tick） */
-    @ConfigEntry.Category("safe")
-    @ConfigEntry.Gui.Tooltip()
-    public int safeCooldown = 600;
 
     /** 跳下传送触发 Y 坐标（低于此值传送） */
     @ConfigEntry.Category("safe")

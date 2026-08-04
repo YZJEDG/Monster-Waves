@@ -23,13 +23,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 /**
  * 休息维度系统：
  * - 维度 monsterwaves:safe（数据包注册，flat 全空 + 代码生成空岛）
- * - 休息符咒传送（带冷却，冷却存玩家 NBT）
+ * - 休息符咒传送（消耗制，无冷却）
  * - 玩家规则：不饥饿、免疫伤害、低于 fallTeleportY 传送至目标维度
  */
 public final class SafeDimensionManager {
     public static final ResourceLocation SAFE_ID = new ResourceLocation(MonsterWavesMod.MOD_ID, "safe");
     public static final ResourceKey<Level> SAFE_DIMENSION = ResourceKey.create(Registries.DIMENSION, SAFE_ID);
-    public static final String COOLDOWN_KEY = "monsterwaves_safe_cooldown";
 
     private SafeDimensionManager() {
     }
@@ -54,14 +53,6 @@ public final class SafeDimensionManager {
             player.displayClientMessage(Component.literal("休息维度不可用"), true);
             return false;
         }
-        long now = player.level().getGameTime();
-        long cooldownUntil = player.getPersistentData().getLong(COOLDOWN_KEY);
-        if (now < cooldownUntil) {
-            int remain = (int) Math.ceil((cooldownUntil - now) / 20.0);
-            player.displayClientMessage(Component.literal("休息符咒冷却中，剩余 " + remain + " 秒"), true);
-            return false;
-        }
-        player.getPersistentData().putLong(COOLDOWN_KEY, now + cfg.safeCooldown);
         ensureIsland(safeLevel);
         int y = Math.max(cfg.safeSpawnY, 1);
         player.teleportTo(safeLevel, 0.5, y, 0.5, player.getYRot(), player.getXRot());
