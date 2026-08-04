@@ -8,8 +8,18 @@ version="${mod_version}"
 displayName="${mod_name}"
 authors="${mod_authors}"
 description='''
-怪物狂潮（Monster Waves）—— 源源不断地刷新怪物，击杀掉落属性球，永久强化玩家属性。
-当前为 MVP 阶段：生成引擎 + 属性球 + 玩家属性存储 + 阶段系统 + 基础指令。
+怪物狂潮（Monster Waves）—— 以怪物波次生存为核心的整合包增强 Mod。
+
+· 阶段系统：按配置顺序递进难度，支持无限阶段，玩家离开启用维度时暂停计时
+· 精英怪 / Boss：概率升级、属性倍率、专属 Boss 血条
+· 技能点系统：升级得点，自由加点（攻击/生命/速度/枪械射速与换弹等）
+· 苦痛传递附魔：命中怪物传染范围伤害（近战 / 弓弩 / TaCZ 枪械）
+· 统一掉落：按阶段与怪物等级（普通/精英/Boss）配置掉落表，可拦截原版掉落
+· 专属维度：休息空岛与战斗竞技场，三符咒自由往返
+· 大范围拾取、经验加成、聊天栏阶段播报
+
+配置：config/monsterwaves.json5（支持注释，保存自动热重载）
+前置：Cloth Config（必需）、FTB Library（客户端必需）；TaCZ / Gunsmith Library 可选
 '''
 
 [[dependencies.${mod_id}]]
