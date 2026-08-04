@@ -188,12 +188,18 @@ public final class MobSpawnManager {
         MonsterWavesMod.LOGGER.debug("MW 已生成 {} 于 {}", type, pos);
     }
 
-    /** 属性难度算法：multiply=乘算 / add=加算（未知值回退加算） */
-    private static double applyAlgorithm(double base, double difficulty, double perLevel, double stageMult, String algo) {
-        if ("multiply".equalsIgnoreCase(algo)) {
-            return base * (1 + (difficulty - 1) * perLevel) * stageMult;
+    /** 属性难度算法：multiply=乘算 / add=加算（未知值回退加算）；触发 MobAttributeCalculateEvent 供开发者完全自定义（取消并用 setResult 覆盖） */
+    private static double applyAlgorithm(Mob mob, String attribute, double base, double difficulty,
+                                         double perLevel, double stageMult, String algo) {
+        double v = "multiply".equalsIgnoreCase(algo)
+                ? base * (1 + (difficulty - 1) * perLevel) * stageMult
+                : base + (difficulty - 1) * perLevel * stageMult;
+        var event = new com.mcmod.monsterwaves.api.MobAttributeCalculateEvent(
+                mob, attribute, base, difficulty, perLevel, stageMult, v);
+        if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event)) {
+            return event.getCustomValue();
         }
-        return base + (difficulty - 1) * perLevel * stageMult;
+        return v;
     }
 
     /**
@@ -206,18 +212,21 @@ public final class MobSpawnManager {
         MWConfig cfg = MWConfig.get();
         var hpAttr = mob.getAttribute(Attributes.MAX_HEALTH);
         if (hpAttr != null) {
-            hpAttr.setBaseValue(applyAlgorithm(hpAttr.getBaseValue(), difficulty,
+            hpAttr.setBaseValue(applyAlgorithm(mob, com.mcmod.monsterwaves.api.MobAttributeCalculateEvent.HEALTH,
+                    hpAttr.getBaseValue(), difficulty,
                     cfg.healthBonusPerLevel, stage.healthMultiplier(), cfg.healthAlgorithm));
             mob.setHealth(mob.getMaxHealth());
         }
         var atkAttr = mob.getAttribute(Attributes.ATTACK_DAMAGE);
         if (atkAttr != null) {
-            atkAttr.setBaseValue(applyAlgorithm(atkAttr.getBaseValue(), difficulty,
+            atkAttr.setBaseValue(applyAlgorithm(mob, com.mcmod.monsterwaves.api.MobAttributeCalculateEvent.ATTACK,
+                    atkAttr.getBaseValue(), difficulty,
                     cfg.attackBonusPerLevel, stage.attackMultiplier(), cfg.attackAlgorithm));
         }
         var armorAttr = mob.getAttribute(Attributes.ARMOR);
         if (armorAttr != null) {
-            armorAttr.setBaseValue(applyAlgorithm(armorAttr.getBaseValue(), difficulty,
+            armorAttr.setBaseValue(applyAlgorithm(mob, com.mcmod.monsterwaves.api.MobAttributeCalculateEvent.ARMOR,
+                    armorAttr.getBaseValue(), difficulty,
                     cfg.armorBonusPerLevel, stage.armorMultiplier(), cfg.armorAlgorithm));
         }
         // 阶段 BUFF
