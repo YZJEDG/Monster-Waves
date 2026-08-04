@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>怪物狂潮（Monster Waves）— 开发文档</title>
+<style>
+  :root {
+    --bg: #0f1419; --panel: #171e26; --panel2: #1d2731; --border: #2a3644;
+    --text: #d5dee8; --muted: #8b9bad; --accent: #4da3ff; --accent2: #7ee787;
+    --warn: #ffab70; --danger: #ff7b72; --code-bg: #0b0f14;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 14px/1.7 "Segoe UI", "Microsoft YaHei", system-ui, sans-serif; }
+  header { position: sticky; top: 0; z-index: 10; background: linear-gradient(180deg,#141b23,#10151b);
+    border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  header h1 { font-size: 18px; margin: 0; color: #fff; }
+  header .badge { background: var(--accent); color: #06121f; border-radius: 4px; padding: 2px 8px; font-size: 12px; font-weight: 700; }
+  header .ver { color: var(--muted); font-size: 13px; }
+  #search { margin-left: auto; background: var(--panel2); border: 1px solid var(--border); color: var(--text);
+    border-radius: 6px; padding: 6px 12px; width: 260px; font-size: 13px; outline: none; }
+  #search:focus { border-color: var(--accent); }
+  .wrap { display: flex; }
+  nav { width: 240px; flex-shrink: 0; border-right: 1px solid var(--border); padding: 16px 0;
+    position: sticky; top: 57px; height: calc(100vh - 57px); overflow-y: auto; }
+  nav a { display: block; color: var(--muted); text-decoration: none; padding: 5px 22px; font-size: 13px;
+    border-left: 3px solid transparent; }
+  nav a:hover { color: var(--text); background: var(--panel); }
+  nav a.s2 { padding-left: 38px; font-size: 12px; }
+  main { flex: 1; padding: 24px 36px 80px; max-width: 1100px; }
+  section { scroll-margin-top: 60px; }
+  h2 { font-size: 20px; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin: 40px 0 16px; }
+  h2 .no { color: var(--accent); margin-right: 8px; }
+  h3 { font-size: 15px; color: var(--accent2); margin: 26px 0 10px; }
+  p, li { color: var(--text); }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0 18px; font-size: 13px; }
+  th { background: var(--panel2); color: #fff; text-align: left; padding: 7px 10px; border: 1px solid var(--border);
+    position: sticky; top: 57px; }
+  td { padding: 6px 10px; border: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: rgba(255,255,255,.015); }
+  code { background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px;
+    font-family: Consolas, "Courier New", monospace; font-size: 12px; color: var(--accent2); }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px;
+    overflow-x: auto; font-size: 12.5px; line-height: 1.6; }
+  pre code { border: none; padding: 0; }
+  .note { background: rgba(77,163,255,.08); border-left: 3px solid var(--accent); padding: 8px 12px; border-radius: 0 6px 6px 0; margin: 10px 0; }
+  .warn { background: rgba(255,171,112,.08); border-left: 3px solid var(--warn); padding: 8px 12px; border-radius: 0 6px 6px 0; margin: 10px 0; }
+  .tag { display: inline-block; font-size: 11px; border-radius: 3px; padding: 1px 6px; margin-right: 4px; }
+  .tag.op { background: #1f3d2e; color: var(--accent2); }
+  .tag.all { background: #2a3644; color: var(--muted); }
+  .tag.opt { background: #3d2e1f; color: var(--warn); }
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 20px; border-top: 1px solid var(--border); }
+  .hl { background: #ffe082; color: #000; border-radius: 2px; padding: 0 2px; }
+  @media (max-width: 900px) { nav { display: none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>怪物狂潮 <span class="badge">Monster Waves</span></h1>
+  <span class="ver">v1.0.1 · Minecraft 1.20.1 · Forge 47.4.10 · 开发者浏览版</span>
+  <input id="search" type="text" placeholder="🔍 搜索（表格/文本过滤）…">
+</header>
+<div class="wrap">
+<nav id="nav">
+  <a href="#build">1. 构建与运行</a>
+  <a href="#src">2. 源码结构</a>
+  <a href="#config">3. 配置总览</a>
+  <a class="s2" href="#cfg-loot">　掉落条目字段</a>
+  <a class="s2" href="#cfg-skill">　技能点配置</a>
+  <a class="s2" href="#cfg-stage">　阶段字段</a>
+  <a href="#stage">4. 阶段系统</a>
+  <a href="#cmd">5. 指令</a>
+  <a href="#data">6. 数据与标记</a>
+  <a href="#skill">7. 技能点系统</a>
+  <a href="#eliteboss">8. 精英 / Boss</a>
+  <a href="#dims">9. 维度系统</a>
+  <a href="#enchant">10. 苦痛传递附魔</a>
+  <a href="#api">11. 开发者 API</a>
+  <a href="#limits">12. 已知限制 / 调试</a>
+  <a href="#changelog">13. 变更记录</a>
+</nav>
+<main>
+
+<h2 id="build"><span class="no">1</span>构建与运行</h2>
+<table>
+  <tr><th style="width:140px">项目</th><th>内容</th></tr>
+  <tr><td>构建命令</td><td><code>gradlew.bat build</code>（项目根目录，Windows）</td></tr>
+  <tr><td>产物</td><td><code>build/libs/monsterwaves-1.0.1.jar</code></td></tr>
+  <tr><td>部署命令</td><td><code>bash deploy.sh</code>：自动备份旧版到 <code>测试MOD\mods_backup\*.previous.jar</code>，再复制最新 jar</td></tr>
+  <tr><td>安装位置</td><td><code>D:\game\mc\.minecraft\versions\测试MOD\mods</code>（测试环境）/ 主整合包 mods</td></tr>
+  <tr><td>JDK / Gradle</td><td>本地 <code>.jdk\jdk-17.0.19+10</code>（自动探测）；Gradle wrapper 8.4，用户缓存 <code>.gradle_home</code></td></tr>
+  <tr><td>镜像</td><td>腾讯（gradle 分发）/ 阿里云（maven）/ maven.minecraftforge.net / parchmentmc</td></tr>
+  <tr><td>Forge / Mappings</td><td><code>1.20.1-47.4.10</code>，parchment <code>2023.09.03-1.20.1</code></td></tr>
+  <tr><td>依赖</td><td>Cloth Config（必需，≥11.1.118）、FTB Library（必需，CLIENT）、TaCZ / Gunsmith Library（可选，缺失自动降级不崩溃）</td></tr>
+</table>
+<div class="note">构建排错：控制台 GBK 乱码用 <code>iconv -f GBK -t UTF-8 日志</code> 转码；首次构建慢（下载依赖）。</div>
+
+<h2 id="src"><span class="no">2</span>源码结构</h2>
+<p>根包：<code>com.mcmod.monsterwaves</code>（<code>src/main/java/com/mcmod/monsterwaves/</code>）</p>
+<table>
+  <tr><th style="width:230px">类</th><th>职责</th></tr>
+  <tr><td><code>MonsterWavesMod</code></td><td>@Mod 主类。<b>必须无参构造器</b>（1.20.1 限制）；用 <code>FMLJavaModLoadingContext.get().getModEventBus()</code> 注册物品（47.4.10 已 deprecated，勿改成 1.20.4+ 的构造器注入）</td></tr>
+  <tr><td><code>config/MWConfig</code></td><td>Cloth Config AutoConfig 配置类（JSON：<code>config/monsterwaves.json</code>）；游戏内 Mods 列表 → Config 按钮开 GUI；服务端 <code>MWConfig.get()</code> 每次读取最新值（即时生效）</td></tr>
+  <tr><td><code>data/PlayerDataManager</code></td><td>技能点：NBT 存储、AttributeModifier 应用（百分比 MULTIPLY_TOTAL）、API 事件发布、旧属性球数据一次性迁移</td></tr>
+  <tr><td><code>api/*Event</code>（4 个）</td><td>开发者钩子：<code>SkillPointGain/Spent/ResetEvent</code> + <code>MobAttributeCalculateEvent</code>（可取消/自定义值，Forge 总线）</td></tr>
+  <tr><td><code>network/NetworkHandler</code> 等</td><td>SimpleChannel：C2S 请求同步/加点/重置，S2C 数据同步/打开界面</td></tr>
+  <tr><td><code>client/SkillScreen</code> 等</td><td>FTB Library 加点界面（ButtonListBaseScreen：搜索+滚动+标题栏）、客户端缓存、按键（P）</td></tr>
+  <tr><td><code>stage/StageManager</code> + <code>StageData</code></td><td>阶段列表、切换广播；SavedData 持久化（主世界 level.dat，键 <code>monsterwaves_stage</code>）</td></tr>
+  <tr><td><code>spawn/MobSpawnManager</code></td><td>生成引擎：tick 调度、位置选择、生物池、难度/阶段应用、精英/Boss 升级入口</td></tr>
+  <tr><td><code>mob/EliteBossHandler</code> + <code>BossManager</code></td><td>精英/Boss 升级（属性×倍率、改名发光）、Boss 血条（ServerBossEvent 紫色条）</td></tr>
+  <tr><td><code>item/ModItems</code> + 3 符咒</td><td>物品注册；休息符咒/回归符咒/战斗符咒（右键传送，永久使用无冷却）</td></tr>
+  <tr><td><code>safe/SafeDimensionManager</code></td><td>休息维度：空岛生成（功能方块+满级附魔台）、玩家规则、跳下传送；<code>IslandData</code> 幂等标记</td></tr>
+  <tr><td><code>arena/ArenaDimensionManager</code></td><td>刷怪维度：超平坦战场、传送入口、出生点、启用开关</td></tr>
+  <tr><td><code>mob/MobTeleportHandler</code></td><td>怪物传送（防溢出）：远离玩家自动拉回</td></tr>
+  <tr><td><code>enchant/ModEnchantments</code> + <code>PainTransferenceHandler</code> + <code>GunPainTransferenceHandler</code></td><td>苦痛传递附魔：近战/弓弩/TaCZ 触发（tacz 相关独立类，仅 tacz 加载时注册）</td></tr>
+  <tr><td><code>event/ModEventHandler</code></td><td>服务端事件：tick（阶段+生成+拾取+规则）、登录/重生/换维度属性应用、统一掉落（三表分级）、经验加成、状态播报、指令注册</td></tr>
+  <tr><td><code>command/MonsterWavesCommand</code></td><td>/monsterwaves 指令树（全部 Tab 补全）</td></tr>
+</table>
+<div class="note">资源：<code>pack.mcmeta</code> <b>必须存在</b>（缺失则 Forge 不索引 assets）；<code>META-INF/mods.toml</code>；<code>assets/monsterwaves/{lang,models,textures}</code>。lang 文件为 CRLF 行尾。</div>
+
+<h2 id="config"><span class="no">3</span>配置总览（Cloth Config，config/monsterwaves.json）</h2>
+<p>游戏内入口：Mods 列表 → 怪物狂潮 → Config。保存后即时生效；<code>/monsterwaves reload</code> 热重载、<code>/monsterwaves config save</code> 把内存配置写盘。</p>
+<table>
+  <tr><th style="width:210px">字段</th><th style="width:90px">分类</th><th style="width:110px">默认值</th><th>说明</th></tr>
+  <tr><td><code>enabled</code></td><td>general</td><td>true</td><td>全局开关</td></tr>
+  <tr><td><code>spawnInterval</code></td><td>spawn</td><td>40</td><td>生成检测间隔（tick）</td></tr>
+  <tr><td><code>minDistance / maxDistance</code></td><td>spawn</td><td>20 / 32</td><td>生成距玩家距离范围</td></tr>
+  <tr><td><code>maxMobsPerPlayer</code></td><td>spawn</td><td>30</td><td>玩家 48 格内本 mod 怪物上限</td></tr>
+  <tr><td><code>mobCountMin / mobCountMax</code></td><td>spawn</td><td>1 / 2</td><td>每波数量范围</td></tr>
+  <tr><td><code>mobStatRadius</code></td><td>spawn</td><td>48.0</td><td>数量统计半径</td></tr>
+  <tr><td><code>mobPool</code></td><td>spawn</td><td>zombie:5, skeleton:3, creeper:2</td><td>怪物池（<code>注册名:权重</code> 字符串）</td></tr>
+  <tr><td><code>healthBonusPerLevel</code></td><td>difficulty</td><td>0.2</td><td>每点难度生命增幅（乘）</td></tr>
+  <tr><td><code>attackBonusPerLevel</code></td><td>difficulty</td><td>0.5</td><td>每点难度攻击增幅（加）</td></tr>
+  <tr><td><code>armorBonusPerLevel</code></td><td>difficulty</td><td>0.5</td><td>每点难度护甲增幅（加）</td></tr>
+  <tr><td><code>healthAlgorithm / attackAlgorithm / armorAlgorithm</code></td><td>difficulty</td><td>multiply / add / add</td><td>难度算法：multiply=乘算 / add=加算（可配）</td></tr>
+  <tr><td><code>eliteEnabled / eliteChance / bossChance / eliteScale / bossScale / 倍率…</code></td><td>eliteBoss</td><td>—</td><td>精英/Boss 系统 13 项（见 §8）</td></tr>
+  <tr><td><code>lootEnabled / lootGlobalChanceMultiplier / lootExtraCountPerLevel</code></td><td>loot</td><td>true / 1.0 / 0</td><td>统一掉落开关/全局概率倍率/每难度额外数量</td></tr>
+  <tr><td><code>normalLoot / eliteLoot / bossLoot</code></td><td>loot</td><td>见下</td><td>三张独立掉落表（Boss=普通+精英+Boss 表）</td></tr>
+  <tr><td><code>experienceEnabled / experienceMultiplier / experienceBonusPerDifficulty</code></td><td>drop.experience</td><td>true / 1.0 / 0.2</td><td>经验加成</td></tr>
+  <tr><td><code>skillEnabled / pointsPerLevel / gainMode / xpPerPoint / maxTotalPoints</code></td><td>skillSystem</td><td>—</td><td>技能点系统（见 §3-技能点配置）</td></tr>
+  <tr><td><code>attributeConfigs</code></td><td>skillSystem</td><td>10 项</td><td>加点白名单：属性注册名→{enabled,percentage,maxPoints,percentagePerPoint}</td></tr>
+  <tr><td><code>attributeDisplayNames</code></td><td>skillSystem</td><td>—</td><td>属性注册名→显示名（空则用属性自身 lang）</td></tr>
+  <tr><td><code>percentagePerPoint</code></td><td>skillSystem</td><td>0.1</td><td>百分比属性每点加成比例（0.1=+10%）</td></tr>
+  <tr><td><code>resetCostPoints / resetEnabled</code></td><td>skillSystem</td><td>5 / true</td><td>GUI 重置消耗 / 允许重置</td></tr>
+  <tr><td><code>keyBinding</code></td><td>skillSystem</td><td>P</td><td>加点界面按键</td></tr>
+  <tr><td><code>battleCharmEnabled / battleCharmGiveOnJoin</code></td><td>battle</td><td>true / true</td><td>战斗符咒开关/开局给予</td></tr>
+  <tr><td><code>pickupEnable / pickupRadius / pickupItems / pickupXp / pickupInterval / onlyOwnDrops / pickupBlacklist</code></td><td>pickup</td><td>—</td><td>大范围拾取 7 项（半径默认 6，含经验球拉取）</td></tr>
+  <tr><td><code>stages</code>（List）</td><td>stage</td><td>3 个</td><td>阶段列表（各阶段独立配置）</td></tr>
+  <tr><td><code>enabledDimensions</code></td><td>dimensions</td><td>空（全部）</td><td>刷怪维度白名单；休息维度始终不刷怪</td></tr>
+  <tr><td><code>safeEnabled / islandRadius / islandBlock / giveOnJoin / fallTeleportY / safeSpawnY</code></td><td>safe</td><td>—</td><td>休息维度（空岛 20 格、grass_block、跳下触发 Y=-10）</td></tr>
+  <tr><td><code>fallDestinationDimension / X / Y / Z / fallMode / fallToRespawnPoint</code></td><td>safe</td><td>arena / 0 / 64 / 0</td><td>空岛坠落目标（默认战斗维度；<code>fallToRespawnPoint=true</code> 时按维度出生点）</td></tr>
+  <tr><td><code>giveHomeCharmOnJoin</code></td><td>safe</td><td>true</td><td>开局给予回归符咒</td></tr>
+  <tr><td><code>arenaEnabled / arenaSpawnY</code></td><td>arena</td><td>true / 4</td><td>刷怪维度开关/出生点 Y</td></tr>
+  <tr><td><code>statusNoticeEnabled / statusNoticeInterval</code></td><td>general</td><td>true / 600</td><td>聊天栏状态播报（阶段/难度，默认每 30 秒）</td></tr>
+  <tr><td><code>painTransferenceEnabled / 基础半径 / 半径每级 / 基础伤害百分比 / 百分比每级 / affectSameTypeOnly / affectEliteBoss / excludeSource</code></td><td>enchant</td><td>—</td><td>苦痛传递附魔（无冷却；基础伤害 30%）</td></tr>
+</table>
+
+<h3 id="cfg-loot">掉落条目字段（normalLoot / eliteLoot / bossLoot 条目）</h3>
+<table>
+  <tr><th>字段（GUI 英文）</th><th>中文含义</th><th>说明</th></tr>
+  <tr><td><code>item</code></td><td>物品</td><td>物品注册名，如 <code>minecraft:diamond</code>（任意模组物品）</td></tr>
+  <tr><td><code>nbt</code></td><td>NBT</td><td>附加 NBT 字符串（可空），如 <code>{CustomTag:1}</code></td></tr>
+  <tr><td><code>minCount / maxCount</code></td><td>数量</td><td>掉落数量下限/上限（≥1，max≥min）</td></tr>
+  <tr><td><code>chance</code></td><td>概率</td><td>基础概率 0~1；最终 = chance × 难度 × 全局倍率（封顶 1）</td></tr>
+  <tr><td><code>isPlayerAffected</code></td><td>受抢夺影响</td><td>是否受 Looting 附魔加成</td></tr>
+</table>
+<div class="note"><b>三表独立计算，不共享概率池</b>：表间与表内条目均为独立 roll。Boss 掉落 = normalLoot + eliteLoot + bossLoot；精英 = normalLoot + eliteLoot；普通 = normalLoot。</div>
+
+<h3 id="cfg-skill">技能点配置（skillSystem）</h3>
+<table>
+  <tr><th>概念</th><th>说明</th></tr>
+  <tr><td>获取</td><td>默认随玩家等级（<code>gainMode=LEVEL</code>，每级 +<code>pointsPerLevel</code>）；可切 XP 模式（每 <code>xpPerPoint</code> 经验 +1）或 DISABLED；开发者监听 <code>SkillPointGainEvent</code> 自定义算法</td></tr>
+  <tr><td>属性来源</td><td>动态读取玩家全部可同步属性（<code>AttributeMap.getSyncableAttributes()</code>），仅 <code>attributeConfigs</code> 白名单内可加/显示；白名单外自动清理（移除 modifier、清分配并返还技能点）</td></tr>
+  <tr><td>加点</td><td>每点 +1（ADDITION）；<code>percentage=true</code> 时每点 +<code>percentagePerPoint</code>（MULTIPLY_TOTAL）</td></tr>
+  <tr><td>白名单默认</td><td>攻击/护甲/生命/速度/攻击速度/挖掘速度 + gunsmithlib 枪械属性（射速/换弹/子弹伤害/子弹速度）</td></tr>
+  <tr><td>重置</td><td>GUI 重置全部：返还 - <code>resetCostPoints</code>；单属性/指令重置免费</td></tr>
+  <tr><td>界面</td><td>P 键 / <code>/monsterwaves skill gui</code>；FTB Library 界面：搜索+滚动、按 mod 分组（组标题可展开收起）、首行重置按钮、属性行点击加点；当前值<b>实时读取客户端属性</b></td></tr>
+</table>
+
+<h3 id="cfg-stage">阶段字段（stages 列表条目）</h3>
+<table>
+  <tr><th>字段</th><th>中文含义</th><th>说明</th></tr>
+  <tr><td><code>id</code></td><td>名称</td><td>纯文字，用于 <code>stage set &lt;id&gt;</code> 与广播</td></tr>
+  <tr><td><code>difficulty</code></td><td>难度系数</td><td>整体难度参数：参与怪物属性/掉落/经验等全部运算</td></tr>
+  <tr><td><code>duration</code></td><td>时长</td><td>tick；<b>-1 = 无限</b>（不自动推进）</td></tr>
+  <tr><td><code>mobListOverride</code></td><td>专属怪物池</td><td>该阶段怪物池（空=用全局 mobPool）</td></tr>
+  <tr><td><code>attributeMultipliers</code></td><td>属性倍率</td><td>子对象：healthMultiplier / attackMultiplier / armorMultiplier（1.0=无加成）</td></tr>
+  <tr><td><code>mobEffects</code></td><td>自带BUFF</td><td>生成怪物的药水效果列表（effect/amplifier/duration(-1无限)/chance/showParticles/showIcon），默认空</td></tr>
+</table>
+
+<h2 id="stage"><span class="no">4</span>阶段系统</h2>
+<p><b>顺序推进</b>：按配置数组先后顺序逐级推进，到 <code>duration=-1</code> 的阶段停住不循环。手动：<code>/monsterwaves stage next|prev|set &lt;id&gt;</code>。SavedData 持久化（跨重启保留）。</p>
+<table>
+  <tr><th>索引</th><th>id</th><th>difficulty</th><th>duration(tick)</th><th>说明</th></tr>
+  <tr><td>0</td><td>萌芽期</td><td>1.0</td><td>6000</td><td>5 分钟</td></tr>
+  <tr><td>1</td><td>激战期</td><td>25.0</td><td>12000</td><td>10 分钟</td></tr>
+  <tr><td>2</td><td>终局之战</td><td>50.0</td><td>-1</td><td>无限，停留不推进</td></tr>
+</table>
+<div class="warn">难度 1→25→50 跨度大：难度参与怪物属性/掉落/经验/精英Boss概率（×√难度）运算，终局之战数值很强，建议实测调参。</div>
+
+<h2 id="cmd"><span class="no">5</span>指令（/monsterwaves，全部 Tab 补全）</h2>
+<table>
+  <tr><th style="width:300px">指令</th><th style="width:70px">权限</th><th>说明</th></tr>
+  <tr><td><code>spawn &lt;生物id&gt; [数量] [normal|elite|boss]</code></td><td><span class="tag op">op</span></td><td>生成带标记+难度应用的怪；非 Mob 实体自动移除</td></tr>
+  <tr><td><code>stats [玩家]</code></td><td><span class="tag all">全员</span></td><td>查看技能点与已分配属性</td></tr>
+  <tr><td><code>difficulty</code></td><td><span class="tag all">全员</span></td><td>当前阶段+难度</td></tr>
+  <tr><td><code>safe / safe reset</code></td><td><span class="tag op">op</span></td><td>传送休息维度 / 重置重建空岛</td></tr>
+  <tr><td><code>battle</code></td><td><span class="tag op">op</span></td><td>传送刷怪维度</td></tr>
+  <tr><td><code>leave</code></td><td><span class="tag all">全员</span></td><td>返回主世界（优先重生点/床）</td></tr>
+  <tr><td><code>stage info / next / prev / set &lt;id&gt;</code></td><td><span class="tag op">op</span>（info 全员）</td><td>阶段管理；set 补全阶段 id（greedyString 支持冒号）</td></tr>
+  <tr><td><code>skill points / add / set / reset / gui</code></td><td>op（gui/points 全员）</td><td>技能点管理；reset &lt;玩家&gt; &lt;属性&gt; 属性用 greedyString</td></tr>
+  <tr><td><code>reload</code></td><td><span class="tag op">op</span></td><td>热重载配置</td></tr>
+  <tr><td><code>config save</code></td><td><span class="tag op">op</span></td><td>把内存配置（含 GUI 未保存修改）写盘</td></tr>
+  <tr><td><code>player &lt;玩家&gt; give/set</code></td><td><span class="tag op">op</span></td><td>玩家数据操作</td></tr>
+</table>
+
+<h2 id="data"><span class="no">6</span>数据与标记（实体/玩家 NBT）</h2>
+<table>
+  <tr><th style="width:280px">键</th><th>位置</th><th>含义</th></tr>
+  <tr><td><code>monsterwaves_marker</code></td><td>实体</td><td>本 mod 生成的怪标记（掉落/传送仅对其生效）</td></tr>
+  <tr><td><code>monsterwaves_elite</code></td><td>实体</td><td>精英标记</td></tr>
+  <tr><td><code>monsterwaves_boss</code></td><td>实体</td><td>Boss 标记（Boss 不视为精英，两标记独立）</td></tr>
+  <tr><td><code>monsterwaves_data</code></td><td>玩家</td><td>技能点：<code>skillPoints</code> / <code>allocated</code>（属性→点数）/ <code>xpBuffer</code> / <code>skillMigrated</code></td></tr>
+  <tr><td><code>monsterwaves_stage</code></td><td>主世界 SavedData</td><td>阶段：<code>stageIndex</code> + <code>stageTimer</code>（跨重启）</td></tr>
+  <tr><td><code>monsterwaves_data.island</code></td><td>SafeDimension SavedData</td><td>空岛幂等标记（不重复生成）</td></tr>
+  <tr><td><code>DROP_OWNER</code></td><td>掉落物</td><td>击杀者 UUID（onlyOwnDrops 归属）</td></tr>
+</table>
+
+<h2 id="skill"><span class="no">7</span>技能点系统</h2>
+<ul>
+  <li><b>获取</b>：默认随等级（LEVEL），可 XP / DISABLED；<code>SkillPointGainEvent</code> 允许开发者完全接管获取算法</li>
+  <li><b>白名单</b>：<code>attributeConfigs</code> 决定可加点集合（默认 6 原版 + 4 枪械属性）；每属性独立配置 enabled / percentage / maxPoints / percentagePerPoint</li>
+  <li><b>迁移</b>：旧属性球数据一次性迁移（值/2→分配 + 总值 20% 补偿），<code>skillMigrated</code> 防重复</li>
+  <li><b>技术坑（1.20.1）</b>：<code>AttributeMap</code> 无 <code>getAttributes/getAllAttributes</code>（用 <code>getSyncableAttributes()</code>）；Button 6 参构造器不存在（用 <code>Button.builder</code>）</li>
+  <li><b>键位</b>：<code>RegisterKeyMappingsEvent</code> 必须在 <b>mod 事件总线</b>注册（Forge 总线回调不触发）</li>
+</ul>
+
+<h2 id="eliteboss"><span class="no">8</span>精英 / Boss 系统</h2>
+<table>
+  <tr><th style="width:110px">级别</th><th>表现</th><th>默认属性倍率</th><th>经验</th></tr>
+  <tr><td>精英</td><td><code>§c【精英】</code>红名+发光（长期无粒子）</td><td>生命 ×3 / 攻击 ×2 / 护甲 ×2</td><td>×2</td></tr>
+  <tr><td>Boss</td><td><code>§6【Boss】</code>金名+发光+<b>Boss 血条</b>（ServerBossEvent 紫色条，全体可见）</td><td>生命 ×50 / 攻击 ×10 / 护甲 ×10</td><td>×20</td></tr>
+</table>
+<ul>
+  <li>升级顺序：先判精英（eliteChance），中精英后在其基础上判 Boss（bossChance）；概率 ×√难度</li>
+  <li>上限：<code>maxElitesPerPlayer</code>（默认 5）/ <code>maxBossesPerPlayer</code>（默认 1），-1=不限</li>
+  <li>体型：配置 <code>eliteScale</code>（1.3）/ <code>bossScale</code>（2.0）；渲染缩放仅客户端，碰撞箱缩放仅服务端（1.20.1 反射 refreshDimensions）</li>
+  <li>碰撞箱缩放<b>目前失败</b>：1.20.1 无可靠多体部件 API，`refreshDimensions` 客户端可能不同步——已知限制见 §12</li>
+</ul>
+
+<h2 id="dims"><span class="no">9</span>维度系统</h2>
+<h3>休息维度（monsterwaves:safe，空岛）</h3>
+<ul>
+  <li>数据包注册（flat 全空），空岛代码生成（幂等，IslandData 标记）</li>
+  <li>设施：中心十字 工作台/熔炉/箱子/高炉/烟熏炉/切石机 + 附魔台（5×5 外环 <b>16 书架</b>满级）</li>
+  <li>玩家规则：不刷怪（<code>MobSpawnEvent.PositionCheck</code> DENY + 引擎跳过）、不饥饿（锁 20/10）、免疫伤害（LivingHurtEvent 取消）、跳下传送（Y&lt;-10）</li>
+  <li>跳下默认目标：<b>战斗维度 arena 出生点</b>（fallDestinationDimension，可配）；<code>fallToRespawnPoint=true</code> 时按维度出生点</li>
+</ul>
+<h3>战斗维度（monsterwaves:arena）</h3>
+<ul>
+  <li>超平坦 grass/dirt/stone 三层，出生点 (0,4,0)；原版自然生成被拦截，本模组引擎接管</li>
+  <li>传送入口：<code>/monsterwaves battle</code>；坠落目标默认 arena</li>
+</ul>
+<h3>符咒（无限使用，无冷却）</h3>
+<table>
+  <tr><th>物品</th><th>作用</th><th>合成（十字形：4 末影珍珠 + 中间）</th></tr>
+  <tr><td><code>return_charm</code> 休息符咒</td><td>传送休息维度</td><td>金苹果</td></tr>
+  <tr><td><code>home_charm</code> 回归符咒</td><td>回主世界重生点</td><td>指南针</td></tr>
+  <tr><td><code>battle_charm</code> 战斗符咒</td><td>传送战斗维度</td><td>铁剑</td></tr>
+</table>
+
+<h2 id="enchant"><span class="no">10</span>苦痛传递附魔（pain_transference）</h2>
+<ul>
+  <li>效果：命中怪物时对周围其他怪物造成「主伤害 × 30%~50%」传递伤害（<b>无冷却</b>）</li>
+  <li>触发来源：近战（剑/斧/三叉戟，LivingHurtEvent）、弓/弩（ProjectileImpactEvent 原版箭）、TaCZ 枪械（<code>GunPainTransferenceHandler</code> 独立类，仅 tacz 加载时注册）</li>
+  <li>创造栏「战斗用品」页含 1~5 级附魔书</li>
+  <li>配置约束：半径/伤害百分比（每级递增）、<code>affectSameTypeOnly</code>、<code>affectEliteBoss</code>、<code>excludeSource</code></li>
+</ul>
+
+<h2 id="api"><span class="no">11</span>开发者 API（api 包，Forge 总线）</h2>
+<table>
+  <tr><th style="width:250px">事件</th><th>用途</th></tr>
+  <tr><td><code>SkillPointGainEvent</code></td><td>技能点获取：可改数量 / 取消（自定义获取算法入口）</td></tr>
+  <tr><td><code>SkillPointSpentEvent</code></td><td>加点消耗：可取消</td></tr>
+  <tr><td><code>SkillPointResetEvent</code></td><td>重置：可取消</td></tr>
+  <tr><td><code>MobAttributeCalculateEvent</code></td><td>怪物生命/攻击/护甲计算钩子：<code>setCustomValue()</code> + <code>setCanceled(true)</code> 完全接管算法。<b>注意</b>：<code>Event.getResult()</code> 是 final 方法，事件方法名为 <code>setCustomValue/getCustomValue</code></td></tr>
+</table>
+<pre><code>// 示例：监听怪物属性计算（任何 mod 均可）
+@SubscribeEvent
+public static void onCalc(MobAttributeCalculateEvent e) {
+    e.setCustomValue(e.getBaseValue() * (1 + e.getDifficulty() * 0.5)); // 自定义公式
+    e.setCanceled(true);
+}</code></pre>
+
+<h2 id="limits"><span class="no">12</span>已知限制 / 调试要点</h2>
+<table>
+  <tr><th style="width:240px">限制/坑</th><th>说明</th></tr>
+  <tr><td>配置 GUI 子字段英文</td><td>Cloth Config 11.1.136 对 List&lt;POJO&gt; 子字段（item/minCount 等）翻译键不生效——只能改 JSON，字段含义见 §3</td></tr>
+  <tr><td>碰撞箱缩放失败</td><td>1.20.1 精英/Boss 体型缩放：渲染缩放（客户端）与碰撞箱缩放（服务端）不同步，碰撞箱缩放不可靠——属已知限制，不做</td></tr>
+  <tr><td>配置 GUI 修改不落盘</td><td>界面 ESC 关闭不保存；必须点「保存并退出」或用 <code>/monsterwaves config save</code></td></tr>
+  <tr><td>lang 文件 CRLF</td><td>zh_cn/en_us 为 CRLF 行尾，编辑工具注意；JSON 必须合法（结尾键无逗号）</td></tr>
+  <tr><td>tacz 缺失兼容</td><td>凡引用 tacz 类的方法必须放独立类并 <code>ModList.get().isLoaded("tacz")</code> 条件注册，否则 NoClassDefFoundError 崩溃</td></tr>
+  <tr><td><code>block_break_speed</code></td><td>需模组提供同名属性才生效（原版无实例）</td></tr>
+  <tr><td>ammo_capacity</td><td>gunsmithlib 弹匣容量是物品属性（不挂玩家），玩家不可加点——已从白名单移除</td></tr>
+  <tr><td>控制台 GBK 乱码</td><td><code>iconv -f GBK -t UTF-8</code> 转码构建日志</td></tr>
+</table>
+
+<h2 id="changelog"><span class="no">13</span>变更记录（摘要）</h2>
+<table>
+  <tr><th style="width:110px">版本</th><th>内容</th></tr>
+  <tr><td>v1.0.1</td><td>统一掉落分级：新增 <code>eliteLoot</code>（仅精英，Boss 也掉）与 <code>bossLoot</code>（仅 Boss）独立掉落表；三表独立计算不共享概率池</td></tr>
+  <tr><td>v1.0.0</td><td>正式版打包：版本 0.1.0→1.0.0；新增 README.md 发布说明</td></tr>
+  <tr><td>v10.6</td><td>聊天栏状态播报（每 30 秒提示阶段/难度，替代 HUD，可配）</td></tr>
+  <tr><td>v10.5.4</td><td>苦痛传递基础伤害系数 15%→30%</td></tr>
+  <tr><td>v10.5.3</td><td>创造栏加入苦痛传递全部等级（1~maxLevel）附魔书</td></tr>
+  <tr><td>v10.5.2</td><td>苦痛传递附魔支持弓/弩（原版箭 ProjectileImpactEvent）</td></tr>
+  <tr><td>v10.5.1</td><td>苦痛传递枪械触发拆独立类 + tacz 条件注册（缺失不崩）</td></tr>
+  <tr><td>v10.5</td><td>苦痛传递附魔（pain_transference）：近战/TaCZ 触发、无冷却、配置</td></tr>
+  <tr><td>v10.3</td><td>精英/Boss 体型缩放配置（eliteScale/bossScale；渲染客户端 + 碰撞箱服务端反射）</td></tr>
+  <tr><td>v10.2.3</td><td>去除传送冷却（怪物传送防溢出即时拉回）</td></tr>
+  <tr><td>v10.2.2</td><td>精英/Boss 数量上限（maxElitesPerPlayer / maxBossesPerPlayer）</td></tr>
+  <tr><td>v10.2.1</td><td>怪物传送范围改为所有启用生成引擎的维度</td></tr>
+  <tr><td>v10.2</td><td>怪物传送（防溢出）：远离最近玩家超阈值拉回、冷却、检测间隔</td></tr>
+  <tr><td>v10.1.1</td><td><code>MobAttributeCalculateEvent</code> 算法自定义钩子</td></tr>
+  <tr><td>v10.1</td><td>怪物属性难度算法可配置（multiply/add）</td></tr>
+  <tr><td>v10.0</td><td>精英怪 / Boss 系统：概率升级、属性倍率、Boss 血条、经验倍率、13 项配置</td></tr>
+  <tr><td>v9.5</td><td>符咒无限使用/无冷却、改名「休息符咒」、坠落目标对齐竞技场</td></tr>
+  <tr><td>v9.4</td><td>gunsmithlib 枪械属性桥接（tacz 加点真正生效）、config save 指令、resetAll 残留修复、实时读取当前值</td></tr>
+  <tr><td>v9.3</td><td>FTB Library 加点界面（ButtonListBaseScreen）</td></tr>
+  <tr><td>v9.0</td><td>技能点系统（替代属性球）：获取模式/白名单/迁移/API 事件</td></tr>
+  <tr><td>v8.x</td><td>维度/符咒/阶段配置化/统一掉落/指令集</td></tr>
+</table>
+
+</main>
+</div>
+<footer>怪物狂潮 Monster Waves · 开发文档 · 由《开发手册.md》《测试手册.md》《指令手册.md》《README.md》整理生成 · 最后更新 2026-08-04</footer>
+
+<script>
+  // 全局搜索：过滤 main 内所有表格行、列表项、标题、段落
+  const search = document.getElementById('search');
+  search.addEventListener('input', () => {
+    const q = search.value.trim().toLowerCase();
+    const nodes = document.querySelectorAll('main tr, main li, main h3, main p, main h2');
+    let visible = 0;
+    nodes.forEach(n => {
+      const t = n.textContent.toLowerCase();
+      const has = !q || t.includes(q);
+      n.style.display = has ? '' : 'none';
+      if (has) visible++;
+      // 隐藏空表格（行全被过滤）
+      if (n.tagName === 'TR') {
+        const anyVisible = [...n.parentElement.querySelectorAll('tr')].some(r => r.style.display !== 'none');
+        if (!anyVisible) n.parentElement.style.display = 'none';
+        else n.parentElement.style.display = '';
+      }
+      // 高亮命中的文本
+      n.querySelectorAll('.hl').forEach(e => { const p = e.parentNode; p.replaceChild(document.createTextNode(e.textContent), e); p.normalize(); });
+      if (q && n.childElementCount === 0) {
+        const idx = n.textContent.toLowerCase().indexOf(q);
+        if (idx >= 0) {
+          const txt = n.textContent;
+          const wrap = document.createElement('span');
+          wrap.appendChild(document.createTextNode(txt.slice(0, idx)));
+          const hl = document.createElement('mark'); hl.className = 'hl'; hl.textContent = txt.slice(idx, idx + q.length);
+          wrap.appendChild(hl);
+          wrap.appendChild(document.createTextNode(txt.slice(idx + q.length)));
+          n.textContent = '';
+          n.appendChild(wrap);
+        }
+      }
+    });
+  });
+  // 锚点平滑滚动
+  document.querySelectorAll('nav a').forEach(a => a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  }));
+</script>
+</body>
+</html>
