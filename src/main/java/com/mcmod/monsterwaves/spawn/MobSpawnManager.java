@@ -34,8 +34,8 @@ public final class MobSpawnManager {
     private MobSpawnManager() {
     }
 
-    /** 维度开关：空列表 = 全部启用；非空则仅列出的维度刷怪 */
-    private static boolean isDimensionEnabled(ServerLevel level) {
+    /** 维度开关：空列表 = 全部启用；非空则仅列出的维度刷怪（与传送功能共用） */
+    public static boolean isDimensionEnabled(ServerLevel level) {
         java.util.List<String> dims = MWConfig.get().enabledDimensions;
         return dims.isEmpty() || dims.contains(level.dimension().location().toString());
     }

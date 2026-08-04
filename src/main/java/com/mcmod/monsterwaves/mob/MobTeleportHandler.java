@@ -1,8 +1,6 @@
 package com.mcmod.monsterwaves.mob;
 
-import com.mcmod.monsterwaves.arena.ArenaDimensionManager;
 import com.mcmod.monsterwaves.config.MWConfig;
-import com.mcmod.monsterwaves.safe.SafeDimensionManager;
 import com.mcmod.monsterwaves.spawn.MobSpawnManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -14,7 +12,7 @@ import java.util.List;
 
 /**
  * 怪物传送（v10.2）：防止玩家跑远导致怪物溢出。
- * - 仅在本 mod 生成的维度（休息 monsterwaves:safe / 战斗 monsterwaves:arena）生效
+ * - 在**任何启用生成引擎的维度**生效（与 MobSpawnManager 维度开关一致）
  * - 仅影响本 mod 生成的怪（MobSpawnManager.MARKER 标记）
  * - 怪与最近玩家距离超过 teleportThreshold → 传送到玩家附近（min~max 距离、随机角度）
  * - 每只怪传送后进入 teleportCooldown 冷却（NBT 存 gameTime），每 teleportCheckInterval tick 检测一次
@@ -36,8 +34,9 @@ public final class MobTeleportHandler {
             return;
         }
         for (ServerLevel level : server.getAllLevels()) {
-            // 仅本 mod 生成的维度
-            if (!ArenaDimensionManager.isArena(level) && !SafeDimensionManager.isSafe(level)) {
+            // 仅在**启用生成引擎的维度**生效（与 MobSpawnManager 维度开关一致）；
+            // 仍只对 mod 生成的怪（MARKER）生效，休息维度无 mod 生成的怪自然无效果
+            if (!MobSpawnManager.isDimensionEnabled(level)) {
                 continue;
             }
             processLevel(level, cfg);
