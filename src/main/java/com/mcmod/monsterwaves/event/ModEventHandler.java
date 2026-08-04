@@ -298,12 +298,19 @@ public final class ModEventHandler {
     /** 掉落覆盖 + 归属标记：只作用于本 mod 生成的怪（v1.0.14 学 Adaptive Hordes 思路：直接操作 event.getDrops()） */
     @SubscribeEvent
     public static void onLivingDrops(net.minecraftforge.event.entity.living.LivingDropsEvent event) {
+        var entity = event.getEntity();
+        boolean tracked = MobSpawnManager.isTracked(entity);
+        boolean override = MWConfig.get().lootOverrideVanilla;
+        // v1.0.15 排查日志（info 可见）：latest.log 搜 "MW drop" 可确认事件是否触发、isTracked 是否命中
+        MonsterWavesMod.LOGGER.info("MW drop: entity={} tracked={} override={} drops={}",
+                entity == null ? "null" : entity.getType().toString(), tracked, override,
+                event.getDrops() == null ? -1 : event.getDrops().size());
         // v1.0.14：OVERRIDE 模式（lootOverrideVanilla=true）——清空原 drops（原版/其他 mod 表内掉落物），
         // 本 mod 掉落表由 dropLoot 独立生成（onLivingDeath，isTracked 限定）；lootOverrideVanilla=false 则完全不干预原掉落
-        if (MobSpawnManager.isTracked(event.getEntity()) && MWConfig.get().lootOverrideVanilla) {
+        if (tracked && override) {
             event.getDrops().clear();
             MonsterWavesMod.LOGGER.debug("MW 掉落覆盖：{} 的原掉落已清空（只掉本 mod 掉落表）",
-                    event.getEntity());
+                    entity);
         }
         if (event.getSource().getEntity() instanceof net.minecraft.world.entity.player.Player p) {
             String owner = p.getStringUUID();
