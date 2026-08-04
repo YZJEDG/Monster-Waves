@@ -99,5 +99,20 @@
   "text.autoconfig.monsterwaves.option.fallToRespawnPoint.@Tooltip": "On=overworld uses player respawn (else world spawn), other dims use target spawn, custom coords hidden; Off=use custom coords below",
   "text.autoconfig.monsterwaves.option.fallDestinationX": "Fall Destination X",
   "text.autoconfig.monsterwaves.option.fallDestinationY": "Fall Destination Y",
-  "text.autoconfig.monsterwaves.option.fallDestinationZ": "Fall Destination Z"
+  "text.autoconfig.monsterwaves.option.fallDestinationZ": "Fall Destination Z",
+  "text.autoconfig.monsterwaves.option.enabled": "Enable Mod",
+  "text.autoconfig.monsterwaves.option.enabled.@Tooltip": "When off, this mod stops spawning mobs",
+  "text.autoconfig.monsterwaves.option.spawnInterval": "Spawn Interval",
+  "text.autoconfig.monsterwaves.option.spawnInterval.@Tooltip": "Interval between spawn checks (ticks, 20 = 1s)",
+  "text.autoconfig.monsterwaves.option.minDistance": "Min Distance",
+  "text.autoconfig.monsterwaves.option.maxDistance": "Max Distance",
+  "text.autoconfig.monsterwaves.option.maxMobsPerPlayer": "Max Mobs per Player",
+  "text.autoconfig.monsterwaves.option.mobCountMin": "Min Mobs per Wave",
+  "text.autoconfig.monsterwaves.option.mobCountMax": "Max Mobs per Wave",
+  "text.autoconfig.monsterwaves.option.mobStatRadius": "Count Radius",
+  "text.autoconfig.monsterwaves.option.mobPool": "Mob Pool",
+  "text.autoconfig.monsterwaves.option.mobPool.@Tooltip": "Format: registryname:weight (e.g. minecraft:zombie:5)",
+  "text.autoconfig.monsterwaves.option.healthBonusPerLevel": "Health Bonus per Difficulty",
+  "text.autoconfig.monsterwaves.option.attackBonusPerLevel": "Attack Bonus per Difficulty",
+  "text.autoconfig.monsterwaves.option.armorBonusPerLevel": "Armor Bonus per Difficulty"
 }

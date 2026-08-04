@@ -98,5 +98,21 @@
   "text.autoconfig.monsterwaves.option.fallToRespawnPoint.@Tooltip": "开启=主世界用玩家重生点（无则世界出生点）、其他维度用目标出生点，并隐藏自定义坐标；关闭=用下方自定义坐标",
   "text.autoconfig.monsterwaves.option.fallDestinationX": "坠落目标X",
   "text.autoconfig.monsterwaves.option.fallDestinationY": "坠落目标Y",
-  "text.autoconfig.monsterwaves.option.fallDestinationZ": "坠落目标Z"
+  "text.autoconfig.monsterwaves.option.fallDestinationZ": "坠落目标Z",
+  "text.autoconfig.monsterwaves.option.enabled": "启用模组",
+  "text.autoconfig.monsterwaves.option.enabled.@Tooltip": "关闭后本模组不再生成怪物",
+  "text.autoconfig.monsterwaves.option.spawnInterval": "生成间隔",
+  "text.autoconfig.monsterwaves.option.spawnInterval.@Tooltip": "每次生成检测的间隔（tick，20 tick = 1 秒）",
+  "text.autoconfig.monsterwaves.option.minDistance": "最小距离",
+  "text.autoconfig.monsterwaves.option.maxDistance": "最大距离",
+  "text.autoconfig.monsterwaves.option.maxMobsPerPlayer": "每玩家怪物上限",
+  "text.autoconfig.monsterwaves.option.mobCountMin": "每波最少数量",
+  "text.autoconfig.monsterwaves.option.mobCountMax": "每波最多数量",
+  "text.autoconfig.monsterwaves.option.mobStatRadius": "数量统计半径",
+  "text.autoconfig.monsterwaves.option.mobPool": "怪物池",
+  "text.autoconfig.monsterwaves.option.mobPool.@Tooltip": "每项格式：注册名:权重（如 minecraft:zombie:5）",
+  "text.autoconfig.monsterwaves.option.healthBonusPerLevel": "每点难度生命增幅",
+  "text.autoconfig.monsterwaves.option.attackBonusPerLevel": "每点难度攻击增幅",
+  "text.autoconfig.monsterwaves.option.armorBonusPerLevel": "每点难度护甲增幅",
+  "text.autoconfig.monsterwaves.option.resetEnabled.@Tooltip": "关闭后界面重置按钮不可用（指令 skill reset 不受影响）"
 }
