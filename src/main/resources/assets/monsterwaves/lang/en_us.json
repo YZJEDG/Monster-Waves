@@ -153,5 +153,9 @@
   "text.autoconfig.monsterwaves.option.teleportCooldown": "Teleport Cooldown",
   "text.autoconfig.monsterwaves.option.teleportCooldown.@Tooltip": "Cooldown per mob after teleport (ticks, 20 = 1s)",
   "text.autoconfig.monsterwaves.option.teleportCheckInterval": "Check Interval",
-  "text.autoconfig.monsterwaves.option.teleportCheckInterval.@Tooltip": "Check every N ticks (20 = 1s)"
+  "text.autoconfig.monsterwaves.option.teleportCheckInterval.@Tooltip": "Check every N ticks (20 = 1s)",
+  "text.autoconfig.monsterwaves.option.maxElitesPerPlayer": "Max Elites per Player",
+  "text.autoconfig.monsterwaves.option.maxElitesPerPlayer.@Tooltip": "Max elites (incl. bosses) within mobStatRadius of a player; -1 = unlimited",
+  "text.autoconfig.monsterwaves.option.maxBossesPerPlayer": "Max Bosses per Player",
+  "text.autoconfig.monsterwaves.option.maxBossesPerPlayer.@Tooltip": "Max bosses within mobStatRadius of a player; -1 = unlimited"
 }

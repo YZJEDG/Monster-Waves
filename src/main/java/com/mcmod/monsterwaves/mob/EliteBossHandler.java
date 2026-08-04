@@ -23,12 +23,16 @@ public final class EliteBossHandler {
     private EliteBossHandler() {
     }
 
-    /** 生成后调用：**先判定精英**（eliteChance），若判定为精英，**再在精英基础上判定 Boss**（bossChance）——Boss 是精英的升级（属性叠加、名字/血条用 Boss 样式） */
+    /** 生成后调用：**先判定精英**（eliteChance），若判定为精英，**再在精英基础上判定 Boss**（bossChance）——Boss 是精英的升级（属性叠加、名字/血条用 Boss 样式）。受 maxElitesPerPlayer/maxBossesPerPlayer 数量上限约束（范围同 mobStatRadius，-1=不限）。 */
     public static void tryUpgrade(Mob mob, double difficulty) {
         if (mob == null || mob.level().isClientSide) {
             return;
         }
         MWConfig cfg = MWConfig.get();
+        // 精英数量上限（统计范围内已有精英 ≥ 上限则不升级，含 Boss——Boss 是精英的升级）
+        if (cfg.maxElitesPerPlayer >= 0 && countUpgradedNear(mob, cfg, ELITE_KEY) >= cfg.maxElitesPerPlayer) {
+            return;
+        }
         // 难度加成：生成系数 × √难度（比线性 ×难度 影响更小，用户 2026-08-04 调整）
         double mult = cfg.difficultyAffectsChance ? Math.max(1.0, Math.sqrt(difficulty)) : 1.0;
         // 1) 先判定是否精英
@@ -36,10 +40,20 @@ public final class EliteBossHandler {
             return;
         }
         makeElite(mob);
-        // 2) 已判定精英后，再判定是否进一步升级为 Boss
-        if (cfg.bossEnabled && mob.getRandom().nextDouble() < cfg.bossChance * mult) {
+        // 2) 已判定精英后，再判定是否进一步升级为 Boss（受 Boss 数量上限约束）
+        if (cfg.bossEnabled
+                && (cfg.maxBossesPerPlayer < 0
+                    || countUpgradedNear(mob, cfg, BOSS_KEY) < cfg.maxBossesPerPlayer)
+                && mob.getRandom().nextDouble() < cfg.bossChance * mult) {
             makeBoss(mob);
         }
+    }
+
+    /** 统计 mob 周围 mobStatRadius 范围内带指定升级标记的怪数量（排除自身） */
+    private static int countUpgradedNear(Mob mob, MWConfig cfg, String key) {
+        var box = mob.getBoundingBox().inflate(cfg.mobStatRadius);
+        return mob.level().getEntitiesOfClass(Mob.class, box,
+                m -> m != mob && m.getPersistentData().getBoolean(key)).size();
     }
 
     /** 升级为精英 */

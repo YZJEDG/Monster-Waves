@@ -153,5 +153,9 @@
   "text.autoconfig.monsterwaves.option.teleportCooldown": "传送冷却",
   "text.autoconfig.monsterwaves.option.teleportCooldown.@Tooltip": "每只怪传送后冷却（tick，20=1秒）",
   "text.autoconfig.monsterwaves.option.teleportCheckInterval": "检测间隔",
-  "text.autoconfig.monsterwaves.option.teleportCheckInterval.@Tooltip": "每隔多少 tick 检测一次（20=1秒）"
+  "text.autoconfig.monsterwaves.option.teleportCheckInterval.@Tooltip": "每隔多少 tick 检测一次（20=1秒）",
+  "text.autoconfig.monsterwaves.option.maxElitesPerPlayer": "精英数量上限",
+  "text.autoconfig.monsterwaves.option.maxElitesPerPlayer.@Tooltip": "玩家周围 mobStatRadius 范围内精英（含Boss）数量上限；-1=不限",
+  "text.autoconfig.monsterwaves.option.maxBossesPerPlayer": "Boss数量上限",
+  "text.autoconfig.monsterwaves.option.maxBossesPerPlayer.@Tooltip": "玩家周围 mobStatRadius 范围内 Boss 数量上限；-1=不限"
 }

@@ -489,6 +489,16 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public boolean difficultyAffectsChance = true;
 
+    /** 统计范围内精英数量上限（-1=不限；范围同 mobStatRadius） */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public int maxElitesPerPlayer = 5;
+
+    /** 统计范围内 Boss 数量上限（-1=不限；范围同 mobStatRadius） */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public int maxBossesPerPlayer = 1;
+
     // ===== 怪物传送（mobTeleport，仅本 mod 生成的维度生效）=====
 
     /** 怪物传送开关（怪远离玩家时拉回，防溢出；任何启用生成引擎的维度 + 仅本 mod 生成的怪） */
