@@ -92,7 +92,7 @@ tasks.named("processResources", ProcessResources).configure {
             mod_id: "monsterwaves",
             mod_name: "怪物狂潮 Monster Waves",
             mod_license: "MIT",
-            mod_version: "0.1.0",
+            mod_version: "1.0.0",
             mod_authors: "MCModDev"
     ]
     inputs.properties replaceProperties
