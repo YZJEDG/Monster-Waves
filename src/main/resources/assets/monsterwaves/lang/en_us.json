@@ -57,6 +57,8 @@
   "text.autoconfig.monsterwaves.option.battleCharmGiveOnJoin.@Tooltip": "Grant battle charm on first join",
   "text.autoconfig.monsterwaves.category.loot": "Unified Drops",
   "text.autoconfig.monsterwaves.option.lootEnabled": "Enable Unified Drops",
+  "text.autoconfig.monsterwaves.option.lootOverrideVanilla": "Override Vanilla Drops",
+  "text.autoconfig.monsterwaves.option.lootOverrideVanilla.@Tooltip": "Mobs spawned by this mod drop nothing from vanilla/other mods; only this mod's loot tables (normalLoot/eliteLoot/bossLoot)",
   "text.autoconfig.monsterwaves.option.lootEnabled.@Tooltip": "Mobs drop configured normalLoot items on death",
   "text.autoconfig.monsterwaves.option.lootGlobalChanceMultiplier": "Global Chance Multiplier",
   "text.autoconfig.monsterwaves.option.lootGlobalChanceMultiplier.@Tooltip": "Final chance = entry chance x difficulty x this (capped at 1)",

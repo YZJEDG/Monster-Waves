@@ -369,6 +369,11 @@ public class MWConfig implements ConfigData {
     public List<String> enabledDimensions = new ArrayList<>();
 
     // ===== 统一掉落（loot）=====
+    /** 拦截 mod 生成怪的原版/其他 mod 掉落，只使用本 mod 掉落表（v1.0.4） */
+    @ConfigEntry.Category("loot")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean lootOverrideVanilla = true;
+
     /** 统一掉落开关（与属性球掉落并行） */
     @ConfigEntry.Category("loot")
     @ConfigEntry.Gui.Tooltip()

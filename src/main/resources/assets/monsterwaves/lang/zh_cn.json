@@ -56,6 +56,8 @@
   "text.autoconfig.monsterwaves.option.battleCharmGiveOnJoin.@Tooltip": "首次加入时自动发放战斗符咒",
   "text.autoconfig.monsterwaves.category.loot": "统一掉落",
   "text.autoconfig.monsterwaves.option.lootEnabled": "启用统一掉落",
+  "text.autoconfig.monsterwaves.option.lootOverrideVanilla": "拦截原版掉落（mod怪）",
+  "text.autoconfig.monsterwaves.option.lootOverrideVanilla.@Tooltip": "本mod生成的怪死亡时不掉原版/其他mod掉落物，只使用本mod掉落表（normalLoot/eliteLoot/bossLoot）",
   "text.autoconfig.monsterwaves.option.lootEnabled.@Tooltip": "怪物死亡按 normalLoot 掉落配置物品",
   "text.autoconfig.monsterwaves.option.lootGlobalChanceMultiplier": "全局概率倍率",
   "text.autoconfig.monsterwaves.option.lootGlobalChanceMultiplier.@Tooltip": "最终概率 = 条目概率 × 难度 × 此倍率（封顶 1）",

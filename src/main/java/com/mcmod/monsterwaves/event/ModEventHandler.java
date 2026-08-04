@@ -291,9 +291,16 @@ public final class ModEventHandler {
         dropLoot(entity, level, difficulty, owner);
     }
 
-    /** 原版掉落也打归属标记（击杀者玩家） */
+    /** 原版掉落拦截 + 归属标记：mod 生成的怪拦截原版/其他 mod 掉落（只使用 mod 掉落表，v1.0.4 可关） */
     @SubscribeEvent
     public static void onLivingDrops(net.minecraftforge.event.entity.living.LivingDropsEvent event) {
+        // v1.0.4：mod 生成的怪（MARKER）取消原版/其他 mod 掉落，掉落完全由本 mod 掉落表接管
+        var entity = event.getEntity();
+        if (entity != null && entity.getPersistentData().getBoolean(MobSpawnManager.MARKER)
+                && MWConfig.get().lootOverrideVanilla) {
+            event.setCanceled(true);
+            return;
+        }
         if (event.getSource().getEntity() instanceof net.minecraft.world.entity.player.Player p) {
             String owner = p.getStringUUID();
             for (net.minecraft.world.entity.item.ItemEntity e : event.getDrops()) {
