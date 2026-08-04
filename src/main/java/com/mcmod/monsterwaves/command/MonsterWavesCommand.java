@@ -131,6 +131,10 @@ public final class MonsterWavesCommand {
                 .then(Commands.literal("reload")
                         .requires(src -> src.hasPermission(2))
                         .executes(MonsterWavesCommand::reloadConfig))
+                .then(Commands.literal("config")
+                        .requires(src -> src.hasPermission(2))
+                        .then(Commands.literal("save")
+                                .executes(MonsterWavesCommand::configSave)))
                 .then(Commands.literal("player")
                         .then(Commands.literal("list")
                                 .executes(MonsterWavesCommand::playerList)))
@@ -248,6 +252,18 @@ public final class MonsterWavesCommand {
         }
         ctx.getSource().sendSuccess(() -> Component.literal("配置已重载，全部玩家属性已重新应用（白名单外分配已清理并返还技能点）"), true);
         return 1;
+    }
+
+    /** 将当前内存配置（含 GUI 已修改但未点保存的值）写入 config/monsterwaves.json */
+    private static int configSave(CommandContext<CommandSourceStack> ctx) {
+        try {
+            me.shedaniel.autoconfig.AutoConfig.getConfigHolder(MWConfig.class).save();
+            ctx.getSource().sendSuccess(() -> Component.literal("配置已保存到 config/monsterwaves.json（重启后生效）"), true);
+            return 1;
+        } catch (Exception e) {
+            ctx.getSource().sendFailure(Component.literal("配置保存失败：" + e.getMessage()));
+            return 0;
+        }
     }
 
     private static int difficulty(CommandContext<CommandSourceStack> ctx) {
