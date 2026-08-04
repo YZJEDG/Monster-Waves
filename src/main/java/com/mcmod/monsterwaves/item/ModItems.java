@@ -27,10 +27,13 @@ public final class ModItems {
             event.accept(RETURN_CHARM.get());
             event.accept(BATTLE_CHARM.get());
             event.accept(HOME_CHARM.get());
-            // 苦痛传递附魔书（等级 1）
-            event.accept(net.minecraft.world.item.EnchantedBookItem.createForEnchantment(
-                    new net.minecraft.world.item.enchantment.EnchantmentInstance(
-                            com.mcmod.monsterwaves.enchant.ModEnchantments.PAIN_TRANSFERENCE.get(), 1)));
+            // 苦痛传递附魔书（1~最大等级各一本）
+            int maxLevel = Math.max(1, com.mcmod.monsterwaves.config.MWConfig.get().painTransferenceMaxLevel);
+            for (int lv = 1; lv <= maxLevel; lv++) {
+                event.accept(net.minecraft.world.item.EnchantedBookItem.createForEnchantment(
+                        new net.minecraft.world.item.enchantment.EnchantmentInstance(
+                                com.mcmod.monsterwaves.enchant.ModEnchantments.PAIN_TRANSFERENCE.get(), lv)));
+            }
         }
     }
 
