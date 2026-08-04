@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-/** 返回符咒：右键传送至休息维度（带冷却，成功后消耗） */
+/** 休息符咒：右键传送至休息维度（带冷却，成功后消耗） */
 public class ReturnCharmItem extends Item {
     public ReturnCharmItem() {
         super(new Item.Properties().stacksTo(1));

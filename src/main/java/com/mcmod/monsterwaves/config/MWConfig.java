@@ -363,7 +363,7 @@ public class MWConfig implements ConfigData {
     public List<String> pickupBlacklist = new ArrayList<>();
 
     // ===== 休息维度（safe）=====
-    /** 是否启用休息维度与返回符咒 */
+    /** 是否启用休息维度与休息符咒 */
     @ConfigEntry.Category("safe")
     @ConfigEntry.Gui.Tooltip()
     public boolean safeEnabled = true;
@@ -376,7 +376,7 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("safe")
     public String islandBlock = "minecraft:grass_block";
 
-    /** 首次加入是否给予返回符咒 */
+    /** 首次加入是否给予休息符咒 */
     @ConfigEntry.Category("safe")
     @ConfigEntry.Gui.Tooltip()
     public boolean giveOnJoin = true;
@@ -386,7 +386,7 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public boolean giveHomeCharmOnJoin = true;
 
-    /** 返回符咒冷却（tick） */
+    /** 休息符咒冷却（tick） */
     @ConfigEntry.Category("safe")
     @ConfigEntry.Gui.Tooltip()
     public int safeCooldown = 600;

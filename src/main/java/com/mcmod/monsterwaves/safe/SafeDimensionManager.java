@@ -23,7 +23,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 /**
  * 休息维度系统：
  * - 维度 monsterwaves:safe（数据包注册，flat 全空 + 代码生成空岛）
- * - 返回符咒传送（带冷却，冷却存玩家 NBT）
+ * - 休息符咒传送（带冷却，冷却存玩家 NBT）
  * - 玩家规则：不饥饿、免疫伤害、低于 fallTeleportY 传送至目标维度
  */
 public final class SafeDimensionManager {
@@ -58,7 +58,7 @@ public final class SafeDimensionManager {
         long cooldownUntil = player.getPersistentData().getLong(COOLDOWN_KEY);
         if (now < cooldownUntil) {
             int remain = (int) Math.ceil((cooldownUntil - now) / 20.0);
-            player.displayClientMessage(Component.literal("返回符咒冷却中，剩余 " + remain + " 秒"), true);
+            player.displayClientMessage(Component.literal("休息符咒冷却中，剩余 " + remain + " 秒"), true);
             return false;
         }
         player.getPersistentData().putLong(COOLDOWN_KEY, now + cfg.safeCooldown);
@@ -114,9 +114,14 @@ public final class SafeDimensionManager {
                     player.teleportTo(target, spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5, 0.0F, 0.0F);
                 }
             } else {
-                // 其他维度：目标维度出生点
-                BlockPos spawn = target.getSharedSpawnPos();
-                player.teleportTo(target, spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5, 0.0F, 0.0F);
+                // 其他维度：战斗维度用竞技场出生点（对齐 teleportToArena），其余用目标维度出生点
+                if (targetKey.equals(com.mcmod.monsterwaves.arena.ArenaDimensionManager.ARENA_DIMENSION)) {
+                    int y = Math.max(1, cfg.arenaSpawnY);
+                    player.teleportTo(target, 0.5, y, 0.5, player.getYRot(), player.getXRot());
+                } else {
+                    BlockPos spawn = target.getSharedSpawnPos();
+                    player.teleportTo(target, spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5, 0.0F, 0.0F);
+                }
             }
             return;
         }

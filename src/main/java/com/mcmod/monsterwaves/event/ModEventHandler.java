@@ -177,7 +177,7 @@ public final class ModEventHandler {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         PlayerDataManager.applyAll(event.getEntity());
-        // 开局给予返回符咒与战斗符咒（各自 giveOnJoin 开关）
+        // 开局给予休息符咒与战斗符咒（各自 giveOnJoin 开关）
         if (event.getEntity() instanceof ServerPlayer sp) {
             MWConfig cfg = MWConfig.get();
             if (cfg.giveOnJoin) {
