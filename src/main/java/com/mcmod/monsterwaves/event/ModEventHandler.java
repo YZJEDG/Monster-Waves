@@ -364,13 +364,17 @@ public final class ModEventHandler {
         }
     }
 
-    /** 经验加成（drop.experience）：击杀敌对怪物获得额外经验 = 原值 × (multiplier + bonusPerDifficulty × (难度-1)) */
+    /** 经验加成（drop.experience）：仅本 mod 生成的生物获得额外经验 = 原值 × (multiplier + bonusPerDifficulty × (难度-1))（v1.0.13） */
     @SubscribeEvent
     public static void onLivingExperienceDrop(LivingExperienceDropEvent event) {
         if (event.getEntity().level().isClientSide) {
             return;
         }
         if (!(event.getEntity() instanceof Monster)) {
+            return;
+        }
+        // v1.0.13：经验加成只对本 mod 生成的生物生效；原版/其他 mod 生物保持原版经验
+        if (!MobSpawnManager.isTracked(event.getEntity())) {
             return;
         }
         MWConfig cfg = MWConfig.get();
