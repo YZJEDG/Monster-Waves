@@ -267,15 +267,15 @@ public final class ModEventHandler {
         }
         // 统一掉落
         dropLoot(entity, level, difficulty, owner);
+        // v1.0.9 延迟移除 UUID 追踪（下 tick 执行，确保 LivingDropsEvent 掉落拦截先完成）
+        level.getServer().execute(() -> MobSpawnManager.untrack(entity.getUUID()));
     }
 
-    /** 原版掉落拦截 + 归属标记：mod 生成的怪拦截原版/其他 mod 掉落（只使用 mod 掉落表，v1.0.4 可关） */
+    /** 原版掉落拦截 + 归属标记：只追踪本 mod 生成的怪（UUID 集合 + NBT 双判断，兼容任意 mod 生物） */
     @SubscribeEvent
     public static void onLivingDrops(net.minecraftforge.event.entity.living.LivingDropsEvent event) {
-        // v1.0.4：mod 生成的怪（MARKER）取消原版/其他 mod 掉落，掉落完全由本 mod 掉落表接管
-        var entity = event.getEntity();
-        if (entity != null && entity.getPersistentData().getBoolean(MobSpawnManager.MARKER)
-                && MWConfig.get().lootOverrideVanilla) {
+        // v1.0.9：只拦截本 mod 生成的生物（MobSpawnManager.isTracked），其他 mod/原版生物掉落完全不受影响
+        if (MobSpawnManager.isTracked(event.getEntity()) && MWConfig.get().lootOverrideVanilla) {
             event.setCanceled(true);
             return;
         }

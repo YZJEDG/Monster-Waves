@@ -189,6 +189,7 @@ public final class MobSpawnManager {
             return;
         }
         mob.getPersistentData().putBoolean(MARKER, true);
+        TRACKED.add(mob.getUUID());
         applyDifficultyTo(mob, difficulty, stage);
         // 精英/Boss 升级（v9.2+ 第三阶段）
         com.mcmod.monsterwaves.mob.EliteBossHandler.tryUpgrade(mob, difficulty);

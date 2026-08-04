@@ -203,6 +203,7 @@ public final class MonsterWavesCommand {
                     MobSpawnType.COMMAND);
             if (entity instanceof Mob mob) {
                 mob.getPersistentData().putBoolean(MobSpawnManager.MARKER, true);
+                com.mcmod.monsterwaves.spawn.MobSpawnManager.track(mob);
                 MobSpawnManager.applyDifficultyTo(mob, difficulty, stage);
                 // 强制类型：normal（默认）/ elite / boss（v10.4 完整指令集）
                 if ("elite".equals(type)) {
