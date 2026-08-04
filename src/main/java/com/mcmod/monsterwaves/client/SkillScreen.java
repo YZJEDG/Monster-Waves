@@ -78,14 +78,26 @@ public class SkillScreen extends ButtonListBaseScreen {
         });
 
         // 按 mod 分组：minecraft 置顶，其余按命名空间字母序；组内按注册名固定排序（不随已分配点数变化）
+        // 组标题可点击：展开/收起（折叠时该组属性行不显示）
         rebuildGroups();
         for (AttributeGroup g : groups) {
-            panel.add(new SimpleTextButton(panel, Component.literal("▶ " + g.displayName), Icons.INFO) {
+            panel.add(new SimpleTextButton(panel, groupTitle(g), Icons.INFO) {
                 @Override
                 public void onClicked(MouseButton button) {
-                    // 组标题：不可点击
+                    if (button.isLeft()) {
+                        g.collapsed = !g.collapsed;
+                        refreshWidgets();
+                    }
+                }
+
+                @Override
+                public Component getTitle() {
+                    return groupTitle(g);
                 }
             });
+            if (g.collapsed) {
+                continue; // 折叠：不显示该组属性行
+            }
             for (AttributeEntry e : g.entries) {
                 panel.add(new SimpleTextButton(panel, rowTitle(e), Icons.ADD) {
                     @Override
@@ -109,6 +121,11 @@ public class SkillScreen extends ButtonListBaseScreen {
             return Component.literal("【重置全部加点】（已禁用）");
         }
         return Component.literal("【重置全部加点】返还（已分配 - " + Math.max(0, cfg.resetCostPoints) + ")");
+    }
+
+    private static Component groupTitle(AttributeGroup g) {
+        return Component.literal((g.collapsed ? "▶ " : "▼ ") + g.displayName
+                + (g.collapsed ? "  (" + g.entries.size() + ")" : ""));
     }
 
     private static Component rowTitle(AttributeEntry e) {
@@ -177,6 +194,7 @@ public class SkillScreen extends ButtonListBaseScreen {
         final String namespace;
         final String displayName;
         final List<AttributeEntry> entries = new ArrayList<>();
+        boolean collapsed = false;
 
         AttributeGroup(String namespace) {
             this.namespace = namespace;
