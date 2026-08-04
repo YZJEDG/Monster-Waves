@@ -6,7 +6,6 @@ import com.mcmod.monsterwaves.item.ModItems;
 import com.mcmod.monsterwaves.network.NetworkHandler;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -55,21 +54,12 @@ public class MonsterWavesMod {
                 MonsterWavesMod.LOGGER.warn("TaCZ 事件注册失败，枪械苦痛传递不可用（其余功能正常）", t);
             }
         }
-        // 注册 Cloth Config 配置（config/monsterwaves.json5 JSON5，支持注释/尾逗号，手编友好；GUI 自动集成 Mods 列表）
+        // 注册 Cloth Config 配置层（config/monsterwaves.json5 JSON5，支持注释/尾逗号，手编友好；v1.3.4 移除 GUI，直接改文件 + 指令）
         // 自定义 Json5ConfigSerializer：Jankson 解析（容忍注释）+ Gson 覆盖反序列化（避免 Jankson 默认 List/Map 追加语义叠加默认值）；
         // Forge 原生 serverconfig(TOML) 不支持 Map/嵌套对象（attributeConfigs），故用 Cloth + 自定义 JSON5 序列化器。
+        // 说明：不再注册 ConfigScreen（Cloth GUI 对嵌套 POJO/Map 支持差且保存按钮有兼容问题），配置全部走 json5 文件：
+        //   改文件后 /monsterwaves reload 重载；改标量可用 /monsterwaves config set <字段> <值>；config save 写回文件。
         AutoConfig.register(MWConfig.class, com.mcmod.monsterwaves.config.Json5ConfigSerializer::new);
-        // 条件显示：开启"传送到重生点"时隐藏自定义坐标字段（fallDestinationX/Y/Z）
-        AutoConfig.getGuiRegistry(MWConfig.class).registerPredicateTransformer(
-                (entries, key, field, config, defaults, registry) ->
-                        ((MWConfig) config).fallToRespawnPoint ? java.util.List.of() : entries,
-                field -> field.getName().equals("fallDestinationX")
-                        || field.getName().equals("fallDestinationY")
-                        || field.getName().equals("fallDestinationZ"));
-        // 注册配置屏幕扩展点：供原版 Mods 列表与 Catalogue（模组目录）显示 Config 按钮
-        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
-                () -> new ConfigScreenHandler.ConfigScreenFactory((client, parent) ->
-                        AutoConfig.getConfigScreen(MWConfig.class, parent).get()));
-        LOGGER.info("Monster Waves (怪物狂潮) MVP 已加载");
+        LOGGER.info("Monster Waves (怪物狂潮) MVP 已加载（配置：config/monsterwaves.json5）");
     }
 }
