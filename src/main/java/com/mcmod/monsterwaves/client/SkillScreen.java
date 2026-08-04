@@ -165,7 +165,17 @@ public class SkillScreen extends ButtonListBaseScreen {
     }
 
     private static Component rowTitle(AttributeEntry e) {
-        return Component.literal(e.displayName + "   当前 " + String.format("%.2f", e.currentValue)
+        // 当前值**实时读取**客户端玩家属性（服务端 modifier 变更经属性同步即时反映，不依赖构造快照）
+        double value = e.currentValue;
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null) {
+            var attr = PlayerDataManager.resolveAttribute(e.attributeId);
+            var inst = attr == null ? null : mc.player.getAttribute(attr);
+            if (inst != null) {
+                value = inst.getValue();
+            }
+        }
+        return Component.literal(e.displayName + "   当前 " + String.format("%.2f", value)
                 + "   +" + e.allocated + (e.canAdd ? "" : "  (已满)"));
     }
 

@@ -209,6 +209,13 @@ public final class PlayerDataManager {
             return 0;
         }
         int refund = totalAllocated(player);
+        // 移除所有已加点的 modifier（否则属性加成残留：界面/服务端值不回落，需重新加点才"修正"）
+        for (String k : getAllAllocated(player).keySet()) {
+            Attribute attr = resolveAttribute(k);
+            if (attr != null) {
+                removeModifier(player, attr);
+            }
+        }
         mutable(player).remove(ALLOCATED_KEY);
         int net = Math.max(0, refund - (charge ? Math.max(0, cfg.resetCostPoints) : 0));
         if (net > 0) {
