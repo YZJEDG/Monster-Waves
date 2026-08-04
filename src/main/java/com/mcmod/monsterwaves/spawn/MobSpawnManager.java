@@ -35,10 +35,13 @@ public final class MobSpawnManager {
     private MobSpawnManager() {
     }
 
-    /** 维度开关：空列表 = 全部启用；非空则仅列出的维度刷怪（与传送功能共用） */
+    /** 维度开关：空列表回退默认仅刷怪维度（v1.3 修正：原空=全部启用导致主世界/下界/末地也刷怪）；非空则仅列出的维度刷怪（与传送/阶段计时共用） */
     public static boolean isDimensionEnabled(ServerLevel level) {
         java.util.List<String> dims = MWConfig.get().enabledDimensions;
-        return dims.isEmpty() || dims.contains(level.dimension().location().toString());
+        if (dims.isEmpty()) {
+            dims = MWConfig.DEFAULT_ENABLED_DIMENSIONS;
+        }
+        return dims.contains(level.dimension().location().toString());
     }
 
     public static void serverTick(ServerLevel level) {

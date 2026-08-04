@@ -84,7 +84,7 @@
   "text.autoconfig.monsterwaves.option.arenaSpawnY": "Arena Spawn Y",
   "text.autoconfig.monsterwaves.category.dimensions": "Dimension Switches",
   "text.autoconfig.monsterwaves.option.enabledDimensions": "Enabled Dimensions",
-  "text.autoconfig.monsterwaves.option.enabledDimensions.@Tooltip": "Empty = all dimensions; fill ids (e.g. minecraft:overworld) to restrict. Safe dimension never spawns",
+  "text.autoconfig.monsterwaves.option.enabledDimensions.@Tooltip": "Empty = default only arena dimension (monsterwaves:arena); fill ids (e.g. minecraft:overworld) to restrict. Safe dimension never spawns",
   "text.autoconfig.monsterwaves.option.safeEnabled": "Enable Safe Dimension",
   "text.autoconfig.monsterwaves.option.safeEnabled.@Tooltip": "Disables rest charm and safe dimension rules",
   "text.autoconfig.monsterwaves.option.islandRadius": "Island Radius",

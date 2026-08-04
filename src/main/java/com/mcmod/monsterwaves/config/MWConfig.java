@@ -427,10 +427,16 @@ public class MWConfig implements ConfigData {
     public double experienceBonusPerDifficulty = 0.2;
 
     // ===== 维度开关（dimensions）=====
-    /** 启用本模组刷怪的维度列表；空列表 = 全部维度启用（休息维度始终不刷怪） */
+    /**
+     * 启用本模组刷怪的维度列表；**留空 = 默认仅刷怪维度（monsterwaves:arena）**（v1.3 修正：原空=全部维度启用导致主世界也刷怪）。
+     * 填维度 id（如 minecraft:overworld）则仅这些维度刷怪；休息维度始终不刷怪。
+     */
     @ConfigEntry.Category("dimensions")
     @ConfigEntry.Gui.Tooltip()
-    public List<String> enabledDimensions = new ArrayList<>();
+    public List<String> enabledDimensions = new ArrayList<>(List.of("monsterwaves:arena"));
+
+    /** 默认启用维度（列表留空时的回退值）：仅本模组刷怪维度 arena */
+    public static final List<String> DEFAULT_ENABLED_DIMENSIONS = java.util.List.of("monsterwaves:arena");
 
     // ===== 统一掉落（loot）=====
     /** 拦截 mod 生成怪的原版/其他 mod 掉落，只使用本 mod 掉落表（v1.0.4） */

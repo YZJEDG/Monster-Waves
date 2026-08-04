@@ -83,7 +83,7 @@
   "text.autoconfig.monsterwaves.option.arenaSpawnY": "刷怪维度出生Y",
   "text.autoconfig.monsterwaves.category.dimensions": "维度开关",
   "text.autoconfig.monsterwaves.option.enabledDimensions": "启用刷怪的维度",
-  "text.autoconfig.monsterwaves.option.enabledDimensions.@Tooltip": "留空 = 全部维度启用；填维度 id（如 minecraft:overworld）则仅这些维度刷怪。休息维度始终不刷怪",
+  "text.autoconfig.monsterwaves.option.enabledDimensions.@Tooltip": "留空 = 默认仅刷怪维度（monsterwaves:arena）；填维度 id（如 minecraft:overworld）则仅这些维度刷怪。休息维度始终不刷怪",
   "text.autoconfig.monsterwaves.option.safeEnabled": "启用休息维度",
   "text.autoconfig.monsterwaves.option.safeEnabled.@Tooltip": "关闭后休息符咒与休息维度规则失效",
   "text.autoconfig.monsterwaves.option.islandRadius": "空岛半径",
