@@ -100,9 +100,13 @@ public class SkillScreen extends Screen {
         addRenderableWidget(Button.builder(Component.literal(info), b -> {
         }).bounds(left, top - 4, 300, 20).build());
 
-        // 重置按钮（按配置收费）
-        Button reset = Button.builder(Component.literal("重置"), b ->
-                NetworkHandler.sendToServer(new C2SResetAll())).bounds(left + 310, top - 4, 90, 20).build();
+        // 重置按钮（按配置收费；点击后立即禁用防连点，收到服务端同步后由 refresh 重建恢复）
+        Button[] resetRef = new Button[1];
+        Button reset = Button.builder(Component.literal("重置"), b -> {
+            resetRef[0].active = false;
+            NetworkHandler.sendToServer(new C2SResetAll());
+        }).bounds(left + 310, top - 4, 90, 20).build();
+        resetRef[0] = reset;
         reset.active = MWConfig.get().resetEnabled;
         addRenderableWidget(reset);
 
@@ -145,11 +149,12 @@ public class SkillScreen extends Screen {
             boolean enabled = PlayerDataManager.isEnabled(id);
             MWConfig cfg = MWConfig.get();
             boolean capped = cfg.perAttributeMaxPoints >= 0 && allocated >= cfg.perAttributeMaxPoints;
+            // 可点性只由配置与上限决定；是否真的有技能点由服务端校验（避免依赖客户端缓存同步导致条目"点不动"）
             entries.add(new AttributeEntry(id,
                     PlayerDataManager.displayName(id),
-                    inst.getValue(),
+                    SkillDataCache.getValue(id, inst.getValue()),
                     allocated,
-                    enabled && !capped && SkillDataCache.getPoints() > 0));
+                    enabled && !capped));
         }
         entries.sort(Comparator
                 .comparingInt((AttributeEntry e) -> e.allocated).reversed()

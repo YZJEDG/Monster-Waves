@@ -25,6 +25,12 @@ public class S2COpenGui {
 
     @OnlyIn(Dist.CLIENT)
     private static void openScreen() {
-        Minecraft.getInstance().setScreen(new com.mcmod.monsterwaves.client.SkillScreen());
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) {
+            return;
+        }
+        // 与 P 键一致：打开前先请求服务端同步最新技能点数据
+        NetworkHandler.sendToServer(new C2SRequestSync());
+        mc.setScreen(new com.mcmod.monsterwaves.client.SkillScreen());
     }
 }

@@ -1,13 +1,15 @@
 package com.mcmod.monsterwaves.network;
 
 import com.mcmod.monsterwaves.data.PlayerDataManager;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-/** 客户端请求为某属性加 1 点 */
+/** 客户端请求为某属性加 1 点（成功/失败均回发同步；失败附带原因提示） */
 public class C2SAddPoint {
     private final String attributeId;
 
@@ -28,7 +30,13 @@ public class C2SAddPoint {
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
             if (player != null) {
-                PlayerDataManager.addPoint(player, msg.attributeId);
+                boolean ok = PlayerDataManager.addPoint(player, msg.attributeId);
+                if (!ok) {
+                    player.displayClientMessage(
+                            Component.literal("无法加点：技能点不足、已达上限或属性不可用")
+                                    .withStyle(ChatFormatting.RED), true);
+                }
+                // 无论成败都回发最新数据，界面立即刷新（含属性当前值，客户端属性同步后自动一致）
                 NetworkHandler.sendTo(player, S2CSyncData.from(player));
             }
         });
