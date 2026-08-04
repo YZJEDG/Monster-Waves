@@ -113,5 +113,7 @@
   "text.autoconfig.monsterwaves.option.attributeConfigs.@Tooltip": "Whitelist: attribute id -> config (enabled / percentage / maxPoints). Attributes not listed cannot be allocated",
   "text.autoconfig.monsterwaves.option.attributeConfigs.enabled": "Enabled",
   "text.autoconfig.monsterwaves.option.attributeConfigs.percentage": "Percentage",
-  "text.autoconfig.monsterwaves.option.attributeConfigs.maxPoints": "Max Points"
+  "text.autoconfig.monsterwaves.option.attributeConfigs.maxPoints": "Max Points",
+  "attribute.name.tacz.gun_fire_rate": "Fire Rate",
+  "attribute.name.tacz.gun_reload_speed": "Reload Speed"
 }

@@ -113,5 +113,7 @@
   "text.autoconfig.monsterwaves.option.attributeConfigs.@Tooltip": "白名单：属性注册名→配置（enabled 是否可加 / percentage 是否百分比 / maxPoints 上限）。未列出的属性不可加点",
   "text.autoconfig.monsterwaves.option.attributeConfigs.enabled": "允许加点",
   "text.autoconfig.monsterwaves.option.attributeConfigs.percentage": "百分比加成",
-  "text.autoconfig.monsterwaves.option.attributeConfigs.maxPoints": "加点上限"
+  "text.autoconfig.monsterwaves.option.attributeConfigs.maxPoints": "加点上限",
+  "attribute.name.tacz.gun_fire_rate": "射速",
+  "attribute.name.tacz.gun_reload_speed": "换弹速度"
 }

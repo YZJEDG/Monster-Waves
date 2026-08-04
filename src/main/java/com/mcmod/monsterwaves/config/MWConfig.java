@@ -157,11 +157,13 @@ public class MWConfig implements ConfigData {
             "minecraft:generic.armor_toughness", "盔甲韧性",
             "minecraft:generic.movement_speed", "移动速度",
             "minecraft:generic.attack_speed", "攻击速度",
-            "minecraft:generic.luck", "幸运"));
+            "minecraft:generic.luck", "幸运",
+            "tacz:gun_fire_rate", "射速",
+            "tacz:gun_reload_speed", "换弹速度"));
 
     /**
      * 属性加点白名单（属性注册名 → 配置）。**未列出的属性不可加点**，开发者可自行增删。
-     * 默认：攻击/护甲/生命/速度/挖掘速度/攻击速度。
+     * 默认：攻击/护甲/生命/速度/挖掘速度/攻击速度 + **额外属性** tacz 射速/换弹（百分比型，测试 TaCZ 对接）。
      * 注：1.20.1 原版无 block_break_speed（挖掘速度）属性（1.21+），模组提供同名属性则自动生效。
      */
     @ConfigEntry.Category("skillSystem")
@@ -172,7 +174,10 @@ public class MWConfig implements ConfigData {
             "minecraft:generic.max_health", new AttributeConfig(true, false, 50),
             "minecraft:generic.movement_speed", new AttributeConfig(true, true, 50),
             "minecraft:generic.attack_speed", new AttributeConfig(true, false, 50),
-            "minecraft:generic.block_break_speed", new AttributeConfig(true, false, 50)));
+            "minecraft:generic.block_break_speed", new AttributeConfig(true, false, 50),
+            // 额外属性（tacz 测试）：百分比型
+            "tacz:gun_fire_rate", new AttributeConfig(true, true, 50),
+            "tacz:gun_reload_speed", new AttributeConfig(true, true, 50)));
 
     /** 单属性加点配置 */
     public static class AttributeConfig {
