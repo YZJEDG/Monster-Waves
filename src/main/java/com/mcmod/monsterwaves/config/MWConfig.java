@@ -150,16 +150,19 @@ public class MWConfig implements ConfigData {
 
     /** 属性显示名（属性注册名→显示名；缺省用原版属性名） */
     @ConfigEntry.Category("skillSystem")
-    public Map<String, String> attributeDisplayNames = new java.util.HashMap<>(Map.of(
-            "minecraft:generic.attack_damage", "攻击力",
-            "minecraft:generic.max_health", "最大生命",
-            "minecraft:generic.armor", "护甲",
-            "minecraft:generic.armor_toughness", "盔甲韧性",
-            "minecraft:generic.movement_speed", "移动速度",
-            "minecraft:generic.attack_speed", "攻击速度",
-            "minecraft:generic.luck", "幸运",
-            "tacz:gun_fire_rate", "射速",
-            "tacz:gun_reload_speed", "换弹速度"));
+    public Map<String, String> attributeDisplayNames = new java.util.HashMap<>(Map.ofEntries(
+            Map.entry("minecraft:generic.attack_damage", "攻击力"),
+            Map.entry("minecraft:generic.max_health", "最大生命"),
+            Map.entry("minecraft:generic.armor", "护甲"),
+            Map.entry("minecraft:generic.armor_toughness", "盔甲韧性"),
+            Map.entry("minecraft:generic.movement_speed", "移动速度"),
+            Map.entry("minecraft:generic.attack_speed", "攻击速度"),
+            Map.entry("minecraft:generic.luck", "幸运"),
+            Map.entry("gunsmithlib:rpm", "射速"),
+            Map.entry("gunsmithlib:reload_speed", "换弹速度"),
+            Map.entry("gunsmithlib:bullet_damage", "子弹伤害"),
+            Map.entry("gunsmithlib:bullet_speed", "子弹速度"),
+            Map.entry("gunsmithlib:ammo_capacity", "弹匣容量")));
 
     /**
      * 属性加点白名单（属性注册名 → 配置）。**未列出的属性不可加点**，开发者可自行增删。
@@ -168,19 +171,24 @@ public class MWConfig implements ConfigData {
      */
     @ConfigEntry.Category("skillSystem")
     @ConfigEntry.Gui.Tooltip()
-    public Map<String, AttributeConfig> attributeConfigs = new java.util.HashMap<>(Map.of(
+    public Map<String, AttributeConfig> attributeConfigs = new java.util.HashMap<>(Map.ofEntries(
             // 默认全部百分比加成（每点 +percentagePerPoint；每属性可单独改回数值/幅度/上限）
-            "minecraft:generic.attack_damage", new AttributeConfig(true, true, 50),
-            "minecraft:generic.armor", new AttributeConfig(true, true, 50),
-            "minecraft:generic.max_health", new AttributeConfig(true, true, 50),
-            "minecraft:generic.movement_speed", new AttributeConfig(true, true, 50),
-            "minecraft:generic.attack_speed", new AttributeConfig(true, true, 50),
-            "minecraft:generic.block_break_speed", new AttributeConfig(true, true, 50),
-            "minecraft:generic.luck", new AttributeConfig(true, true, 50),
-            "minecraft:generic.armor_toughness", new AttributeConfig(true, true, 50),
-            // 额外属性（tacz 测试）：百分比型
-            "tacz:gun_fire_rate", new AttributeConfig(true, true, 50),
-            "tacz:gun_reload_speed", new AttributeConfig(true, true, 50)));
+            Map.entry("minecraft:generic.attack_damage", new AttributeConfig(true, true, 50)),
+            Map.entry("minecraft:generic.armor", new AttributeConfig(true, true, 50)),
+            Map.entry("minecraft:generic.max_health", new AttributeConfig(true, true, 50)),
+            Map.entry("minecraft:generic.movement_speed", new AttributeConfig(true, true, 50)),
+            Map.entry("minecraft:generic.attack_speed", new AttributeConfig(true, true, 50)),
+            Map.entry("minecraft:generic.block_break_speed", new AttributeConfig(true, true, 50)),
+            Map.entry("minecraft:generic.luck", new AttributeConfig(true, true, 50)),
+            Map.entry("minecraft:generic.armor_toughness", new AttributeConfig(true, true, 50)),
+            // 枪械加成（gunsmithlib = Gunsmith Library，TaCZ 实际读取的属性）：
+            // rpm 射速 / reload_speed 换弹 / bullet_damage 子弹伤害 / bullet_speed 子弹速度 / ammo_capacity 弹匣容量
+            // 全部百分比型（每点 +percentagePerPoint）：rpm 基值大（数百级）需乘算，reload_speed 基值 1.0（乘数）乘算即 +10% 换弹
+            Map.entry("gunsmithlib:rpm", new AttributeConfig(true, true, 50)),
+            Map.entry("gunsmithlib:reload_speed", new AttributeConfig(true, true, 50)),
+            Map.entry("gunsmithlib:bullet_damage", new AttributeConfig(true, true, 50)),
+            Map.entry("gunsmithlib:bullet_speed", new AttributeConfig(true, true, 50)),
+            Map.entry("gunsmithlib:ammo_capacity", new AttributeConfig(true, true, 50))));
 
     /** 单属性加点配置（白名单内每个属性独立配置） */
     public static class AttributeConfig {

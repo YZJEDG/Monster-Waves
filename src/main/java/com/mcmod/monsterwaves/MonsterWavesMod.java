@@ -35,8 +35,7 @@ public class MonsterWavesMod {
         // 技能点网络通信（v9.0）
         NetworkHandler.register();
         // 自定义属性（tacz 测试属性）注册 + 挂到玩家属性表
-        com.mcmod.monsterwaves.attribute.ModAttributes.TACZ_ATTRIBUTES.register(modBus);
-        modBus.addListener(com.mcmod.monsterwaves.attribute.ModAttributes::onAttributeModification);
+        // v9.4：枪械加成改用 gunsmithlib（Gunsmith Library，TaCZ 实际读取的属性：rpm/reload_speed/bullet_damage 等），不再注册 tacz 占位属性
         // 客户端：技能点按键（**mod 总线**：RegisterKeyMappingsEvent 只在 modBus 触发，注册错总线按键不会进入游戏"控制"设置）与 P 键检测（Forge 总线）
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             MinecraftForge.EVENT_BUS.register(com.mcmod.monsterwaves.client.ClientEvents.class);
