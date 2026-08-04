@@ -104,6 +104,8 @@ public final class ModEventHandler {
         }
         MinecraftServer server = event.getServer();
         StageManager.serverTick(server);
+        // 独立掉落配置热重载检查（v1.0.18：config/monsterwaves_loot.json5 mtime 轮询）
+        com.mcmod.monsterwaves.config.LootConfigLoader.tick();
         // Boss 血条进度更新/清理
         com.mcmod.monsterwaves.mob.BossManager.tick(server);
         // 怪物传送（防溢出，仅 mod 维度）
@@ -382,22 +384,23 @@ public final class ModEventHandler {
         event.setDroppedExperience(newXp);
     }
 
-    /** 统一掉落：普通表所有怪；精英追加精英表；Boss 再追加 Boss 表；再加阶段掉落表（概率/数量受难度影响） */
+    /** 统一掉落：普通表所有怪；精英追加精英表；Boss 再追加 Boss 表；再加阶段表与怪物表（概率/数量受难度影响）——v1.0.18 读独立掉落配置 */
     private static void dropLoot(LivingEntity entity, ServerLevel level, double difficulty, String owner) {
         MWConfig cfg = MWConfig.get();
         if (!cfg.lootEnabled) {
             return;
         }
-        dropTable(entity, level, difficulty, owner, cfg.normalLoot);
+        com.mcmod.monsterwaves.config.LootConfig lc = com.mcmod.monsterwaves.config.LootConfigLoader.get();
+        dropTable(entity, level, difficulty, owner, lc.normalLoot);
         if (EliteBossHandler.isBoss(entity)) {
-            dropTable(entity, level, difficulty, owner, cfg.eliteLoot);
-            dropTable(entity, level, difficulty, owner, cfg.bossLoot);
+            dropTable(entity, level, difficulty, owner, lc.eliteLoot);
+            dropTable(entity, level, difficulty, owner, lc.bossLoot);
         } else if (EliteBossHandler.isElite(entity)) {
-            dropTable(entity, level, difficulty, owner, cfg.eliteLoot);
+            dropTable(entity, level, difficulty, owner, lc.eliteLoot);
         }
-        // v1.0.7 阶段掉落表（追加）：匹配当前阶段 id + 怪物等级（tier）
+        // 阶段掉落表（追加）：匹配当前阶段 id + 怪物等级（tier）
         String stageId = StageManager.getData(level.getServer()).currentStage().id();
-        for (MWConfig.StageLoot sl : cfg.stageLoot) {
+        for (com.mcmod.monsterwaves.config.LootConfig.StageLoot sl : lc.stageLoot) {
             if (sl == null || sl.entries == null) {
                 continue;
             }
@@ -409,9 +412,9 @@ public final class ModEventHandler {
             }
             dropTable(entity, level, difficulty, owner, sl.entries);
         }
-        // v1.0.17 怪物掉落表（追加）：匹配具体怪物注册名 + 怪物等级（tier），实现特定怪物的特定掉落
+        // 怪物掉落表（追加）：匹配具体怪物注册名 + 怪物等级（tier），实现特定怪物的特定掉落
         String mobId = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString();
-        for (MWConfig.MobLoot ml : cfg.mobLoot) {
+        for (com.mcmod.monsterwaves.config.LootConfig.MobLoot ml : lc.mobLoot) {
             if (ml == null || ml.entries == null) {
                 continue;
             }
@@ -443,12 +446,12 @@ public final class ModEventHandler {
     /** 原版 loot table 物品缓存（按实体类型）——v1.0.11 掉落过滤用 */
     /** 掉落一张掉落表 */
     private static void dropTable(LivingEntity entity, ServerLevel level, double difficulty, String owner,
-                                  java.util.List<MWConfig.LootEntry> table) {
+                                  java.util.List<com.mcmod.monsterwaves.config.LootConfig.LootEntry> table) {
         if (table == null || table.isEmpty()) {
             return;
         }
         MWConfig cfg = MWConfig.get();
-        for (MWConfig.LootEntry entry : table) {
+        for (com.mcmod.monsterwaves.config.LootConfig.LootEntry entry : table) {
             if (entry == null || entry.item == null || entry.item.isEmpty()) {
                 continue;
             }

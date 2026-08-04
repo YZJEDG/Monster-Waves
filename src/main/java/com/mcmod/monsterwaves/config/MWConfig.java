@@ -70,44 +70,9 @@ public class MWConfig implements ConfigData {
             }
         }
 
-        // ===== loot（三张表独立） =====
+        // ===== loot（v1.0.18：掉落表已移至独立文件 config/monsterwaves_loot.json5，由 LootConfigLoader 校验；此处仅保留全局倍率） =====
         lootGlobalChanceMultiplier = Math.max(0.0, lootGlobalChanceMultiplier);
         lootExtraCountPerLevel = Math.max(0.0, lootExtraCountPerLevel);
-        for (List<LootEntry> table : List.of(normalLoot, eliteLoot, bossLoot)) {
-            if (table == null) continue;
-            table.removeIf(e -> e == null || e.item == null || e.item.isBlank());
-            for (LootEntry e : table) {
-                e.chance = Math.max(0.0, Math.min(1.0, e.chance));
-                e.minCount = Math.max(1, e.minCount);
-                e.maxCount = Math.max(e.minCount, Math.min(4096, e.maxCount));
-            }
-        }
-        // v1.0.7 阶段掉落表校验：tier 非法回退 any、stageId 判空、entries 同掉落条目规则
-        if (stageLoot == null) stageLoot = new ArrayList<>();
-        stageLoot.removeIf(s -> s == null || s.entries == null);
-        for (StageLoot s : stageLoot) {
-            if (s.stageId == null) s.stageId = "";
-            if (s.tier == null || !s.tier.matches("any|normal|elite|boss")) s.tier = "any";
-            s.entries.removeIf(e -> e == null || e.item == null || e.item.isBlank());
-            for (LootEntry e : s.entries) {
-                e.chance = Math.max(0.0, Math.min(1.0, e.chance));
-                e.minCount = Math.max(1, e.minCount);
-                e.maxCount = Math.max(e.minCount, Math.min(4096, e.maxCount));
-            }
-        }
-        // v1.0.17 怪物掉落表校验：mobType 判空、tier 非法回退 any、entries 同掉落条目规则
-        if (mobLoot == null) mobLoot = new ArrayList<>();
-        mobLoot.removeIf(m -> m == null || m.entries == null);
-        for (MobLoot m : mobLoot) {
-            if (m.mobType == null) m.mobType = "";
-            if (m.tier == null || !m.tier.matches("any|normal|elite|boss")) m.tier = "any";
-            m.entries.removeIf(e -> e == null || e.item == null || e.item.isBlank());
-            for (LootEntry e : m.entries) {
-                e.chance = Math.max(0.0, Math.min(1.0, e.chance));
-                e.minCount = Math.max(1, e.minCount);
-                e.maxCount = Math.max(e.minCount, Math.min(4096, e.maxCount));
-            }
-        }
 
         // ===== experience =====
         experienceMultiplier = Math.max(0.0, experienceMultiplier);
@@ -464,72 +429,6 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("loot")
     @ConfigEntry.Gui.Tooltip()
     public double lootExtraCountPerLevel = 0.0;
-
-    /** 普通怪掉落条目（v1.0.8 移出 GUI，直接改 json5） */
-    @ConfigEntry.Gui.Excluded
-    public List<LootEntry> normalLoot = new ArrayList<>(List.of(
-            new LootEntry("minecraft:diamond", 1, 1, 0.1)));
-
-    /** 精英怪专属掉落表（仅精英掉落；Boss 也会掉落本表；v1.0.8 移出 GUI，直接改 json5） */
-    @ConfigEntry.Gui.Excluded
-    public List<LootEntry> eliteLoot = new ArrayList<>();
-
-    /** Boss 专属掉落表（仅 Boss 掉落；v1.0.8 移出 GUI，直接改 json5） */
-    @ConfigEntry.Gui.Excluded
-    public List<LootEntry> bossLoot = new ArrayList<>();
-
-    /** 阶段掉落表（v1.0.7）：按阶段 + 怪物等级（普通/精英/Boss）追加掉落；stageId 空=所有阶段、tier=any/normal/elite/boss；v1.0.8 移出 GUI，直接改 json5 */
-    @ConfigEntry.Gui.Excluded
-    public List<StageLoot> stageLoot = new ArrayList<>();
-
-    /** 阶段掉落条目：stageId 阶段id（空=所有阶段）/ tier 怪物等级（any=全部、normal=普通、elite=精英(不含Boss)、boss=Boss）/ entries 掉落条目 */
-    public static class StageLoot {
-        public String stageId = "";
-        public String tier = "any";
-        public List<LootEntry> entries = new ArrayList<>();
-    }
-
-    /** 怪物掉落表（v1.0.17）：按【具体怪物注册名 + 等级】配置掉落，实现特定怪物的特定掉落；mobType 空=所有怪；移出 GUI 直接改 json5 */
-    @ConfigEntry.Gui.Excluded
-    public List<MobLoot> mobLoot = new ArrayList<>();
-
-    /** 怪物掉落条目：mobType 怪物注册名（如 minecraft:zombie / cataclysm:ender_golem，空=所有怪）/ tier 怪物等级（any/normal/elite/boss）/ entries 掉落条目 */
-    public static class MobLoot {
-        public String mobType = "";
-        public String tier = "any";
-        public List<LootEntry> entries = new ArrayList<>();
-    }
-
-    /** 掉落条目：item 注册名 / nbt（可选）/ min-max 数量 / 概率（0~1）/ 是否受抢夺影响 */
-    public static class LootEntry {
-        public String item = "minecraft:diamond";
-        public String nbt = "";
-        public int minCount = 1;
-        public int maxCount = 1;
-        public double chance = 0.1;
-        public boolean isPlayerAffected = true;
-
-        public LootEntry() {
-        }
-
-        public LootEntry(String item, int minCount, int maxCount, double chance) {
-            this.item = item;
-            this.minCount = minCount;
-            this.maxCount = maxCount;
-            this.chance = chance;
-        }
-
-        @Override
-        public String toString() {
-            // 列表项显示本地化物品名（中文环境显示中文名）+ 数量/概率
-            net.minecraft.world.item.Item item = net.minecraftforge.registries.ForgeRegistries.ITEMS
-                    .getValue(net.minecraft.resources.ResourceLocation.tryParse(this.item));
-            String name = item == null
-                    ? this.item
-                    : item.getName(new net.minecraft.world.item.ItemStack(item)).getString();
-            return name + " ×" + minCount + "-" + maxCount + "（" + (int) (chance * 100) + "%）";
-        }
-    }
 
     // ===== 战斗符咒（battle）=====
     /** 战斗符咒开关 */

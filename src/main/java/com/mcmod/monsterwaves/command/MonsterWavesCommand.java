@@ -294,6 +294,7 @@ public final class MonsterWavesCommand {
     private static int reloadConfig(CommandContext<CommandSourceStack> ctx) {
         try {
             me.shedaniel.autoconfig.AutoConfig.getConfigHolder(MWConfig.class).load();
+            com.mcmod.monsterwaves.config.LootConfigLoader.reload(); // v1.0.18 独立掉落配置一并重载
         } catch (Exception e) {
             ctx.getSource().sendFailure(Component.literal("配置重载失败：" + e.getMessage()));
             return 0;
