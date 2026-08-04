@@ -4,7 +4,7 @@
 // 作用：拦截【本 mod 生成的生物】的原版/其他 mod 表内掉落物，
 //       只保留本 mod 掉落表（normalLoot/eliteLoot/bossLoot/stageLoot，
 //       由 mod 内部 dropLoot 独立生成，不受本脚本影响）。
-// 安装：放入 <游戏目录>/kubejs/scripts/ 下，重启游戏自动加载。
+// 安装：放入 <游戏目录>/kubejs/server_scripts/ 下（KubeJS 2001.x 用 server_scripts），重启游戏自动加载。
 // ============================================================
 
 // 总开关：false = 不拦截（保留原版掉落），true = 拦截（默认）
