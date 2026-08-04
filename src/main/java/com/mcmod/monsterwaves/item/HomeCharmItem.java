@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-/** 回归符咒：右键传送回主世界重生点（床/出生点，成功后消耗，任意维度可用） */
+/** 回归符咒：右键传送回主世界重生点（床/出生点，无限使用，任意维度可用） */
 public class HomeCharmItem extends Item {
     public HomeCharmItem() {
         super(new Item.Properties().stacksTo(1));
@@ -20,10 +20,7 @@ public class HomeCharmItem extends Item {
         ItemStack stack = player.getItemInHand(hand);
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             if (SafeDimensionManager.teleportToSpawn(serverPlayer)) {
-                // 传送成功：非创造模式消耗符咒
-                if (!serverPlayer.getAbilities().instabuild) {
-                    stack.shrink(1);
-                }
+                // 无限使用：传送成功不消耗
             }
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);

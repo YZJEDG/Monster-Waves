@@ -11,7 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-/** 战斗符咒：右键传送至刷怪维度（成功后消耗，无冷却） */
+/** 战斗符咒：右键传送至刷怪维度（无限使用） */
 public class BattleCharmItem extends Item {
 
     public BattleCharmItem() {
@@ -28,9 +28,7 @@ public class BattleCharmItem extends Item {
                 return InteractionResultHolder.sidedSuccess(stack, false);
             }
             if (ArenaDimensionManager.teleportToArena(serverPlayer)) {
-                if (!serverPlayer.getAbilities().instabuild) {
-                    stack.shrink(1);
-                }
+                // 无限使用：传送成功不消耗
             }
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
