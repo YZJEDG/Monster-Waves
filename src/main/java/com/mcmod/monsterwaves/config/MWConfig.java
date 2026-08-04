@@ -453,24 +453,21 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public double lootExtraCountPerLevel = 0.0;
 
-    /** 普通怪掉落条目（POJO 表单，字段见开发手册"掉落条目字段"表） */
-    @ConfigEntry.Category("loot")
+    /** 普通怪掉落条目（v1.0.8 移出 GUI，直接改 json5） */
+    @ConfigEntry.Gui.Excluded
     public List<LootEntry> normalLoot = new ArrayList<>(List.of(
             new LootEntry("minecraft:diamond", 1, 1, 0.1)));
 
-    /** 精英怪专属掉落表（仅精英掉落；Boss 也会掉落本表） */
-    @ConfigEntry.Category("loot")
-    @ConfigEntry.Gui.Tooltip()
+    /** 精英怪专属掉落表（仅精英掉落；Boss 也会掉落本表；v1.0.8 移出 GUI，直接改 json5） */
+    @ConfigEntry.Gui.Excluded
     public List<LootEntry> eliteLoot = new ArrayList<>();
 
-    /** Boss 专属掉落表（仅 Boss 掉落） */
-    @ConfigEntry.Category("loot")
-    @ConfigEntry.Gui.Tooltip()
+    /** Boss 专属掉落表（仅 Boss 掉落；v1.0.8 移出 GUI，直接改 json5） */
+    @ConfigEntry.Gui.Excluded
     public List<LootEntry> bossLoot = new ArrayList<>();
 
-    /** 阶段掉落表（v1.0.7）：按阶段 + 怪物等级（普通/精英/Boss）追加掉落；stageId 空=所有阶段、tier=any/normal/elite/boss */
-    @ConfigEntry.Category("loot")
-    @ConfigEntry.Gui.Tooltip()
+    /** 阶段掉落表（v1.0.7）：按阶段 + 怪物等级（普通/精英/Boss）追加掉落；stageId 空=所有阶段、tier=any/normal/elite/boss；v1.0.8 移出 GUI，直接改 json5 */
+    @ConfigEntry.Gui.Excluded
     public List<StageLoot> stageLoot = new ArrayList<>();
 
     /** 阶段掉落条目：stageId 阶段id（空=所有阶段）/ tier 怪物等级（any=全部、normal=普通、elite=精英(不含Boss)、boss=Boss）/ entries 掉落条目 */

@@ -102,6 +102,8 @@
   "text.autoconfig.monsterwaves.option.fallDestinationY": "Fall Destination Y",
   "text.autoconfig.monsterwaves.option.fallDestinationZ": "Fall Destination Z",
   "text.autoconfig.monsterwaves.option.enabled": "Enable Mod",
+  "text.autoconfig.monsterwaves.option.configAutoReload": "Auto Reload Config",
+  "text.autoconfig.monsterwaves.option.configAutoReload.@Tooltip": "Check config/monsterwaves.json5 every 5s and hot-reload when saved; disable to only reload via /monsterwaves reload",
   "text.autoconfig.monsterwaves.option.enabled.@Tooltip": "When off, this mod stops spawning mobs",
   "text.autoconfig.monsterwaves.option.spawnInterval": "Spawn Interval",
   "text.autoconfig.monsterwaves.option.spawnInterval.@Tooltip": "Interval between spawn checks (ticks, 20 = 1s)",

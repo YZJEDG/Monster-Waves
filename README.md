@@ -56,7 +56,7 @@
 
 1. 安装 **Forge 1.20.1（47.4.x）**
 2. 将 `monsterwaves-1.0.0.jar` 与上述依赖放入 `mods/`
-3. 启动游戏，配置在 `config/monsterwaves.json`（或游戏内 Catalogue → 怪物狂潮 → Config）
+3. 启动游戏，配置在 `config/monsterwaves.json5`（或游戏内 Catalogue → 怪物狂潮 → Config）
 
 ## 快速上手
 
