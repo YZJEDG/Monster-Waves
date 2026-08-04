@@ -110,13 +110,25 @@ public final class EliteBossHandler {
         scaleCollision(mob, collisionFactor);
     }
 
-    /** 按因子缩放实体碰撞箱（反射改 Entity.dimensions + refreshDimensions；1.20.1 无公开 API） */
+    /** 按因子缩放实体碰撞箱（反射改 Entity.dimensions + refreshDimensions；1.20.1 无公开 API）。
+     * 字段名兼容开发环境（parchment: dimensions）与生产（srg: f_19789_）。 */
     private static void scaleCollision(Mob mob, float factor) {
         if (factor <= 0 || Math.abs(factor - 1.0f) < 0.001f) {
             return;
         }
         try {
-            java.lang.reflect.Field f = net.minecraft.world.entity.Entity.class.getDeclaredField("dimensions");
+            java.lang.reflect.Field f = null;
+            for (String n : new String[]{"dimensions", "f_19789_"}) {
+                try {
+                    f = net.minecraft.world.entity.Entity.class.getDeclaredField(n);
+                    break;
+                } catch (NoSuchFieldException ignored) {
+                }
+            }
+            if (f == null) {
+                com.mcmod.monsterwaves.MonsterWavesMod.LOGGER.warn("MW 找不到 Entity.dimensions 字段（srg/parchment 均试过），碰撞箱缩放跳过");
+                return;
+            }
             f.setAccessible(true);
             net.minecraft.world.entity.EntityDimensions d = (net.minecraft.world.entity.EntityDimensions) f.get(mob);
             f.set(mob, d.scale(factor));
@@ -146,13 +158,18 @@ public final class EliteBossHandler {
         return 1.0;
     }
 
-    /** 体型缩放（渲染倍率，供客户端 RenderLivingEvent 缩放）：Boss > 精英 > 1.0 */
+    /** 体型缩放（渲染倍率，供客户端 RenderLivingEvent 缩放）：Boss > 精英 > 1.0。
+     * 注意：客户端实体无 NBT 标记（persistentData 不同步），改用**自定义名前缀**判断（customName 同步）。 */
     public static float getScale(LivingEntity e) {
         MWConfig cfg = MWConfig.get();
-        if (isBoss(e)) {
+        if (e == null || !e.hasCustomName()) {
+            return 1.0f;
+        }
+        String name = e.getCustomName().getString();
+        if (name.startsWith(PREFIX_BOSS)) {
             return (float) cfg.bossScale;
         }
-        if (isElite(e)) {
+        if (name.startsWith(PREFIX_ELITE)) {
             return (float) cfg.eliteScale;
         }
         return 1.0f;
