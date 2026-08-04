@@ -29,7 +29,8 @@ public final class EliteBossHandler {
             return;
         }
         MWConfig cfg = MWConfig.get();
-        double mult = cfg.difficultyAffectsChance ? Math.max(1.0, difficulty) : 1.0;
+        // 难度加成：生成系数 × √难度（比线性 ×难度 影响更小，用户 2026-08-04 调整）
+        double mult = cfg.difficultyAffectsChance ? Math.max(1.0, Math.sqrt(difficulty)) : 1.0;
         // 1) 先判定是否精英
         if (!cfg.eliteEnabled || mob.getRandom().nextDouble() >= cfg.eliteChance * mult) {
             return;
