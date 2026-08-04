@@ -23,18 +23,21 @@ public final class EliteBossHandler {
     private EliteBossHandler() {
     }
 
-    /** 生成后调用：按配置概率（×难度加成，可关）升级为 Boss 或精英 */
+    /** 生成后调用：**先判定精英**（eliteChance），若判定为精英，**再在精英基础上判定 Boss**（bossChance）——Boss 是精英的升级（属性叠加、名字/血条用 Boss 样式） */
     public static void tryUpgrade(Mob mob, double difficulty) {
         if (mob == null || mob.level().isClientSide) {
             return;
         }
         MWConfig cfg = MWConfig.get();
         double mult = cfg.difficultyAffectsChance ? Math.max(1.0, difficulty) : 1.0;
-        double r = mob.getRandom().nextDouble();
-        if (cfg.bossEnabled && r < cfg.bossChance * mult) {
+        // 1) 先判定是否精英
+        if (!cfg.eliteEnabled || mob.getRandom().nextDouble() >= cfg.eliteChance * mult) {
+            return;
+        }
+        makeElite(mob);
+        // 2) 已判定精英后，再判定是否进一步升级为 Boss
+        if (cfg.bossEnabled && mob.getRandom().nextDouble() < cfg.bossChance * mult) {
             makeBoss(mob);
-        } else if (cfg.eliteEnabled && r < cfg.eliteChance * mult) {
-            makeElite(mob);
         }
     }
 
@@ -75,9 +78,12 @@ public final class EliteBossHandler {
         if (arm != null) {
             arm.setBaseValue(arm.getBaseValue() * armMult);
         }
-        // 名字变色（保留原自定义名）
+        // 名字变色（Boss 升级时去掉精英前缀，避免 "§6【Boss】§c【精英】" 嵌套）
         String base = mob.hasCustomName() ? mob.getCustomName().getString()
                 : mob.getType().getDescription().getString();
+        if (base.startsWith(PREFIX_ELITE)) {
+            base = base.substring(PREFIX_ELITE.length());
+        }
         mob.setCustomName(Component.literal(prefix + base));
         mob.setCustomNameVisible(true);
         // 发光（长期，无粒子）
