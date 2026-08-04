@@ -7,6 +7,7 @@ import com.mcmod.monsterwaves.network.NetworkHandler;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -56,10 +57,21 @@ public class MonsterWavesMod {
             }
         }
         // 注册 Cloth Config 配置层（config/monsterwaves.json 标准 JSON，v1.3.5 改回 Gson——JSON5/Jankson 在用户环境保存异常且写回丢注释）
-        // GsonConfigSerializer：gson.fromJson 覆盖反序列化（List/Map 不叠加默认值）；输出标准 JSON（无注释，GUI 已移除）；
+        // GsonConfigSerializer：gson.fromJson 覆盖反序列化（List/Map 不叠加默认值）；输出标准 JSON（无注释）；
         // Forge 原生 serverconfig(TOML) 不支持 Map/嵌套对象（attributeConfigs），故用 Cloth + Gson 序列化器。
-        // 配置入口：手编 config/monsterwaves.json 后 /monsterwaves reload 重载；标量用 /monsterwaves config set <字段> <值>；config save 写回。
+        // 配置入口：GUI（v1.4 恢复，仅显示标量+字符串列表，嵌套表改 json 文件）；手编 config/monsterwaves.json + /monsterwaves reload；config set/save 指令。
         AutoConfig.register(MWConfig.class, GsonConfigSerializer::new);
+        // 条件显示：开启"传送到重生点"时隐藏自定义坐标字段（fallDestinationX/Y/Z）
+        AutoConfig.getGuiRegistry(MWConfig.class).registerPredicateTransformer(
+                (entries, key, field, config, defaults, registry) ->
+                        ((MWConfig) config).fallToRespawnPoint ? java.util.List.of() : entries,
+                field -> field.getName().equals("fallDestinationX")
+                        || field.getName().equals("fallDestinationY")
+                        || field.getName().equals("fallDestinationZ"));
+        // 注册配置屏幕扩展点：供原版 Mods 列表与 Catalogue（模组目录）显示 Config 按钮（v1.4 恢复）
+        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
+                () -> new ConfigScreenHandler.ConfigScreenFactory((client, parent) ->
+                        AutoConfig.getConfigScreen(MWConfig.class, parent).get()));
         LOGGER.info("Monster Waves (怪物狂潮) MVP 已加载（配置：config/monsterwaves.json）");
     }
 }
