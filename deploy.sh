@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Monster Waves 部署脚本（在项目根目录用 bash 运行：./deploy.sh 或 bash deploy.sh）
+# 主测试环境：刷怪爽！（2026-08-04 起）；如需切回 测试MOD 改下方 MODS/BACKUP 路径
 # 1. 备份 mods 中现有的 monsterwaves jar 到 mods_backup（前一版，保留 .previous.jar）
 # 2. 复制最新构建产物（mod 本体）到测试环境 mods 目录
 set -euo pipefail
 
 SRC="build/libs/monsterwaves-1.0.0.jar"
-MODS="D:/game/mc/.minecraft/versions/测试MOD/mods"
-BACKUP="D:/game/mc/.minecraft/versions/测试MOD/mods_backup"
+MODS="D:/game/mc/.minecraft/versions/刷怪爽！/mods"
+BACKUP="D:/game/mc/.minecraft/versions/刷怪爽！/mods_backup"
 
 [ -f "$SRC" ] || { echo "[错误] 未找到构建产物: $SRC （请先运行 gradlew.bat build）"; exit 1; }
 [ -d "$MODS" ] || { echo "[错误] 目标 mods 目录不存在: $MODS"; exit 1; }
