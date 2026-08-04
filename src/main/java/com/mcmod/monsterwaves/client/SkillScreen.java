@@ -86,7 +86,13 @@ public class SkillScreen extends ButtonListBaseScreen {
                 public void onClicked(MouseButton button) {
                     if (button.isLeft()) {
                         g.collapsed = !g.collapsed;
-                        refreshWidgets();
+                        // 延迟到下一 tick 重建（在点击事件分发过程中直接 refreshWidgets 会因列表被修改而失败）
+                        net.minecraft.client.Minecraft.getInstance().tell(() -> {
+                            if (net.minecraft.client.Minecraft.getInstance().screen instanceof IScreenWrapper sw
+                                    && sw.getGui() == SkillScreen.this) {
+                                refreshWidgets();
+                            }
+                        });
                     }
                 }
 

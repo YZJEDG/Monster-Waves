@@ -116,5 +116,7 @@
   "text.autoconfig.monsterwaves.option.attributeConfigs.maxPoints": "加点上限",
   "attribute.name.tacz.gun_fire_rate": "射速",
   "attribute.name.tacz.gun_reload_speed": "换弹速度",
-  "text.autoconfig.monsterwaves.option.attributeConfigs.percentagePerPoint": "每点百分比幅度（0=跟随全局）"
+  "text.autoconfig.monsterwaves.option.attributeConfigs.percentagePerPoint": "每点百分比幅度（0=跟随全局）",
+  "text.autoconfig.monsterwaves.option.pickupXp": "拾取经验球",
+  "text.autoconfig.monsterwaves.option.pickupXp.@Tooltip": "把玩家周围的经验球拉向玩家（接触自动吸收），不受 onlyOwnDrops 限制"
 }

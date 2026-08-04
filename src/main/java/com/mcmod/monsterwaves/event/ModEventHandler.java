@@ -116,7 +116,7 @@ public final class ModEventHandler {
     }
 
     /**
-     * 大范围拾取：自动拾取玩家周围掉落物入背包。
+     * 大范围拾取：自动拾取玩家周围掉落物入背包，并把经验球拉向玩家（接触自动吸收）。
      * - 黑名单过滤；onlyOwnDrops 时仅拾取归属自己的掉落（DROP_OWNER 标记）
      */
     private static void pickupAround(ServerLevel level) {
@@ -129,6 +129,21 @@ public final class ModEventHandler {
         }
         double range = Math.max(1.0, cfg.pickupRange);
         for (ServerPlayer player : level.players()) {
+            // 经验球：拉向玩家（原版接触自动吸收经验），不受 onlyOwnDrops 限制
+            if (cfg.pickupXp) {
+                java.util.List<net.minecraft.world.entity.ExperienceOrb> orbs =
+                        level.getEntitiesOfClass(net.minecraft.world.entity.ExperienceOrb.class,
+                                player.getBoundingBox().inflate(range));
+                for (net.minecraft.world.entity.ExperienceOrb orb : orbs) {
+                    if (orb.isRemoved()) {
+                        continue;
+                    }
+                    net.minecraft.world.phys.Vec3 dir = player.position().add(0, 0.8, 0)
+                            .subtract(orb.position()).normalize();
+                    orb.setDeltaMovement(dir.scale(0.6));
+                    orb.hasImpulse = true; // 服务端速度同步到客户端
+                }
+            }
             java.util.List<ItemEntity> items = level.getEntitiesOfClass(ItemEntity.class,
                     player.getBoundingBox().inflate(range));
             for (ItemEntity item : items) {

@@ -335,6 +335,11 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("pickup")
     public boolean pickupItems = true;
 
+    /** 是否拾取经验球（拉到玩家身边，原版接触自动吸收） */
+    @ConfigEntry.Category("pickup")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean pickupXp = true;
+
     /** 拾取检测间隔（tick） */
     @ConfigEntry.Category("pickup")
     public int pickupInterval = 5;

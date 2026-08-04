@@ -116,5 +116,7 @@
   "text.autoconfig.monsterwaves.option.attributeConfigs.maxPoints": "Max Points",
   "attribute.name.tacz.gun_fire_rate": "Fire Rate",
   "attribute.name.tacz.gun_reload_speed": "Reload Speed",
-  "text.autoconfig.monsterwaves.option.attributeConfigs.percentagePerPoint": "Percentage per point (0 = use global)"
+  "text.autoconfig.monsterwaves.option.attributeConfigs.percentagePerPoint": "Percentage per point (0 = use global)",
+  "text.autoconfig.monsterwaves.option.pickupXp": "Pick up XP Orbs",
+  "text.autoconfig.monsterwaves.option.pickupXp.@Tooltip": "Pull XP orbs toward the player (auto-absorbed on contact), not limited by onlyOwnDrops"
 }
