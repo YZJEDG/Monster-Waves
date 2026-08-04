@@ -294,12 +294,12 @@ public final class PlayerDataManager {
         }
         UUID uuid = uuidFor(attr);
         inst.removeModifier(uuid);
-        MWConfig cfg = MWConfig.get();
         boolean percentage = isPercentage(ForgeRegistries.ATTRIBUTES.getKey(attr).toString());
         AttributeModifier mod;
         if (percentage) {
+            double per = perAttributePercentagePerPoint(ForgeRegistries.ATTRIBUTES.getKey(attr).toString());
             mod = new AttributeModifier(uuid, "monsterwaves_skill",
-                    allocated * cfg.percentagePerPoint, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                    allocated * per, AttributeModifier.Operation.MULTIPLY_TOTAL);
         } else {
             mod = new AttributeModifier(uuid, "monsterwaves_skill",
                     allocated, AttributeModifier.Operation.ADDITION);
@@ -341,6 +341,12 @@ public final class PlayerDataManager {
     public static boolean isPercentage(String attrId) {
         MWConfig.AttributeConfig cfg = MWConfig.get().attributeConfigs.get(attrId);
         return cfg != null && cfg.percentage;
+    }
+
+    /** 该属性每点百分比加成幅度（属性配置 > 全局 percentagePerPoint） */
+    public static double perAttributePercentagePerPoint(String attrId) {
+        MWConfig.AttributeConfig cfg = MWConfig.get().attributeConfigs.get(attrId);
+        return cfg == null ? MWConfig.get().percentagePerPoint : cfg.effectivePercentagePerPoint();
     }
 
     /** 属性显示名：配置 attributeDisplayNames > 原版属性名 > 注册名 */

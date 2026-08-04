@@ -179,7 +179,7 @@ public class MWConfig implements ConfigData {
             "tacz:gun_fire_rate", new AttributeConfig(true, true, 50),
             "tacz:gun_reload_speed", new AttributeConfig(true, true, 50)));
 
-    /** 单属性加点配置 */
+    /** 单属性加点配置（白名单内每个属性独立配置） */
     public static class AttributeConfig {
         /** 是否允许加点 */
         public boolean enabled = true;
@@ -187,6 +187,8 @@ public class MWConfig implements ConfigData {
         public boolean percentage = false;
         /** 该属性加点上限（-1=无限） */
         public int maxPoints = 50;
+        /** 该属性百分比加成幅度（每点；0 = 跟随全局 percentagePerPoint） */
+        public double percentagePerPoint = 0.0;
 
         public AttributeConfig() {
         }
@@ -195,6 +197,11 @@ public class MWConfig implements ConfigData {
             this.enabled = enabled;
             this.percentage = percentage;
             this.maxPoints = maxPoints;
+        }
+
+        /** 该属性的实际每点百分比幅度（属性配置 > 全局 percentagePerPoint） */
+        public double effectivePercentagePerPoint() {
+            return percentagePerPoint > 0 ? percentagePerPoint : MWConfig.get().percentagePerPoint;
         }
     }
 

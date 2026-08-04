@@ -115,5 +115,6 @@
   "text.autoconfig.monsterwaves.option.attributeConfigs.percentage": "百分比加成",
   "text.autoconfig.monsterwaves.option.attributeConfigs.maxPoints": "加点上限",
   "attribute.name.tacz.gun_fire_rate": "射速",
-  "attribute.name.tacz.gun_reload_speed": "换弹速度"
+  "attribute.name.tacz.gun_reload_speed": "换弹速度",
+  "text.autoconfig.monsterwaves.option.attributeConfigs.percentagePerPoint": "每点百分比幅度（0=跟随全局）"
 }
