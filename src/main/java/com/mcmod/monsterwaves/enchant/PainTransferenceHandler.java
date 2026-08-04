@@ -19,11 +19,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * 苦痛传递触发逻辑（v10.5）：
  * - 近战（剑/斧/三叉戟）：LivingHurtEvent，直接攻击者为玩家且主手武器带附魔
  * - 弓/弩（原版箭）：ProjectileImpactEvent，箭射手为玩家且手持弓/弩带附魔
- * - TaCZ 枪械：EntityHurtByGunEvent，攻击者主手枪带附魔（射击用主手，从主手读附魔）
- * - 对目标周围半径内其他怪物造成「主伤害 × 百分比」伤害（受 affectSameTypeOnly/affectEliteBoss/excludeSource/cooldown 配置约束）
+ * - TaCZ 枪械：见 {@link GunPainTransferenceHandler}（独立类，tacz 加载时才注册）
+ * - 对目标周围半径内其他怪物造成「主伤害 × 百分比」伤害（无冷却；受 affectSameTypeOnly/affectEliteBoss/excludeSource 配置约束）
  */
 public final class PainTransferenceHandler {
-    public static final String COOLDOWN_KEY = "monsterwaves_pain_cooldown";
 
     private PainTransferenceHandler() {
     }
@@ -63,21 +62,6 @@ public final class PainTransferenceHandler {
         trigger(player, target, (float) arrow.getBaseDamage(), level);
     }
 
-    @SubscribeEvent
-    public static void onGunHurt(com.tacz.guns.api.event.common.EntityHurtByGunEvent event) {
-        if (!MWConfig.get().painTransferenceEnabled) {
-            return;
-        }
-        if (!(event.getAttacker() instanceof Player player)) {
-            return;
-        }
-        int level = EnchantmentHelper.getItemEnchantmentLevel(
-                ModEnchantments.PAIN_TRANSFERENCE.get(), player.getMainHandItem());
-        if (level > 0 && event.getHurtEntity() instanceof LivingEntity target) {
-            trigger(player, target, event.getAmount(), level);
-        }
-    }
-
     /** 读取主手/副手弓弩的附魔等级 */
     private static int bowLevel(Player player) {
         ItemStack main = player.getMainHandItem();
@@ -94,21 +78,13 @@ public final class PainTransferenceHandler {
     }
 
     /** 传递伤害：对目标周围其他怪物造成主伤害 × 百分比 */
-    private static void trigger(Player player, LivingEntity target, float mainDamage, int level) {
+    static void trigger(Player player, LivingEntity target, float mainDamage, int level) {
         MWConfig cfg = MWConfig.get();
         double radius = cfg.painTransferenceBaseRadius + (level - 1) * cfg.painTransferenceRadiusPerLevel;
         double percent = cfg.painTransferenceBaseDamagePercent + (level - 1) * cfg.painTransferenceDamagePercentPerLevel;
         float dmg = (float) (mainDamage * percent);
         if (dmg <= 0 || target.level().isClientSide) {
             return;
-        }
-        // 冷却（玩家 NBT 存 gameTime）
-        if (cfg.painTransferenceCooldown > 0) {
-            long now = target.level().getGameTime();
-            if (now < player.getPersistentData().getLong(COOLDOWN_KEY)) {
-                return;
-            }
-            player.getPersistentData().putLong(COOLDOWN_KEY, now + cfg.painTransferenceCooldown);
         }
         var box = target.getBoundingBox().inflate(radius);
         for (LivingEntity e : target.level().getEntitiesOfClass(LivingEntity.class, box,

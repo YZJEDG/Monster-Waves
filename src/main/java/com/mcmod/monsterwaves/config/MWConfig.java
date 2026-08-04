@@ -573,11 +573,6 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public boolean painTransferenceExcludeSource = true;
 
-    /** 触发冷却（tick，0=无冷却） */
-    @ConfigEntry.Category("enchantment")
-    @ConfigEntry.Gui.Tooltip()
-    public int painTransferenceCooldown = 0;
-
     /** 伤害源标识（调试用，自定义伤害源 msgId） */
     @ConfigEntry.Category("enchantment")
     @ConfigEntry.Gui.Tooltip()

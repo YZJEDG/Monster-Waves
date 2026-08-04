@@ -167,6 +167,5 @@
   "text.autoconfig.monsterwaves.option.painTransferenceAffectSameTypeOnly": "Affect Same Type Only",
   "text.autoconfig.monsterwaves.option.painTransferenceAffectEliteBoss": "Affect Elite/Boss",
   "text.autoconfig.monsterwaves.option.painTransferenceExcludeSource": "Exclude Source",
-  "text.autoconfig.monsterwaves.option.painTransferenceCooldown": "Cooldown",
   "text.autoconfig.monsterwaves.option.painTransferenceDamageSourceMessage": "Damage Source Message"
 }

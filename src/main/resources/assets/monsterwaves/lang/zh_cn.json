@@ -167,6 +167,5 @@
   "text.autoconfig.monsterwaves.option.painTransferenceAffectSameTypeOnly": "只传递同类型怪",
   "text.autoconfig.monsterwaves.option.painTransferenceAffectEliteBoss": "传递作用于精英/Boss",
   "text.autoconfig.monsterwaves.option.painTransferenceExcludeSource": "排除目标自身",
-  "text.autoconfig.monsterwaves.option.painTransferenceCooldown": "触发冷却",
   "text.autoconfig.monsterwaves.option.painTransferenceDamageSourceMessage": "伤害源标识"
 }
