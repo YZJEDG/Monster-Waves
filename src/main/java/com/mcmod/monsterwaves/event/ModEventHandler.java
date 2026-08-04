@@ -297,11 +297,17 @@ public final class ModEventHandler {
         }
     }
 
-    /** 归属标记：只作用于本 mod 生成的怪（v1.0.16 掉落拦截移交 KubeJS 脚本，此处仅保留击杀归属标记） */
+    /** 掉落覆盖 + 归属标记：只作用于本 mod 生成的怪（v1.0.19 去除 KubeJS 脚本，恢复 mod 内 Java 拦截） */
     @SubscribeEvent
     public static void onLivingDrops(net.minecraftforge.event.entity.living.LivingDropsEvent event) {
-        // v1.0.16：原掉落拦截改由 KubeJS 脚本（kubejs/scripts/monsterwaves_drops.js）负责——
-        // 脚本按 monsterwaves_spawned 标记清空 event.drops；本方法只保留击杀归属标记（供 onlyOwnDrops 使用）
+        // v1.0.19：OVERRIDE 模式（lootOverrideVanilla=true）——清空原 drops（原版 loot table 掉落物），
+        // 本 mod 掉落表由 dropLoot 独立生成（onLivingDeath，isTracked 限定）；false 则完全不干预原掉落。
+        // 注：Configurable Extra Mob Drops 类 mod 直接 addFreshEntity 生成掉落，绕过本事件，无法拦截（机制限制）。
+        if (MobSpawnManager.isTracked(event.getEntity()) && MWConfig.get().lootOverrideVanilla) {
+            event.getDrops().clear();
+            MonsterWavesMod.LOGGER.debug("MW 掉落覆盖：{} 的原掉落已清空（只掉本 mod 掉落表）",
+                    event.getEntity());
+        }
         if (event.getSource().getEntity() instanceof net.minecraft.world.entity.player.Player p) {
             String owner = p.getStringUUID();
             for (net.minecraft.world.entity.item.ItemEntity e : event.getDrops()) {
