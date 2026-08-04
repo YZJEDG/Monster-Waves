@@ -21,21 +21,24 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * v9.3 技能点加点界面（FTB Library ButtonListBaseScreen）：
- * - 自带搜索框（按属性名过滤）与滚动列表
- * - 标题栏实时显示 等级 / 技能点 / 已分配
- * - 按 **mod 分类**（自动读取属性注册名 namespace 判断来源，minecraft 置顶，组内按注册名固定排序）
- * - 每组分一个不可点击的组标题行 + 属性行（点击 = 加 1 点）；首行为重置按钮
- * - 只显示 attributeConfigs 白名单内启用的属性；点数校验在服务端
+ * v9.3 技能点加点界面（FTB Library ButtonListBaseScreen）重构版：
+ * - 自带搜索框（按属性名过滤）与滚动列表；标题栏实时显示 等级/技能点/已分配
+ * - 按 mod 分组（自动读取属性 namespace 来源，minecraft 置顶），组内按注册名固定排序
+ * - **折叠状态独立存于字段**（Map<namespace, Boolean>），重建/刷新不丢失；
+ *   组标题点击切换折叠，列表延迟到下一 tick 重建（避免事件分发中修改列表）
+ * - 折叠组显示"▶ 组名 (N)"且不渲染属性行；展开显示"▼ 组名"
  */
 @OnlyIn(Dist.CLIENT)
 public class SkillScreen extends ButtonListBaseScreen {
     private static SkillScreen openInstance;
+    /** 折叠状态：属性 namespace -> 是否折叠（独立于组对象，刷新/重建不丢失） */
+    private final Map<String, Boolean> collapsed = new HashMap<>();
     private final List<AttributeGroup> groups = new ArrayList<>();
 
     public SkillScreen() {
@@ -47,7 +50,14 @@ public class SkillScreen extends ButtonListBaseScreen {
         return openInstance;
     }
 
-    /** 标题：等级 / 技能点 / 已分配（打开时与每次刷新时更新） */
+    // ===== 打开状态判断 =====
+
+    private boolean isOpen() {
+        return Minecraft.getInstance().screen instanceof IScreenWrapper sw && sw.getGui() == this;
+    }
+
+    // ===== 标题 =====
+
     private static Component headerTitle() {
         Minecraft mc = Minecraft.getInstance();
         int level = mc.player == null ? 0 : mc.player.experienceLevel;
@@ -56,14 +66,31 @@ public class SkillScreen extends ButtonListBaseScreen {
                 + "  📊已分配 " + SkillDataCache.getTotalAllocated());
     }
 
+    // ===== 按钮构建（ButtonListBaseScreen 回调，每次 refreshWidgets 重建） =====
+
     @Override
     public void addButtons(Panel panel) {
         openInstance = this;
         setTitle(headerTitle());
 
         // 首行：重置全部加点
-        MWConfig cfg = MWConfig.get();
-        panel.add(new SimpleTextButton(panel, resetTitle(cfg), Icons.REMOVE) {
+        panel.add(resetButton(panel));
+
+        // 按 mod 分组（minecraft 置顶、组内注册名固定排序）；折叠组只显示标题
+        rebuildGroups();
+        for (AttributeGroup g : groups) {
+            panel.add(groupHeaderButton(panel, g));
+            if (collapsed.getOrDefault(g.namespace, false)) {
+                continue;
+            }
+            for (AttributeEntry e : g.entries) {
+                panel.add(attributeButton(panel, e));
+            }
+        }
+    }
+
+    private SimpleTextButton resetButton(Panel panel) {
+        return new SimpleTextButton(panel, resetTitle(MWConfig.get()), Icons.REMOVE) {
             @Override
             public void onClicked(MouseButton button) {
                 if (button.isLeft()) {
@@ -75,52 +102,53 @@ public class SkillScreen extends ButtonListBaseScreen {
             public Component getTitle() {
                 return resetTitle(MWConfig.get());
             }
-        });
-
-        // 按 mod 分组：minecraft 置顶，其余按命名空间字母序；组内按注册名固定排序（不随已分配点数变化）
-        // 组标题可点击：展开/收起（折叠时该组属性行不显示）
-        rebuildGroups();
-        for (AttributeGroup g : groups) {
-            panel.add(new SimpleTextButton(panel, groupTitle(g), Icons.INFO) {
-                @Override
-                public void onClicked(MouseButton button) {
-                    if (button.isLeft()) {
-                        g.collapsed = !g.collapsed;
-                        // 延迟到下一 tick 重建（在点击事件分发过程中直接 refreshWidgets 会因列表被修改而失败）
-                        net.minecraft.client.Minecraft.getInstance().tell(() -> {
-                            if (net.minecraft.client.Minecraft.getInstance().screen instanceof IScreenWrapper sw
-                                    && sw.getGui() == SkillScreen.this) {
-                                refreshWidgets();
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public Component getTitle() {
-                    return groupTitle(g);
-                }
-            });
-            if (g.collapsed) {
-                continue; // 折叠：不显示该组属性行
-            }
-            for (AttributeEntry e : g.entries) {
-                panel.add(new SimpleTextButton(panel, rowTitle(e), Icons.ADD) {
-                    @Override
-                    public void onClicked(MouseButton button) {
-                        if (button.isLeft() && e.canAdd) {
-                            NetworkHandler.sendToServer(new C2SAddPoint(e.attributeId));
-                        }
-                    }
-
-                    @Override
-                    public Component getTitle() {
-                        return rowTitle(e);
-                    }
-                });
-            }
-        }
+        };
     }
+
+    private SimpleTextButton groupHeaderButton(Panel panel, AttributeGroup g) {
+        return new SimpleTextButton(panel, groupTitle(g), Icons.INFO) {
+            @Override
+            public void onClicked(MouseButton button) {
+                if (button.isLeft()) {
+                    toggleGroup(g.namespace);
+                }
+            }
+
+            @Override
+            public Component getTitle() {
+                return groupTitle(g);
+            }
+        };
+    }
+
+    private SimpleTextButton attributeButton(Panel panel, AttributeEntry e) {
+        return new SimpleTextButton(panel, rowTitle(e), Icons.ADD) {
+            @Override
+            public void onClicked(MouseButton button) {
+                if (button.isLeft() && e.canAdd) {
+                    NetworkHandler.sendToServer(new C2SAddPoint(e.attributeId));
+                }
+            }
+
+            @Override
+            public Component getTitle() {
+                return rowTitle(e);
+            }
+        };
+    }
+
+    // ===== 折叠逻辑（状态存字段，重建不丢失；延迟一 tick 重建避免事件分发中改列表） =====
+
+    private void toggleGroup(String namespace) {
+        collapsed.put(namespace, !collapsed.getOrDefault(namespace, false));
+        Minecraft.getInstance().tell(() -> {
+            if (isOpen()) {
+                refreshWidgets();
+            }
+        });
+    }
+
+    // ===== 标题文本 =====
 
     private static Component resetTitle(MWConfig cfg) {
         if (!cfg.resetEnabled) {
@@ -130,8 +158,10 @@ public class SkillScreen extends ButtonListBaseScreen {
     }
 
     private static Component groupTitle(AttributeGroup g) {
-        return Component.literal((g.collapsed ? "▶ " : "▼ ") + g.displayName
-                + (g.collapsed ? "  (" + g.entries.size() + ")" : ""));
+        boolean collapsed = SkillScreen.getOpenInstance() != null
+                && SkillScreen.getOpenInstance().collapsed.getOrDefault(g.namespace, false);
+        return Component.literal((collapsed ? "▶ " : "▼ ") + g.displayName
+                + (collapsed ? "  (" + g.entries.size() + ")" : ""));
     }
 
     private static Component rowTitle(AttributeEntry e) {
@@ -139,14 +169,16 @@ public class SkillScreen extends ButtonListBaseScreen {
                 + "   +" + e.allocated + (e.canAdd ? "" : "  (已满)"));
     }
 
-    /** 收到服务端同步后刷新（重建按钮列表） */
+    // ===== 数据构建 =====
+
+    /** 收到服务端同步后刷新（重建按钮列表；折叠状态保留在字段中） */
     public void refresh() {
-        if (Minecraft.getInstance().screen instanceof IScreenWrapper sw && sw.getGui() == this) {
+        if (isOpen()) {
             refreshWidgets();
         }
     }
 
-    /** 按属性注册名 namespace 分组（自动读取属性来源 mod），组与组内均为固定顺序 */
+    /** 按属性注册名 namespace 分组（自动读取属性来源 mod）；组与组内均为固定顺序 */
     private void rebuildGroups() {
         groups.clear();
         Minecraft mc = Minecraft.getInstance();
@@ -166,10 +198,8 @@ public class SkillScreen extends ButtonListBaseScreen {
                     SkillDataCache.getAllocated(id),
                     !isCapped(id)));
         }
-        // 组顺序：minecraft 置顶，其余按命名空间字母序
         List<AttributeGroup> ordered = new ArrayList<>(byNs.values());
         ordered.sort(Comparator.comparing(g -> g.namespace.equals("minecraft") ? "" : g.namespace));
-        // 组内：按属性注册名固定排序
         for (AttributeGroup g : ordered) {
             g.entries.sort(Comparator.comparing(e -> e.attributeId));
         }
@@ -181,7 +211,6 @@ public class SkillScreen extends ButtonListBaseScreen {
         return maxPts >= 0 && SkillDataCache.getAllocated(id) >= maxPts;
     }
 
-    /** 属性来源 mod 显示名：minecraft→原版，其余取 ModList 显示名（无则用命名空间） */
     private static String modDisplayName(String namespace) {
         if (namespace.equals("minecraft")) {
             return "原版 Minecraft";
@@ -196,11 +225,12 @@ public class SkillScreen extends ButtonListBaseScreen {
         return namespace;
     }
 
+    // ===== 内部结构 =====
+
     private static class AttributeGroup {
         final String namespace;
         final String displayName;
         final List<AttributeEntry> entries = new ArrayList<>();
-        boolean collapsed = false;
 
         AttributeGroup(String namespace) {
             this.namespace = namespace;
