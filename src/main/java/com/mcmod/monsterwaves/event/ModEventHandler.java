@@ -295,18 +295,15 @@ public final class ModEventHandler {
         }
     }
 
-    /** 原版掉落过滤 + 归属标记：只追踪本 mod 生成的怪（UUID 集合 + NBT 双判断，兼容任意 mod 生物） */
+    /** 掉落覆盖 + 归属标记：只作用于本 mod 生成的怪（v1.0.14 学 Adaptive Hordes 思路：直接操作 event.getDrops()） */
     @SubscribeEvent
     public static void onLivingDrops(net.minecraftforge.event.entity.living.LivingDropsEvent event) {
-        // v1.0.11：对本 mod 生成的生物，只删除「原版原生掉落」（该生物 loot table 的物品），
-        // 保留其他 mod 的掉落（loot modifier / 掉落事件）与本 mod 掉落表（dropLoot 独立流程）——不再整体 setCanceled
+        // v1.0.14：OVERRIDE 模式（lootOverrideVanilla=true）——清空原 drops（原版/其他 mod 表内掉落物），
+        // 本 mod 掉落表由 dropLoot 独立生成（onLivingDeath，isTracked 限定）；lootOverrideVanilla=false 则完全不干预原掉落
         if (MobSpawnManager.isTracked(event.getEntity()) && MWConfig.get().lootOverrideVanilla) {
-            java.util.Set<net.minecraft.world.item.Item> vanilla = vanillaLootItems(event.getEntity());
-            if (!vanilla.isEmpty()) {
-                event.getDrops().removeIf(d -> d != null && vanilla.contains(d.getItem().getItem()));
-                MonsterWavesMod.LOGGER.debug("MW 掉落过滤：已移除 {} 的原版掉落物（剩 {} 个非原版）",
-                        event.getEntity(), event.getDrops().size());
-            }
+            event.getDrops().clear();
+            MonsterWavesMod.LOGGER.debug("MW 掉落覆盖：{} 的原掉落已清空（只掉本 mod 掉落表）",
+                    event.getEntity());
         }
         if (event.getSource().getEntity() instanceof net.minecraft.world.entity.player.Player p) {
             String owner = p.getStringUUID();
@@ -435,112 +432,6 @@ public final class ModEventHandler {
     }
 
     /** 原版 loot table 物品缓存（按实体类型）——v1.0.11 掉落过滤用 */
-    private static final java.util.Map<net.minecraft.world.entity.EntityType<?>,
-            java.util.Set<net.minecraft.world.item.Item>> VANILLA_LOOT_CACHE = new java.util.concurrent.ConcurrentHashMap<>();
-
-    // 1.20.1 这些字段是 package-private 且无 getter，用反射访问（mapped 字段名）
-    private static final java.lang.reflect.Field TABLE_POOLS_FIELD = reflectField(
-            net.minecraft.world.level.storage.loot.LootTable.class, "pools");
-    private static final java.lang.reflect.Field POOL_ENTRIES_FIELD = reflectField(
-            net.minecraft.world.level.storage.loot.LootPool.class, "entries");
-    private static final java.lang.reflect.Field LOOT_ITEM_FIELD = reflectField(
-            net.minecraft.world.level.storage.loot.entries.LootItem.class, "item");
-    private static final java.lang.reflect.Field TABLE_REF_NAME_FIELD = reflectField(
-            net.minecraft.world.level.storage.loot.entries.LootTableReference.class, "name");
-
-    private static java.lang.reflect.Field reflectField(Class<?> cls, String name) {
-        try {
-            java.lang.reflect.Field f = cls.getDeclaredField(name);
-            f.setAccessible(true);
-            return f;
-        } catch (Exception e) {
-            MonsterWavesMod.LOGGER.warn("MW 原版掉落解析字段不可用：{}.{}", cls.getSimpleName(), name);
-            return null;
-        }
-    }
-
-    /** 解析生物原版 loot table 会掉的物品（静态解析 pools/entries，递归子表）——含其他 mod 生物的表 */
-    private static java.util.Set<net.minecraft.world.item.Item> vanillaLootItems(LivingEntity entity) {
-        net.minecraft.world.entity.EntityType<?> type = entity.getType();
-        return VANILLA_LOOT_CACHE.computeIfAbsent(type, t -> {
-            var set = new java.util.HashSet<net.minecraft.world.item.Item>();
-            try {
-                var server = entity.level().getServer();
-                if (server == null) {
-                    return set;
-                }
-                var lootData = server.getLootData();
-                var table = lootData.getLootTable(entity.getLootTable());
-                if (table == null || table == net.minecraft.world.level.storage.loot.LootTable.EMPTY) {
-                    return set;
-                }
-                collectTableEntries(table, set, lootData, new java.util.HashSet<>());
-            } catch (Exception e) {
-                MonsterWavesMod.LOGGER.debug("MW 原版掉落解析失败：{}", e.toString());
-            }
-            return set;
-        });
-    }
-
-    private static void collectTableEntries(net.minecraft.world.level.storage.loot.LootTable table,
-                                            java.util.Set<net.minecraft.world.item.Item> out,
-                                            net.minecraft.world.level.storage.loot.LootDataManager lootData,
-                                            java.util.Set<net.minecraft.resources.ResourceLocation> seen) {
-        if (table == null || table == net.minecraft.world.level.storage.loot.LootTable.EMPTY) {
-            return;
-        }
-        if (TABLE_POOLS_FIELD == null) {
-            return;
-        }
-        try {
-            var pools = (net.minecraft.world.level.storage.loot.LootPool[]) TABLE_POOLS_FIELD.get(table);
-            if (pools == null) {
-                return;
-            }
-            for (net.minecraft.world.level.storage.loot.LootPool pool : pools) {
-                if (POOL_ENTRIES_FIELD == null) {
-                    continue;
-                }
-                try {
-                    var arr = (net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer[]) POOL_ENTRIES_FIELD.get(pool);
-                    for (net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer entry : arr) {
-                        collectEntry(entry, out, lootData, seen);
-                    }
-                } catch (Exception e) {
-                    // 单个池解析失败忽略
-                }
-            }
-        } catch (Exception e) {
-            // 表解析失败忽略
-        }
-    }
-
-    private static void collectEntry(net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer entry,
-                                     java.util.Set<net.minecraft.world.item.Item> out,
-                                     net.minecraft.world.level.storage.loot.LootDataManager lootData,
-                                     java.util.Set<net.minecraft.resources.ResourceLocation> seen) {
-        if (entry instanceof net.minecraft.world.level.storage.loot.entries.LootItem li && LOOT_ITEM_FIELD != null) {
-            try {
-                var item = (net.minecraft.world.item.Item) LOOT_ITEM_FIELD.get(li);
-                if (item != null) {
-                    out.add(item);
-                }
-            } catch (Exception e) {
-                // 忽略
-            }
-        } else if (entry instanceof net.minecraft.world.level.storage.loot.entries.LootTableReference ref
-                && TABLE_REF_NAME_FIELD != null) {
-            try {
-                var loc = (net.minecraft.resources.ResourceLocation) TABLE_REF_NAME_FIELD.get(ref);
-                if (loc != null && seen.add(loc)) {
-                    collectTableEntries(lootData.getLootTable(loc), out, lootData, seen);
-                }
-            } catch (Exception e) {
-                // 忽略
-            }
-        }
-    }
-
     /** 掉落一张掉落表 */
     private static void dropTable(LivingEntity entity, ServerLevel level, double difficulty, String owner,
                                   java.util.List<MWConfig.LootEntry> table) {
