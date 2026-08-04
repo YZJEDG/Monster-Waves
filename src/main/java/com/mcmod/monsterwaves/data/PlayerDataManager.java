@@ -367,14 +367,19 @@ public final class PlayerDataManager {
         return cfg == null ? MWConfig.get().percentagePerPoint : cfg.effectivePercentagePerPoint();
     }
 
-    /** 属性显示名：配置 attributeDisplayNames > 原版属性名 > 注册名 */
+    /** 属性显示名：配置 attributeDisplayNames > 属性注册的本地化名（原版/任何 mod 的 lang，如 attribute.name.generic.movement_speed → 移动速度）> 注册名 */
     public static String displayName(String attrId) {
         String custom = MWConfig.get().attributeDisplayNames.get(attrId);
         if (custom != null && !custom.isEmpty()) {
             return custom;
         }
         Attribute attr = resolveAttribute(attrId);
-        return attr == null ? attrId : attr.getDescriptionId().replace("attribute.name.", "");
+        if (attr == null) {
+            return attrId;
+        }
+        String localized = net.minecraft.network.chat.Component.translatable(attr.getDescriptionId()).getString();
+        return localized != null && !localized.isEmpty() && !localized.equals(attr.getDescriptionId())
+                ? localized : attrId;
     }
 
     // ===== XP 模式缓冲 =====
