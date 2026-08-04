@@ -48,33 +48,42 @@ public class Json5ConfigSerializer<T extends ConfigData> implements ConfigSerial
         return Utils.getConfigFolder().resolve(definition.name() + ".json5");
     }
 
+    /** 静态锁：serialize/deserialize 互斥（防单机服务端 tick 与 GUI 保存线程并发操作同一 Gson/Jankson 实例） */
+    private static final Object LOCK = new Object();
+
     @Override
     public void serialize(T config) throws SerializationException {
         Path path = getConfigPath();
-        try {
-            Files.createDirectories(path.getParent());
-            try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-                writer.write(jankson.toJson(config).toJson(true, true));
+        synchronized (LOCK) {
+            try {
+                Files.createDirectories(path.getParent());
+                try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+                    writer.write(jankson.toJson(config).toJson(true, true));
+                }
+            } catch (Throwable t) {
+                com.mcmod.monsterwaves.MonsterWavesMod.LOGGER.error("MW 配置保存失败（serialize），路径: {}", path, t);
+                throw new SerializationException(t);
             }
-        } catch (Throwable t) {
-            throw new SerializationException(t);
         }
     }
 
     @Override
     public T deserialize() throws SerializationException {
         Path path = getConfigPath();
-        if (Files.exists(path)) {
-            try {
-                // Jankson 解析 json5（容忍手写注释/尾逗号），再转标准 JSON 字符串交给 Gson 覆盖反序列化
-                JsonObject obj = jankson.load(path.toFile());
-                String json = obj.toJson(false, false);
-                return gson.fromJson(json, configClass);
-            } catch (Throwable t) {
-                throw new SerializationException(t);
+        synchronized (LOCK) {
+            if (Files.exists(path)) {
+                try {
+                    // Jankson 解析 json5（容忍手写注释/尾逗号），再转标准 JSON 字符串交给 Gson 覆盖反序列化
+                    JsonObject obj = jankson.load(path.toFile());
+                    String json = obj.toJson(false, false);
+                    return gson.fromJson(json, configClass);
+                } catch (Throwable t) {
+                    com.mcmod.monsterwaves.MonsterWavesMod.LOGGER.error("MW 配置读取失败（deserialize），路径: {}", path, t);
+                    throw new SerializationException(t);
+                }
             }
+            return createDefault();
         }
-        return createDefault();
     }
 
     @Override

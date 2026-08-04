@@ -101,8 +101,6 @@
   "text.autoconfig.monsterwaves.option.fallDestinationY": "坠落目标Y",
   "text.autoconfig.monsterwaves.option.fallDestinationZ": "坠落目标Z",
   "text.autoconfig.monsterwaves.option.enabled": "启用模组",
-  "text.autoconfig.monsterwaves.option.configAutoReload": "配置文件自动加载",
-  "text.autoconfig.monsterwaves.option.configAutoReload.@Tooltip": "每 5 秒检测 config/monsterwaves.json5 修改，保存后自动重载并生效（无需重启/指令）；关闭则需 /monsterwaves reload 手动加载",
   "text.autoconfig.monsterwaves.option.enabled.@Tooltip": "关闭后本模组不再生成怪物",
   "text.autoconfig.monsterwaves.option.spawnInterval": "生成间隔",
   "text.autoconfig.monsterwaves.option.spawnInterval.@Tooltip": "每次生成检测的间隔（tick，20 tick = 1 秒）",
