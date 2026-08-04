@@ -106,6 +106,7 @@ public final class MonsterWavesCommand {
                 .then(Commands.literal("skill")
                         .executes(ctx -> stats(ctx, ctx.getSource().getPlayerOrException()))
                         .then(Commands.literal("points")
+                                .executes(ctx -> stats(ctx, ctx.getSource().getPlayerOrException()))
                                 .then(Commands.argument("player", EntityArgument.player())
                                         .executes(ctx -> stats(ctx, EntityArgument.getPlayer(ctx, "player")))))
                         .then(Commands.literal("add")
