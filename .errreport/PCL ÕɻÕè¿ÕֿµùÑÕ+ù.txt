@@ -2614,3 +2614,612 @@
 10:31:54.620 I <275 · Crash Analyzer> [ModCrash] 导出错误报告文件：游戏崩溃前的输出.txt
 10:31:54.621 I <275 · Crash Analyzer> [ModCrash] 导出错误报告文件：crash-2026-08-04_10.31.30-fml.txt
 10:31:54.622 I <275 · Crash Analyzer> [ModCrash] 导出错误报告文件：测试MOD.json
+10:31:54.741 I <275 · Crash Analyzer> [ModCrash] 导出错误报告文件：PCL 启动器日志.txt
+10:31:54.743 I <275 · Crash Analyzer> [ModCrash] 导出错误报告文件：启动脚本.bat
+10:31:54.789 I <275 · Crash Analyzer> [ModBase] 正在打开资源管理器：E:\Saved\MOD\MC MOD\1.20.1 Forge\Monster Waves\错误报告-2026-8-4_10.31.44.zip
+10:31:54.789 I <275 · Crash Analyzer> [ModBase] 启动进程：explorer /select,"E:\Saved\MOD\MC MOD\1.20.1 Forge\Monster Waves\错误报告-2026-8-4_10.31.44.zip"
+10:31:54.804 I <234 · Telemetry> [ModMain] 匿名数据上报：Minecraft 崩溃
+10:31:54.816 I [ModMain] 弹出提示：错误报告已导出！
+10:39:35.003 I [MyButton] 按下按钮：版本设置
+10:39:35.009 I [FormMain] 切换主要页面：PCL.FormMain+PageStackData, SetupLaunch
+10:39:35.145 I <254 · W/CurrentJavaWorker> [RedoableWorker] CurrentJavaWorker：运行开始
+10:39:35.145 I <254 · W/CurrentJavaWorker> [ModJava] 自动选择以下范围的 Java：[17.0, +∞) 
+10:39:35.145 I <254 · W/CurrentJavaWorker> [ModJava] 已选定 Java：Java 25 (25.0.1.0)：C:\Users\*************\AppData\Roaming\.minecraft\runtime\java-runtime-epsilon\bin\
+10:39:35.145 I <254 · W/CurrentJavaWorker> [RedoableWorker] CurrentJavaWorker：运行成功
+10:39:36.130 I [MyButton] 按下按钮：存档文件夹
+10:39:36.132 I [ModBase] 正在打开资源管理器：D:\game\mc\.minecraft\versions\测试MOD\saves\
+10:39:36.132 I [ModBase] 启动进程：D:\game\mc\.minecraft\versions\测试MOD\saves\ 
+10:39:55.116 I [MyIconButton] 按下图标按钮：BtnTitleInner
+10:39:55.116 I [FormMain] 切换主要页面：PCL.FormMain+PageStackData, -1
+10:39:55.827 I [MyButton] 按下按钮：启动游戏
+10:39:55.827 I [ModLoader] 加载器 LoaderTask`2 Loader Launch 状态改变：Loading
+10:39:55.838 I <205 · L/Loader Launch> [ModLaunch] 预检测已通过
+10:39:55.838 I <205 · L/Loader Launch> [ModDownload] 开始后台检查资源文件索引
+10:39:55.838 I <205 · L/Loader Launch> [ModLoader] 加载器 LoaderCombo`1 后台更新资源文件索引 状态改变：Loading
+10:39:55.838 I <205 · L/Loader Launch> [ModLoader] 加载器 LoaderTask`2 后台分析资源文件索引地址 状态改变：Loading
+10:39:55.838 I <205 · L/Loader Launch> [ModLoader] 加载器 LoaderTask`2 登录 状态改变：Waiting
+10:39:55.838 I <205 · L/Loader Launch> [ModLoader] 加载器 LoaderCombo`1 Minecraft 启动 状态改变：Loading
+10:39:55.838 I <44 · L/后台分析资源文件索引地址> [ModDownload] 版本 测试MOD 对应的资源文件索引为 5
+10:39:55.838 I <205 · L/Loader Launch> [ModLoader] 加载器 LoaderTask`2 获取 Java 状态改变：Loading
+10:39:55.840 I <44 · L/后台分析资源文件索引地址> [ModDownload] 无需更新资源文件索引，取消
+10:39:55.840 I <44 · L/后台分析资源文件索引地址> [ModLoader] 加载器 LoaderTask`2 后台分析资源文件索引地址 状态改变：Canceled
+10:39:55.840 I <44 · L/后台分析资源文件索引地址> [ModLoader] 加载器 LoaderCombo`1 后台更新资源文件索引 状态改变：Canceled
+10:39:55.840 I <44 · L/后台分析资源文件索引地址> [ModLoader] 加载器 LoaderDownload 后台下载资源文件索引 状态改变：Canceled
+10:39:55.840 I <44 · L/后台分析资源文件索引地址> [ModNet] 后台下载资源文件索引 已取消！
+10:39:55.840 W <44 · L/后台分析资源文件索引地址> [ModLoader] 加载线程 后台分析资源文件索引地址 已中断但线程正常运行至结束，输出被弃用（最新线程：-1）
+10:39:55.840 I <205 · L/Loader Launch> [ModLoader] 加载器 LoaderTask`2 登录 状态改变：Loading
+10:39:55.840 I <115 · L/获取 Java> [ModJava] 自动选择以下范围的 Java：[17.0, +∞) 
+10:39:55.840 I <115 · L/获取 Java> [ModJava] 已选定 Java：Java 25 (25.0.1.0)：C:\Users\*************\AppData\Roaming\.minecraft\runtime\java-runtime-epsilon\bin\
+10:39:55.840 I <115 · L/获取 Java> [ModLaunch] 选择的 Java：Java 25 (25.0.1.0)：C:\Users\*************\AppData\Roaming\.minecraft\runtime\java-runtime-epsilon\bin\
+10:39:55.840 I <115 · L/获取 Java> [ModLoader] 加载器 LoaderTask`2 获取 Java 状态改变：Finished
+10:39:55.840 I <205 · L/Loader Launch> [ModLoader] 加载器 LoaderCombo`1 补全文件 状态改变：Loading
+10:39:55.840 I <142 · L/登录> [ModLaunch] 登录加载已开始
+10:39:55.840 I <205 · L/Loader Launch> [ModLoader] 加载器 LoaderCombo`1 下载支持库文件（主加载器） 状态改变：Loading
+10:39:55.840 I <142 · L/登录> [ModLoader] 加载器 LoaderTask`2 Loader Login Ms 状态改变：Loading
+10:39:55.840 I <205 · L/Loader Launch> [ModLoader] 加载器 LoaderTask`2 分析缺失支持库文件 状态改变：Loading
+10:39:55.840 I <207 · L/Loader Login Ms> [ModLaunch] 登录方式：正版（YZYHDG）
+10:39:55.840 I <207 · L/Loader Login Ms> [ModLaunch] 无需登录，AccessToken 尚未过期
+10:39:55.840 I <207 · L/Loader Login Ms> [ModLaunch] 微软登录结束，AccessToken 将在 2026/8/4 16:10:25 过期
+10:39:55.840 I <207 · L/Loader Login Ms> [ModLoader] 加载器 LoaderTask`2 Loader Login Ms 状态改变：Finished
+10:39:55.840 I <205 · L/Loader Launch> [ModLoader] 加载器 LoaderCombo`1 下载资源文件（主加载器） 状态改变：Loading
+10:39:55.840 I <205 · L/Loader Launch> [ModLoader] 加载器 LoaderTask`2 分析资源文件索引地址 状态改变：Loading
+10:39:55.840 I <205 · L/Loader Launch> [ModLoader] 加载器 LoaderTask`2 内存优化 状态改变：Loading
+10:39:55.840 I <218 · L/分析资源文件索引地址> [ModDownload] 版本 测试MOD 对应的资源文件索引为 5
+10:39:55.841 I <205 · L/Loader Launch> [ModLoader] Minecraft 启动 已加入任务列表
+10:39:55.841 I <230 · L/内存优化> [ModLaunch] 内存优化开始
+10:39:55.841 I <154 · Launch Memory Optimize> [PageOtherTest] 获取内存优化权限
+10:39:55.841 I <154 · Launch Memory Optimize> [PageOtherTest] 内存优化操作 2 开始
+10:39:55.846 I <218 · L/分析资源文件索引地址> [ModLoader] 加载器 LoaderTask`2 分析资源文件索引地址 状态改变：Finished
+10:39:55.847 I <218 · L/分析资源文件索引地址> [ModLoader] 加载器 LoaderDownload 下载资源文件索引 状态改变：Loading
+10:39:55.847 I <44 · L/下载 2420> [ModLoader] 加载器 LoaderDownload 下载资源文件索引 状态改变：Finished
+10:39:55.847 I <44 · L/下载 2420> [ModLoader] 加载器 LoaderTask`2 获取资源文件列表 状态改变：Loading
+10:39:55.861 I <142 · L/登录> [ModLaunch] 登录加载已结束
+10:39:55.861 I <142 · L/登录> [ModLoader] 加载器 LoaderTask`2 登录 状态改变：Finished
+10:39:55.885 I <264 · L/分析缺失支持库文件> [ModMinecraft] 获取支持库列表：测试MOD
+10:39:55.887 I <264 · L/分析缺失支持库文件> [ModLoader] 加载器 LoaderTask`2 分析缺失支持库文件 状态改变：Finished
+10:39:55.887 I <264 · L/分析缺失支持库文件> [ModLoader] 加载器 LoaderDownload 下载支持库文件 状态改变：Loading
+10:39:55.891 I <173 · L/获取资源文件列表> [ModLoader] 加载器 LoaderTask`2 获取资源文件列表 状态改变：Finished
+10:39:55.891 I <173 · L/获取资源文件列表> [ModLoader] 加载器 LoaderDownload 下载资源文件 状态改变：Loading
+10:39:55.892 I <225 · L/下载 2422> [ModLoader] 加载器 LoaderDownload 下载资源文件 状态改变：Finished
+10:39:55.892 I <225 · L/下载 2422> [ModLoader] 加载器 LoaderCombo`1 下载资源文件（主加载器） 状态改变：Finished
+10:39:56.020 I <275 · 下载 文件复制 2417/2534> [ModLoader] 加载器 LoaderDownload 下载支持库文件 状态改变：Finished
+10:39:56.020 I <275 · 下载 文件复制 2417/2534> [ModLoader] 加载器 LoaderCombo`1 下载支持库文件（主加载器） 状态改变：Finished
+10:39:56.020 I <275 · 下载 文件复制 2417/2534> [ModLoader] 加载器 LoaderCombo`1 补全文件 状态改变：Finished
+10:39:56.323 I <154 · Launch Memory Optimize> [PageOtherTest] 内存优化操作 3 开始
+10:39:58.694 I <154 · Launch Memory Optimize> [PageOtherTest] 内存优化操作 4 开始
+10:39:59.832 I <154 · Launch Memory Optimize> [PageOtherTest] 内存优化完成，可用内存改变量：2 G，大致剩余内存：10.9 G
+10:39:59.876 I <230 · L/内存优化> [ModLoader] 加载器 LoaderTask`2 内存优化 状态改变：Finished
+10:39:59.881 I <230 · L/内存优化> [ModLoader] 加载器 LoaderTask`2 获取启动参数 状态改变：Loading
+10:39:59.889 I <225 · L/获取启动参数> [ModLaunch] 参数获取开始
+10:39:59.889 I <225 · L/获取启动参数> [ModLaunch] 新版 JVM 参数：从版本 JSON 获取（测试MOD）
+10:39:59.890 I <225 · L/获取启动参数> [ModLaunch] 使用 JLW：False
+10:39:59.890 I <225 · L/获取启动参数> [ModMinecraft] 获取支持库列表：测试MOD
+10:39:59.890 I <225 · L/获取启动参数> [ModLaunch] 使用 LUA：False
+10:39:59.890 I <225 · L/获取启动参数> [ModLaunch] 当前剩余内存：10.9G
+10:39:59.893 I <225 · L/获取启动参数> [ModLaunch] GC 设置：4，选取 G1GC，Java 版本：25
+10:39:59.893 I <225 · L/获取启动参数> [ModLaunch] 新版游戏参数：从版本 JSON 获取（测试MOD）
+10:39:59.893 I <225 · L/获取启动参数> [ModLaunch] =================== 启动参数开始 ===================
+10:39:59.894 I <225 · L/获取启动参数> [ModMinecraft] 获取支持库列表：测试MOD
+10:39:59.898 I <225 · L/获取启动参数> [ModLaunch] -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump
+10:39:59.898 I <225 · L/获取启动参数> [ModLaunch] -Djava.library.path=D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives
+10:39:59.898 I <225 · L/获取启动参数> [ModLaunch] -Djna.tmpdir=D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives
+10:39:59.898 I <225 · L/获取启动参数> [ModLaunch] -Dorg.lwjgl.system.SharedLibraryExtractPath=D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives
+10:39:59.898 I <225 · L/获取启动参数> [ModLaunch] -Dio.netty.native.workdir=D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives
+10:39:59.898 I <225 · L/获取启动参数> [ModLaunch] -Dminecraft.launcher.brand=PCL
+10:39:59.898 I <225 · L/获取启动参数> [ModLaunch] -Dminecraft.launcher.version=406
+10:39:59.898 I <225 · L/获取启动参数> [ModLaunch] -cp
+10:39:59.898 I <225 · L/获取启动参数> [ModLaunch] D:\game\mc\.minecraft\libraries\com\github\oshi\oshi-core\6.2.2\oshi-core-6.2.2.jar;D:\game\mc\.minecraft\libraries\com\google\code\gson\gson\2.10\gson-2.10.jar;D:\game\mc\.minecraft\libraries\com\google\guava\failureaccess\1.0.1\failureaccess-1.0.1.jar;D:\game\mc\.minecraft\libraries\com\google\guava\guava\31.1-jre\guava-31.1-jre.jar;D:\game\mc\.minecraft\libraries\com\ibm\icu\icu4j\71.1\icu4j-71.1.jar;D:\game\mc\.minecraft\libraries\com\mojang\authlib\4.0.43\authlib-4.0.43.jar;D:\game\mc\.minecraft\libraries\com\mojang\blocklist\1.0.10\blocklist-1.0.10.jar;D:\game\mc\.minecraft\libraries\com\mojang\brigadier\1.1.8\brigadier-1.1.8.jar;D:\game\mc\.minecraft\libraries\com\mojang\datafixerupper\6.0.8\datafixerupper-6.0.8.jar;D:\game\mc\.minecraft\libraries\com\mojang\logging\1.1.1\logging-1.1.1.jar;D:\game\mc\.minecraft\libraries\com\mojang\patchy\2.2.10\patchy-2.2.10.jar;D:\game\mc\.minecraft\libraries\com\mojang\text2speech\1.17.9\text2speech-1.17.9.jar;D:\game\mc\.minecraft\libraries\commons-codec\commons-codec\1.15\commons-codec-1.15.jar;D:\game\mc\.minecraft\libraries\commons-io\commons-io\2.11.0\commons-io-2.11.0.jar;D:\game\mc\.minecraft\libraries\commons-logging\commons-logging\1.2\commons-logging-1.2.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-buffer\4.1.82.Final\netty-buffer-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-codec\4.1.82.Final\netty-codec-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-common\4.1.82.Final\netty-common-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-handler\4.1.82.Final\netty-handler-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-resolver\4.1.82.Final\netty-resolver-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-transport-classes-epoll\4.1.82.Final\netty-transport-classes-epoll-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-transport-native-unix-common\4.1.82.Final\netty-transport-native-unix-common-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-transport\4.1.82.Final\netty-transport-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\it\unimi\dsi\fastutil\8.5.9\fastutil-8.5.9.jar;D:\game\mc\.minecraft\libraries\net\java\dev\jna\jna-platform\5.12.1\jna-platform-5.12.1.jar;D:\game\mc\.minecraft\libraries\net\java\dev\jna\jna\5.12.1\jna-5.12.1.jar;D:\game\mc\.minecraft\libraries\net\sf\jopt-simple\jopt-simple\5.0.4\jopt-simple-5.0.4.jar;D:\game\mc\.minecraft\libraries\org\apache\commons\commons-compress\1.21\commons-compress-1.21.jar;D:\game\mc\.minecraft\libraries\org\apache\commons\commons-lang3\3.12.0\commons-lang3-3.12.0.jar;D:\game\mc\.minecraft\libraries\org\apache\httpcomponents\httpclient\4.5.13\httpclient-4.5.13.jar;D:\game\mc\.minecraft\libraries\org\apache\httpcomponents\httpcore\4.4.15\httpcore-4.4.15.jar;D:\game\mc\.minecraft\libraries\org\apache\logging\log4j\log4j-api\2.19.0\log4j-api-2.19.0.jar;D:\game\mc\.minecraft\libraries\org\apache\logging\log4j\log4j-core\2.19.0\log4j-core-2.19.0.jar;D:\game\mc\.minecraft\libraries\org\apache\logging\log4j\log4j-slf4j2-impl\2.19.0\log4j-slf4j2-impl-2.19.0.jar;D:\game\mc\.minecraft\libraries\org\joml\joml\1.10.5\joml-1.10.5.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-glfw\3.3.1\lwjgl-glfw-3.3.1.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-glfw\3.3.1\lwjgl-glfw-3.3.1-natives-windows.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-glfw\3.3.1\lwjgl-glfw-3.3.1-natives-windows-arm64.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-glfw\3.3.1\lwjgl-glfw-3.3.1-natives-windows-x86.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-jemalloc\3.3.1\lwjgl-jemalloc-3.3.1.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-jemalloc\3.3.1\lwjgl-jemalloc-3.3.1-natives-windows.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-jemalloc\3.3.1\lwjgl-jemalloc-3.3.1-natives-windows-arm64.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-jemalloc\3.3.1\lwjgl-jemalloc-3.3.1-natives-windows-x86.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-openal\3.3.1\lwjgl-openal-3.3.1.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-openal\3.3.1\lwjgl-openal-3.3.1-natives-windows.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-openal\3.3.1\lwjgl-openal-3.3.1-natives-windows-arm64.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-openal\3.3.1\lwjgl-openal-3.3.1-natives-windows-x86.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-opengl\3.3.1\lwjgl-opengl-3.3.1.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-opengl\3.3.1\lwjgl-opengl-3.3.1-natives-windows.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-opengl\3.3.1\lwjgl-opengl-3.3.1-natives-windows-arm64.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-opengl\3.3.1\lwjgl-opengl-3.3.1-natives-windows-x86.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-stb\3.3.1\lwjgl-stb-3.3.1.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-stb\3.3.1\lwjgl-stb-3.3.1-natives-windows.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-stb\3.3.1\lwjgl-stb-3.3.1-natives-windows-arm64.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-stb\3.3.1\lwjgl-stb-3.3.1-natives-windows-x86.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-tinyfd\3.3.1\lwjgl-tinyfd-3.3.1.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-tinyfd\3.3.1\lwjgl-tinyfd-3.3.1-natives-windows.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-tinyfd\3.3.1\lwjgl-tinyfd-3.3.1-natives-windows-arm64.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-tinyfd\3.3.1\lwjgl-tinyfd-3.3.1-natives-windows-x86.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl\3.3.1\lwjgl-3.3.1.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl\3.3.1\lwjgl-3.3.1-natives-windows.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl\3.3.1\lwjgl-3.3.1-natives-windows-arm64.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl\3.3.1\lwjgl-3.3.1-natives-windows-x86.jar;D:\game\mc\.minecraft\libraries\org\slf4j\slf4j-api\2.0.1\slf4j-api-2.0.1.jar;D:\game\mc\.minecraft\libraries\cpw\mods\securejarhandler\2.1.10\securejarhandler-2.1.10.jar;D:\game\mc\.minecraft\libraries\org\ow2\asm\asm\9.9.1\asm-9.9.1.jar;D:\game\mc\.minecraft\libraries\org\ow2\asm\asm-commons\9.9.1\asm-commons-9.9.1.jar;D:\game\mc\.minecraft\libraries\org\ow2\asm\asm-tree\9.9.1\asm-tree-9.9.1.jar;D:\game\mc\.minecraft\libraries\org\ow2\asm\asm-util\9.9.1\asm-util-9.9.1.jar;D:\game\mc\.minecraft\libraries\org\ow2\asm\asm-analysis\9.9.1\asm-analysis-9.9.1.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\accesstransformers\8.0.4\accesstransformers-8.0.4.jar;D:\game\mc\.minecraft\libraries\org\antlr\antlr4-runtime\4.9.1\antlr4-runtime-4.9.1.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\eventbus\6.2.33\eventbus-6.2.33.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\forgespi\7.0.1\forgespi-7.0.1.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\coremods\5.2.4\coremods-5.2.4.jar;D:\game\mc\.minecraft\libraries\cpw\mods\modlauncher\10.0.9\modlauncher-10.0.9.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\unsafe\0.2.0\unsafe-0.2.0.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\mergetool\1.1.5\mergetool-1.1.5-api.jar;D:\game\mc\.minecraft\libraries\com\electronwill\night-config\core\3.6.4\core-3.6.4.jar;D:\game\mc\.minecraft\libraries\com\electronwill\night-config\toml\3.6.4\toml-3.6.4.jar;D:\game\mc\.minecraft\libraries\org\apache\maven\maven-artifact\3.8.5\maven-artifact-3.8.5.jar;D:\game\mc\.minecraft\libraries\net\jodah\typetools\0.6.3\typetools-0.6.3.jar;D:\game\mc\.minecraft\libraries\net\minecrell\terminalconsoleappender\1.2.0\terminalconsoleappender-1.2.0.jar;D:\game\mc\.minecraft\libraries\org\jline\jline-reader\3.12.1\jline-reader-3.12.1.jar;D:\game\mc\.minecraft\libraries\org\jline\jline-terminal\3.12.1\jline-terminal-3.12.1.jar;D:\game\mc\.minecraft\libraries\org\spongepowered\mixin\0.8.5\mixin-0.8.5.jar;D:\game\mc\.minecraft\libraries\org\openjdk\nashorn\nashorn-core\15.4\nashorn-core-15.4.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\JarJarSelector\0.3.19\JarJarSelector-0.3.19.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\JarJarMetadata\0.3.19\JarJarMetadata-0.3.19.jar;D:\game\mc\.minecraft\libraries\cpw\mods\bootstraplauncher\1.1.2\bootstraplauncher-1.1.2.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\JarJarFileSystems\0.3.19\JarJarFileSystems-0.3.19.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\fmlloader\1.20.1-47.4.20\fmlloader-1.20.1-47.4.20.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\fmlearlydisplay\1.20.1-47.4.20\fmlearlydisplay-1.20.1-47.4.20.jar;D:\game\mc\.minecraft\versions\测试MOD\测试MOD.jar
+10:39:59.898 I <225 · L/获取启动参数> [ModLaunch] -Djava.net.preferIPv6Addresses=system
+10:39:59.898 I <225 · L/获取启动参数> [ModLaunch] -DignoreList=bootstraplauncher,securejarhandler,asm-commons,asm-util,asm-analysis,asm-tree,asm,JarJarFileSystems,client-extra,fmlcore,javafmllanguage,lowcodelanguage,mclanguage,forge-,测试MOD.jar
+10:39:59.898 I <225 · L/获取启动参数> [ModLaunch] -DmergeModules=jna-5.10.0.jar,jna-platform-5.10.0.jar
+10:39:59.898 I <225 · L/获取启动参数> [ModLaunch] -DlibraryDirectory=D:\game\mc\.minecraft\libraries
+10:39:59.898 I <225 · L/获取启动参数> [ModLaunch] -p
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] D:\game\mc\.minecraft\libraries/cpw/mods/bootstraplauncher/1.1.2/bootstraplauncher-1.1.2.jar;D:\game\mc\.minecraft\libraries/cpw/mods/securejarhandler/2.1.10/securejarhandler-2.1.10.jar;D:\game\mc\.minecraft\libraries/org/ow2/asm/asm-commons/9.9.1/asm-commons-9.9.1.jar;D:\game\mc\.minecraft\libraries/org/ow2/asm/asm-util/9.9.1/asm-util-9.9.1.jar;D:\game\mc\.minecraft\libraries/org/ow2/asm/asm-analysis/9.9.1/asm-analysis-9.9.1.jar;D:\game\mc\.minecraft\libraries/org/ow2/asm/asm-tree/9.9.1/asm-tree-9.9.1.jar;D:\game\mc\.minecraft\libraries/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar;D:\game\mc\.minecraft\libraries/net/minecraftforge/JarJarFileSystems/0.3.19/JarJarFileSystems-0.3.19.jar
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --add-modules
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] ALL-MODULE-PATH
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --add-opens
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] java.base/java.util.jar=cpw.mods.securejarhandler
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --add-opens
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] java.base/java.lang.invoke=cpw.mods.securejarhandler
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --add-exports
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] java.base/sun.security.util=cpw.mods.securejarhandler
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --add-exports
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] jdk.naming.dns/com.sun.jndi.dns=java.naming
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -XX:-OmitStackTraceInFastThrow
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -Djdk.lang.Process.allowAmbiguousCommands=True
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -Dfml.ignoreInvalidMinecraftCertificates=True
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -Dfml.ignorePatchDiscrepancies=True
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -Xmx6758m
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -XX:+UnlockExperimentalVMOptions
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -XX:+UseCompactObjectHeaders
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -XX:+UseG1GC
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -XX:G1NewSizePercent=20
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -XX:G1ReservePercent=20
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -XX:G1HeapRegionSize=32M
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -XX:MaxGCPauseMillis=50
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -XX:+PerfDisableSharedMem
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -XX:MinHeapFreeRatio=25
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -XX:MaxHeapFreeRatio=40
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -Dlog4j2.formatMsgNoLookups=true
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -Dstdout.encoding=UTF-8
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -Dstderr.encoding=UTF-8
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] -Dfile.encoding=COMPAT
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] cpw.mods.bootstraplauncher.BootstrapLauncher
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --username
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] YZYHDG
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --version
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] 测试MOD
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --gameDir
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] D:\game\mc\.minecraft\versions\测试MOD
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --assetsDir
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] D:\game\mc\.minecraft\assets
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --assetIndex
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] 5
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --uuid
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] 7910c30aeb484139ae9b8b0ce7fc4aae
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --accessToken
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] eyJra*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************v6Wlw
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --clientId
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] ${clientid}
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --xuid
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] ${auth_xuid}
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --userType
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] msa
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --versionType
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] PCL
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --width
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] 854
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --height
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] 480
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --launchTarget
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] forgeclient
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --fml.forgeVersion
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] 47.4.20
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --fml.mcVersion
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] 1.20.1
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --fml.forgeGroup
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] net.minecraftforge
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --fml.mcpVersion
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] 20230612.114412
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] --fullscreen
+10:39:59.899 I <225 · L/获取启动参数> [ModLaunch] =================== 启动参数结束 ===================
+10:39:59.899 I <225 · L/获取启动参数> [ModLoader] 加载器 LoaderTask`2 获取启动参数 状态改变：Finished
+10:39:59.899 I <225 · L/获取启动参数> [ModLoader] 加载器 LoaderTask`2 解压文件 状态改变：Loading
+10:39:59.900 I <204 · L/解压文件> [ModLaunch] 正在解压 Natives 文件
+10:39:59.900 I <204 · L/解压文件> [ModMinecraft] 获取支持库列表：测试MOD
+10:39:59.901 I <204 · L/解压文件> [ModLaunch] 删除：D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives\glfw.dll
+10:39:59.903 I <204 · L/解压文件> [ModLaunch] 删除：D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives\jemalloc.dll
+10:39:59.904 I <204 · L/解压文件> [ModLaunch] 删除：D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives\jna4041288464950364117.dll
+10:39:59.904 I <204 · L/解压文件> [ModLaunch] 删除：D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives\jna4041288464950364117.dll.x
+10:39:59.904 I <204 · L/解压文件> [ModLaunch] 删除：D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives\lwjgl.dll
+10:39:59.905 I <204 · L/解压文件> [ModLaunch] 删除：D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives\lwjgl_opengl.dll
+10:39:59.905 I <204 · L/解压文件> [ModLaunch] 删除：D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives\lwjgl_stb.dll
+10:39:59.905 I <204 · L/解压文件> [ModLaunch] 删除：D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives\OpenAL.dll
+10:39:59.905 I <204 · L/解压文件> [ModLoader] 加载器 LoaderTask`2 解压文件 状态改变：Finished
+10:39:59.905 I <204 · L/解压文件> [ModLoader] 加载器 LoaderTask`2 预启动处理 状态改变：Loading
+10:39:59.907 I <275 · L/预启动处理> [ModMain] 无需调整显卡设置：C:\Users\*************\AppData\Roaming\.minecraft\runtime\java-runtime-epsilon\bin\java.exe
+10:39:59.907 I <275 · L/预启动处理> [ModMain] 无需调整显卡设置：D:\game\mc\Plain Craft Launcher 2.exe
+10:39:59.909 I <275 · L/预启动处理> [ModLaunch] 已更新 launcher_profiles.json
+10:39:59.909 I <275 · L/预启动处理> [ModLaunch] 需要的语言为 zh_cn，当前语言为 zh_cn，无需修改
+10:39:59.909 I <275 · L/预启动处理> [ModLoader] 加载器 LoaderTask`2 预启动处理 状态改变：Finished
+10:39:59.909 I <275 · L/预启动处理> [ModLoader] 加载器 LoaderTask`2 执行自定义命令 状态改变：Loading
+10:39:59.912 I <148 · L/执行自定义命令> [ModLoader] 加载器 LoaderTask`2 执行自定义命令 状态改变：Finished
+10:39:59.912 I <148 · L/执行自定义命令> [ModLoader] 加载器 LoaderTask`2 启动进程 状态改变：Loading
+10:39:59.912 I <266 · L/启动进程> [ModBase] 启动进程：C:\Users\*************\AppData\Roaming\.minecraft\runtime\java-runtime-epsilon\bin\java.exe -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -Djava.library.path=D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives -Djna.tmpdir=D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives -Dorg.lwjgl.system.SharedLibraryExtractPath=D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives -Dio.netty.native.workdir=D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives -Dminecraft.launcher.brand=PCL -Dminecraft.launcher.version=406 -cp D:\game\mc\.minecraft\libraries\com\github\oshi\oshi-core\6.2.2\oshi-core-6.2.2.jar;D:\game\mc\.minecraft\libraries\com\google\code\gson\gson\2.10\gson-2.10.jar;D:\game\mc\.minecraft\libraries\com\google\guava\failureaccess\1.0.1\failureaccess-1.0.1.jar;D:\game\mc\.minecraft\libraries\com\google\guava\guava\31.1-jre\guava-31.1-jre.jar;D:\game\mc\.minecraft\libraries\com\ibm\icu\icu4j\71.1\icu4j-71.1.jar;D:\game\mc\.minecraft\libraries\com\mojang\authlib\4.0.43\authlib-4.0.43.jar;D:\game\mc\.minecraft\libraries\com\mojang\blocklist\1.0.10\blocklist-1.0.10.jar;D:\game\mc\.minecraft\libraries\com\mojang\brigadier\1.1.8\brigadier-1.1.8.jar;D:\game\mc\.minecraft\libraries\com\mojang\datafixerupper\6.0.8\datafixerupper-6.0.8.jar;D:\game\mc\.minecraft\libraries\com\mojang\logging\1.1.1\logging-1.1.1.jar;D:\game\mc\.minecraft\libraries\com\mojang\patchy\2.2.10\patchy-2.2.10.jar;D:\game\mc\.minecraft\libraries\com\mojang\text2speech\1.17.9\text2speech-1.17.9.jar;D:\game\mc\.minecraft\libraries\commons-codec\commons-codec\1.15\commons-codec-1.15.jar;D:\game\mc\.minecraft\libraries\commons-io\commons-io\2.11.0\commons-io-2.11.0.jar;D:\game\mc\.minecraft\libraries\commons-logging\commons-logging\1.2\commons-logging-1.2.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-buffer\4.1.82.Final\netty-buffer-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-codec\4.1.82.Final\netty-codec-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-common\4.1.82.Final\netty-common-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-handler\4.1.82.Final\netty-handler-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-resolver\4.1.82.Final\netty-resolver-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-transport-classes-epoll\4.1.82.Final\netty-transport-classes-epoll-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-transport-native-unix-common\4.1.82.Final\netty-transport-native-unix-common-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\io\netty\netty-transport\4.1.82.Final\netty-transport-4.1.82.Final.jar;D:\game\mc\.minecraft\libraries\it\unimi\dsi\fastutil\8.5.9\fastutil-8.5.9.jar;D:\game\mc\.minecraft\libraries\net\java\dev\jna\jna-platform\5.12.1\jna-platform-5.12.1.jar;D:\game\mc\.minecraft\libraries\net\java\dev\jna\jna\5.12.1\jna-5.12.1.jar;D:\game\mc\.minecraft\libraries\net\sf\jopt-simple\jopt-simple\5.0.4\jopt-simple-5.0.4.jar;D:\game\mc\.minecraft\libraries\org\apache\commons\commons-compress\1.21\commons-compress-1.21.jar;D:\game\mc\.minecraft\libraries\org\apache\commons\commons-lang3\3.12.0\commons-lang3-3.12.0.jar;D:\game\mc\.minecraft\libraries\org\apache\httpcomponents\httpclient\4.5.13\httpclient-4.5.13.jar;D:\game\mc\.minecraft\libraries\org\apache\httpcomponents\httpcore\4.4.15\httpcore-4.4.15.jar;D:\game\mc\.minecraft\libraries\org\apache\logging\log4j\log4j-api\2.19.0\log4j-api-2.19.0.jar;D:\game\mc\.minecraft\libraries\org\apache\logging\log4j\log4j-core\2.19.0\log4j-core-2.19.0.jar;D:\game\mc\.minecraft\libraries\org\apache\logging\log4j\log4j-slf4j2-impl\2.19.0\log4j-slf4j2-impl-2.19.0.jar;D:\game\mc\.minecraft\libraries\org\joml\joml\1.10.5\joml-1.10.5.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-glfw\3.3.1\lwjgl-glfw-3.3.1.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-glfw\3.3.1\lwjgl-glfw-3.3.1-natives-windows.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-glfw\3.3.1\lwjgl-glfw-3.3.1-natives-windows-arm64.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-glfw\3.3.1\lwjgl-glfw-3.3.1-natives-windows-x86.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-jemalloc\3.3.1\lwjgl-jemalloc-3.3.1.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-jemalloc\3.3.1\lwjgl-jemalloc-3.3.1-natives-windows.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-jemalloc\3.3.1\lwjgl-jemalloc-3.3.1-natives-windows-arm64.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-jemalloc\3.3.1\lwjgl-jemalloc-3.3.1-natives-windows-x86.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-openal\3.3.1\lwjgl-openal-3.3.1.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-openal\3.3.1\lwjgl-openal-3.3.1-natives-windows.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-openal\3.3.1\lwjgl-openal-3.3.1-natives-windows-arm64.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-openal\3.3.1\lwjgl-openal-3.3.1-natives-windows-x86.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-opengl\3.3.1\lwjgl-opengl-3.3.1.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-opengl\3.3.1\lwjgl-opengl-3.3.1-natives-windows.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-opengl\3.3.1\lwjgl-opengl-3.3.1-natives-windows-arm64.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-opengl\3.3.1\lwjgl-opengl-3.3.1-natives-windows-x86.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-stb\3.3.1\lwjgl-stb-3.3.1.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-stb\3.3.1\lwjgl-stb-3.3.1-natives-windows.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-stb\3.3.1\lwjgl-stb-3.3.1-natives-windows-arm64.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-stb\3.3.1\lwjgl-stb-3.3.1-natives-windows-x86.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-tinyfd\3.3.1\lwjgl-tinyfd-3.3.1.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-tinyfd\3.3.1\lwjgl-tinyfd-3.3.1-natives-windows.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-tinyfd\3.3.1\lwjgl-tinyfd-3.3.1-natives-windows-arm64.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl-tinyfd\3.3.1\lwjgl-tinyfd-3.3.1-natives-windows-x86.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl\3.3.1\lwjgl-3.3.1.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl\3.3.1\lwjgl-3.3.1-natives-windows.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl\3.3.1\lwjgl-3.3.1-natives-windows-arm64.jar;D:\game\mc\.minecraft\libraries\org\lwjgl\lwjgl\3.3.1\lwjgl-3.3.1-natives-windows-x86.jar;D:\game\mc\.minecraft\libraries\org\slf4j\slf4j-api\2.0.1\slf4j-api-2.0.1.jar;D:\game\mc\.minecraft\libraries\cpw\mods\securejarhandler\2.1.10\securejarhandler-2.1.10.jar;D:\game\mc\.minecraft\libraries\org\ow2\asm\asm\9.9.1\asm-9.9.1.jar;D:\game\mc\.minecraft\libraries\org\ow2\asm\asm-commons\9.9.1\asm-commons-9.9.1.jar;D:\game\mc\.minecraft\libraries\org\ow2\asm\asm-tree\9.9.1\asm-tree-9.9.1.jar;D:\game\mc\.minecraft\libraries\org\ow2\asm\asm-util\9.9.1\asm-util-9.9.1.jar;D:\game\mc\.minecraft\libraries\org\ow2\asm\asm-analysis\9.9.1\asm-analysis-9.9.1.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\accesstransformers\8.0.4\accesstransformers-8.0.4.jar;D:\game\mc\.minecraft\libraries\org\antlr\antlr4-runtime\4.9.1\antlr4-runtime-4.9.1.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\eventbus\6.2.33\eventbus-6.2.33.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\forgespi\7.0.1\forgespi-7.0.1.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\coremods\5.2.4\coremods-5.2.4.jar;D:\game\mc\.minecraft\libraries\cpw\mods\modlauncher\10.0.9\modlauncher-10.0.9.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\unsafe\0.2.0\unsafe-0.2.0.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\mergetool\1.1.5\mergetool-1.1.5-api.jar;D:\game\mc\.minecraft\libraries\com\electronwill\night-config\core\3.6.4\core-3.6.4.jar;D:\game\mc\.minecraft\libraries\com\electronwill\night-config\toml\3.6.4\toml-3.6.4.jar;D:\game\mc\.minecraft\libraries\org\apache\maven\maven-artifact\3.8.5\maven-artifact-3.8.5.jar;D:\game\mc\.minecraft\libraries\net\jodah\typetools\0.6.3\typetools-0.6.3.jar;D:\game\mc\.minecraft\libraries\net\minecrell\terminalconsoleappender\1.2.0\terminalconsoleappender-1.2.0.jar;D:\game\mc\.minecraft\libraries\org\jline\jline-reader\3.12.1\jline-reader-3.12.1.jar;D:\game\mc\.minecraft\libraries\org\jline\jline-terminal\3.12.1\jline-terminal-3.12.1.jar;D:\game\mc\.minecraft\libraries\org\spongepowered\mixin\0.8.5\mixin-0.8.5.jar;D:\game\mc\.minecraft\libraries\org\openjdk\nashorn\nashorn-core\15.4\nashorn-core-15.4.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\JarJarSelector\0.3.19\JarJarSelector-0.3.19.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\JarJarMetadata\0.3.19\JarJarMetadata-0.3.19.jar;D:\game\mc\.minecraft\libraries\cpw\mods\bootstraplauncher\1.1.2\bootstraplauncher-1.1.2.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\JarJarFileSystems\0.3.19\JarJarFileSystems-0.3.19.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\fmlloader\1.20.1-47.4.20\fmlloader-1.20.1-47.4.20.jar;D:\game\mc\.minecraft\libraries\net\minecraftforge\fmlearlydisplay\1.20.1-47.4.20\fmlearlydisplay-1.20.1-47.4.20.jar;D:\game\mc\.minecraft\versions\测试MOD\测试MOD.jar -Djava.net.preferIPv6Addresses=system -DignoreList=bootstraplauncher,securejarhandler,asm-commons,asm-util,asm-analysis,asm-tree,asm,JarJarFileSystems,client-extra,fmlcore,javafmllanguage,lowcodelanguage,mclanguage,forge-,测试MOD.jar -DmergeModules=jna-5.10.0.jar,jna-platform-5.10.0.jar -DlibraryDirectory=D:\game\mc\.minecraft\libraries -p D:\game\mc\.minecraft\libraries/cpw/mods/bootstraplauncher/1.1.2/bootstraplauncher-1.1.2.jar;D:\game\mc\.minecraft\libraries/cpw/mods/securejarhandler/2.1.10/securejarhandler-2.1.10.jar;D:\game\mc\.minecraft\libraries/org/ow2/asm/asm-commons/9.9.1/asm-commons-9.9.1.jar;D:\game\mc\.minecraft\libraries/org/ow2/asm/asm-util/9.9.1/asm-util-9.9.1.jar;D:\game\mc\.minecraft\libraries/org/ow2/asm/asm-analysis/9.9.1/asm-analysis-9.9.1.jar;D:\game\mc\.minecraft\libraries/org/ow2/asm/asm-tree/9.9.1/asm-tree-9.9.1.jar;D:\game\mc\.minecraft\libraries/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar;D:\game\mc\.minecraft\libraries/net/minecraftforge/JarJarFileSystems/0.3.19/JarJarFileSystems-0.3.19.jar --add-modules ALL-MODULE-PATH --add-opens java.base/java.util.jar=cpw.mods.securejarhandler --add-opens java.base/java.lang.invoke=cpw.mods.securejarhandler --add-exports java.base/sun.security.util=cpw.mods.securejarhandler --add-exports jdk.naming.dns/com.sun.jndi.dns=java.naming -XX:-OmitStackTraceInFastThrow -Djdk.lang.Process.allowAmbiguousCommands=True -Dfml.ignoreInvalidMinecraftCertificates=True -Dfml.ignorePatchDiscrepancies=True -Xmx6758m -XX:+UnlockExperimentalVMOptions -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:G1HeapRegionSize=32M -XX:MaxGCPauseMillis=50 -XX:+PerfDisableSharedMem -XX:MinHeapFreeRatio=25 -XX:MaxHeapFreeRatio=40 -Dlog4j2.formatMsgNoLookups=true -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 -Dfile.encoding=COMPAT cpw.mods.bootstraplauncher.BootstrapLauncher --username YZYHDG --version 测试MOD --gameDir D:\game\mc\.minecraft\versions\测试MOD --assetsDir D:\game\mc\.minecraft\assets --assetIndex 5 --uuid 7910c30aeb484139ae9b8b0ce7fc4aae --accessToken eyJra*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************v6Wlw --clientId ${clientid} --xuid ${auth_xuid} --userType msa --versionType PCL --width 854 --height 480 --launchTarget forgeclient --fml.forgeVersion 47.4.20 --fml.mcVersion 1.20.1 --fml.forgeGroup net.minecraftforge --fml.mcpVersion 20230612.114412 --fullscreen
+10:39:59.923 I <266 · L/启动进程> [ModLaunch] 已启动游戏进程：C:\Users\*************\AppData\Roaming\.minecraft\runtime\java-runtime-epsilon\bin\java.exe
+10:39:59.924 I <266 · L/启动进程> [ModLoader] 加载器 LoaderTask`2 启动进程 状态改变：Finished
+10:39:59.924 I <266 · L/启动进程> [ModLoader] 加载器 LoaderTask`2 等待游戏窗口出现 状态改变：Loading
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] 
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] ~ 基础参数 ~
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] PCL 版本：正式版 2.13.0.1 (406)
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] 游戏版本：正式版 1.20.1, Forge 47.4.20（20.0.1，Drop 200）
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] 资源版本：5
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] 版本继承：无
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] 分配的内存：6.6 GB（6758 MB）
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] MC 文件夹：D:\game\mc\.minecraft\
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] 版本文件夹：D:\game\mc\.minecraft\versions\测试MOD\
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] 版本隔离：True
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] HMCL 格式：False
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] Java 信息：Java 25 (25.0.1.0)：C:\Users\*************\AppData\Roaming\.minecraft\runtime\java-runtime-epsilon\bin\
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] Natives 文件夹：D:\game\mc\.minecraft\versions\测试MOD\测试MOD-natives\
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] 
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] ~ 登录参数 ~
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] 玩家用户名：YZYHDG
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] AccessToken：eyJra*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************v6Wlw
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] ClientToken：7910c30aeb484139ae9b8b0ce7fc4aae
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] UUID：7910c30aeb484139ae9b8b0ce7fc4aae
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] 登录方式：Microsoft
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] 
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] [30872] 开始 Minecraft 日志监控
+10:39:59.925 I <248 · L/等待游戏窗口出现> [ModLaunch] [全局] 出现运行中的 Minecraft
+10:40:00.390 I <250 · Minecraft Watcher PID 30872> [ModLaunch] [30872] 日志 1/5：已出现日志输出
+10:40:02.250 I <250 · Minecraft Watcher PID 30872> [ModLaunch] [30872] Minecraft 窗口已加载：Minecraft* 1.20.1（1248084）
+10:40:02.250 I <250 · Minecraft Watcher PID 30872> [ModLaunch] [30872] Minecraft 加载已完成
+10:40:02.305 I <248 · L/等待游戏窗口出现> [ModLoader] 加载器 LoaderTask`2 等待游戏窗口出现 状态改变：Finished
+10:40:02.306 I <248 · L/等待游戏窗口出现> [ModLoader] 加载器 LoaderTask`2 结束处理 状态改变：Loading
+10:40:02.307 I <259 · L/结束处理> [ModLaunch] 开始启动结束处理
+10:40:02.307 I <259 · L/结束处理> [ModLaunch] 启动器可见性：5
+10:40:02.312 I <259 · L/结束处理> [ModLoader] 加载器 LoaderTask`2 结束处理 状态改变：Finished
+10:40:02.312 I <259 · L/结束处理> [ModLoader] 加载器 LoaderCombo`1 Minecraft 启动 状态改变：Finished
+10:40:02.336 I [ModLoader] Minecraft 启动 已移出任务列表
+10:40:02.368 I <205 · L/Loader Launch> [ModLoader] 加载器 LoaderTask`2 Loader Launch 状态改变：Finished
+10:40:02.368 I <251 · Telemetry> [ModMain] 匿名数据上报：Minecraft 启动成功
+10:40:02.402 I [ModMain] 弹出提示：测试MOD 启动成功！
+10:40:09.455 I <250 · Minecraft Watcher PID 30872> [ModLaunch] [30872] 日志 2/5：游戏用户已设置
+10:40:09.455 I <250 · Minecraft Watcher PID 30872> [ModLaunch] [30872] 日志 3/5：LWJGL 版本已确认
+10:40:20.101 I <250 · Minecraft Watcher PID 30872> [ModLaunch] [30872] 日志 4/5：OpenAL 已加载
+10:40:20.101 I <250 · Minecraft Watcher PID 30872> [ModLaunch] [30872] 日志 5/5：材质已加载
+10:40:20.333 E <250 · Minecraft Watcher PID 30872> [ModLaunch] [30872] 识别为崩溃的 Log：[10:40:20] [Render thread/FATAL] [ne.mi.cl.lo.ClientModLoader/]: Crash report saved to D:\game\mc\.minecraft\versions\娴嬭瘯MOD\crash-reports\crash-2026-08-04_10.40.20-fml.txt
+10:40:20.333 I <250 · Minecraft Watcher PID 30872> [ModLaunch] [全局] 已无运行中的 Minecraft
+10:40:20.334 E <250 · Minecraft Watcher PID 30872> [ModLaunch] [30872] Minecraft 已崩溃，将在 2 秒后开始崩溃分析
+10:40:20.349 I [ModMain] 弹出提示：检测到 Minecraft 出现错误，错误分析已开始……
+10:40:20.467 W <250 · Minecraft Watcher PID 30872> [ModMain] 诊断信息：
+10:40:20.467 W <250 · Minecraft Watcher PID 30872> [ModMain] 操作系统：Microsoft Windows 11 专业版
+10:40:20.467 W <250 · Minecraft Watcher PID 30872> [ModMain] 剩余内存：8709 M / 15575 M
+10:40:20.467 W <250 · Minecraft Watcher PID 30872> [ModMain] DPI：144（150%）
+10:40:20.467 W <250 · Minecraft Watcher PID 30872> [ModMain] MC 文件夹：D:\game\mc\.minecraft\
+10:40:20.467 W <250 · Minecraft Watcher PID 30872> [ModMain] 文件位置：D:\game\mc\
+10:40:20.691 I <250 · Minecraft Watcher PID 30872> [ModLaunch] [30872] Minecraft 日志监控已退出
+10:40:22.472 I <26 · Crash Analyzer> [ModLaunch] [30872] 崩溃分析开始
+10:40:22.472 I <26 · Crash Analyzer> [ModCrash] 崩溃分析暂存文件夹：C:\Users\*************\AppData\Local\Temp\PCL\TaskTemp\2616-647624\
+10:40:22.474 I <26 · Crash Analyzer> [ModCrash] 步骤 1：收集日志文件
+10:40:22.474 I <26 · Crash Analyzer> [ModCrash] 可能可用的日志文件：D:\game\mc\.minecraft\versions\测试MOD\crash-reports\crash-2026-08-04_10.40.20-fml.txt（0 分钟）
+10:40:22.474 I <26 · Crash Analyzer> [ModCrash] 可能可用的日志文件：D:\game\mc\.minecraft\versions\测试MOD\logs\latest.log（0 分钟）
+10:40:22.474 I <26 · Crash Analyzer> [ModCrash] 可能可用的日志文件：D:\game\mc\.minecraft\versions\测试MOD\logs\debug.log（0 分钟）
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 以下为游戏输出的最后一段内容：
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by cpw.mods.jarhandling.impl.SecureJarVerifier$UnsafeAccessor (file:/D:/game/mc/.minecraft/libraries/cpw/mods/securejarhandler/2.1.10/securejarhandler-2.1.10.jar)
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: Please consider reporting this to the maintainers of class cpw.mods.jarhandling.impl.SecureJarVerifier$UnsafeAccessor
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 2026-08-04 10:40:01,427 main WARN Advanced terminal features are not available in this environment
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:01] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--username, YZYHDG, --version, 娴嬭瘯MOD, --gameDir, D:\game\mc\.minecraft\versions\娴嬭瘯MOD, --assetsDir, D:\game\mc\.minecraft\assets, --assetIndex, 5, --uuid, 7910c30aeb484139ae9b8b0ce7fc4aae, --accessToken, 鉂勨潉鉂勨潉鉂勨潉鉂勨潉, --clientId, ${clientid}, --xuid, ${auth_xuid}, --userType, msa, --versionType, PCL, --width, 854, --height, 480, --launchTarget, forgeclient, --fml.forgeVersion, 47.4.20, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --fullscreen]
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:01] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 25.0.1 by Microsoft; OS Windows 11 arch amd64 version 10.0
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:02] [main/INFO] [ne.mi.fm.lo.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: A restricted method in java.lang.System has been called
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: java.lang.System::load has been called by org.lwjgl.system.Library$$Lambda/0x000000003b3b4000 in module org.lwjgl (union:/D:/game/mc/.minecraft/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1.jar%23132!/)
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: Use --enable-native-access=org.lwjgl to avoid a warning for callers in this module
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [LWJGL] [ThreadLocalUtil] Unsupported JNI version detected, this may result in a crash. Please inform LWJGL developers.
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:02] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:02] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.6 got version 4.6
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: A restricted method in java.lang.System has been called
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: java.lang.System::load has been called by org.lwjgl.opengl.GL$$Lambda/0x000000003b417a00 in module org.lwjgl.opengl (union:/D:/game/mc/.minecraft/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1.jar%23126!/)
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: Use --enable-native-access=org.lwjgl.opengl to avoid a warning for callers in this module
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:02] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/D:/game/mc/.minecraft/libraries/org/spongepowered/mixin/0.8.5/mixin-0.8.5.jar%23150!/ Service=ModLauncher Env=CLIENT
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:02] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: NVIDIA GeForce RTX 5060 Laptop GPU/PCIe/SSE2 GL version 4.6.0 NVIDIA 591.74, NVIDIA Corporation
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: A restricted method in java.lang.System has been called
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: java.lang.System::load has been called by org.lwjgl.stb.LibSTB$$Lambda/0x000000003b44b800 in module org.lwjgl.stb (union:/D:/game/mc/.minecraft/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1.jar%23128!/)
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: Use --enable-native-access=org.lwjgl.stb to avoid a warning for callers in this module
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [2026-08-04 10:40:02] [INFO]: I18nUpdate Mod 3.7.0 is loaded in 1.20.1 with Forge
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [2026-08-04 10:40:02] [INFO]: Using fastest url: http://downloader1.meitangdehulu.com:22943/
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [2026-08-04 10:40:02] [INFO]: Converting: C:\Users\*************\AppData\Local\.i18nupdatemod\1.20\Minecraft-Mod-Language-Modpack-1-20.zip
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [2026-08-04 10:40:03] [INFO]: Converting: C:\Users\*************\AppData\Local\.i18nupdatemod\1.19\Minecraft-Mod-Language-Modpack-1-19.zip
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [2026-08-04 10:40:03] [INFO]: Converting: C:\Users\*************\AppData\Local\.i18nupdatemod\1.18\Minecraft-Mod-Language-Modpack-1-18.zip
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [2026-08-04 10:40:03] [INFO]: Converted: [C:\Users\*************\AppData\Local\.i18nupdatemod\1.20\Minecraft-Mod-Language-Modpack-1-20.zip, C:\Users\*************\AppData\Local\.i18nupdatemod\1.19\Minecraft-Mod-Language-Modpack-1-19.zip, C:\Users\*************\AppData\Local\.i18nupdatemod\1.18\Minecraft-Mod-Language-Modpack-1-18.zip] -> C:\Users\*************\AppData\Local\.i18nupdatemod\1.20.1\Minecraft-Mod-Language-Modpack-Converted-1.20.1.zip
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [2026-08-04 10:40:03] [INFO]: Synchronized: C:\Users\*************\AppData\Local\.i18nupdatemod\1.20.1\Minecraft-Mod-Language-Modpack-Converted-1.20.1.zip -> D:\game\mc\.minecraft\versions\娴嬭瘯MOD\resourcepacks\Minecraft-Mod-Language-Modpack-Converted-1.20.1.zip
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:03] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file D:\game\mc\.minecraft\libraries\net\minecraftforge\fmlcore\1.20.1-47.4.20\fmlcore-1.20.1-47.4.20.jar is missing mods.toml file
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:03] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file D:\game\mc\.minecraft\libraries\net\minecraftforge\javafmllanguage\1.20.1-47.4.20\javafmllanguage-1.20.1-47.4.20.jar is missing mods.toml file
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:03] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file D:\game\mc\.minecraft\libraries\net\minecraftforge\lowcodelanguage\1.20.1-47.4.20\lowcodelanguage-1.20.1-47.4.20.jar is missing mods.toml file
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:03] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file D:\game\mc\.minecraft\libraries\net\minecraftforge\mclanguage\1.20.1-47.4.20\mclanguage-1.20.1-47.4.20.jar is missing mods.toml file
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:04] [main/INFO] [ne.mi.fm.lo.mo.JarInJarDependencyLocator/]: Found 21 dependencies adding them to mods collection
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:04] [main/ERROR] [ne.mi.fm.lo.ModSorter/LOADING]: Missing or unsupported mandatory dependencies:
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Mod ID: 'minecraft', Requested by: 'ftbquests', Expected range: '[1.19.2,1.20)', Actual version: '1.20.1'
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:04] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclient' with arguments [--version, 娴嬭瘯MOD, --gameDir, D:\game\mc\.minecraft\versions\娴嬭瘯MOD, --assetsDir, D:\game\mc\.minecraft\assets, --uuid, 7910c30aeb484139ae9b8b0ce7fc4aae, --username, YZYHDG, --assetIndex, 5, --accessToken, 鉂勨潉鉂勨潉鉂勨潉鉂勨潉, --clientId, ${clientid}, --xuid, ${auth_xuid}, --userType, msa, --versionType, PCL, --width, 854, --height, 480, --fullscreen]
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: A restricted method in java.lang.System has been called
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: java.lang.System::load has been called by com.sun.jna.Native in module com.sun.jna (union:/D:/game/mc/.minecraft/libraries/net/java/dev/jna/jna/5.12.1/jna-5.12.1.jar%23110!/)
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: Use --enable-native-access=com.sun.jna to avoid a warning for callers in this module
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:07] [Datafixer Bootstrap/INFO] [mojang/DataFixerBuilder]: 188 Datafixer optimizations took 81 milliseconds
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:08] [Render thread/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/D:/game/mc/.minecraft/libraries/net/minecraft/client/1.20.1-20230612.114412/client-1.20.1-20230612.114412-srg.jar%23306!/assets/.mcassetsroot' uses unexpected schema
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:08] [Render thread/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/D:/game/mc/.minecraft/libraries/net/minecraft/client/1.20.1-20230612.114412/client-1.20.1-20230612.114412-srg.jar%23306!/data/.mcassetsroot' uses unexpected schema
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:08] [Render thread/INFO] [mojang/YggdrasilAuthenticationService]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/INFO] [minecraft/Minecraft]: Setting user: YZYHDG
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/INFO] [minecraft/Minecraft]: Backend library: LWJGL version 3.3.1 build 7
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/FATAL] [ne.mi.fm.ModLoader/CORE]: Error during pre-loading phase
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] net.minecraftforge.fml.ModLoadingException: Mod 搂eftbquests搂r requires 搂6minecraft搂r 搂o1.19.2 or above, and below 1.20搂r
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 搂7Currently, 搂6minecraft搂r搂7 is 搂o1.20.1
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.fml.ModLoadingException.lambda$fromEarlyException$0(ModLoadingException.java:50) ~[fmlcore-1.20.1-47.4.20.jar%23307!/:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:214) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.AbstractList$RandomAccessSpliterator.forEachRemaining(AbstractList.java:722) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:632) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.stream.ReferencePipeline$7$1FlatMap.accept(ReferencePipeline.java:293) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1716) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:921) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:723) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.fml.ModLoader.<init>(ModLoader.java:96) ~[fmlcore-1.20.1-47.4.20.jar%23307!/:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.fml.ModLoader.get(ModLoader.java:128) ~[fmlcore-1.20.1-47.4.20.jar%23307!/:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.client.loading.ClientModLoader.lambda$begin$1(ClientModLoader.java:66) ~[forge-1.20.1-47.4.20-universal.jar%23311!/:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.client.loading.ClientModLoader.lambda$createRunnableWithCatch$4(ClientModLoader.java:86) ~[forge-1.20.1-47.4.20-universal.jar%23311!/:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.client.loading.ClientModLoader.begin(ClientModLoader.java:66) ~[forge-1.20.1-47.4.20-universal.jar%23311!/:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.client.Minecraft.<init>(Minecraft.java:459) ~[client-1.20.1-20230612.114412-srg.jar%23306!/:?] {re:classloading,pl:accesstransformer:B}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.client.main.Main.main(Main.java:182) ~[%e6%b5%8b%e8%af%95MOD.jar:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.4.20.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.4.20.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.fml.loading.targets.CommonClientLaunchHandler.lambda$makeService$0(CommonClientLaunchHandler.java:25) ~[fmlloader-1.20.1-47.4.20.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.sound.SoundEngineLoadEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterColorHandlersEvent$Block to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterColorHandlersEvent$Item to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RenderLevelStageEvent$RegisterStageEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterParticleProvidersEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterClientReloadListenersEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$RegisterLayerDefinitions to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$RegisterRenderers to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterTextureAtlasSpriteLoadersEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterEntitySpectatorShadersEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterKeyMappingsEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterRecipeBookCategoriesEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterGuiOverlaysEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterDimensionSpecialEffectsEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterNamedRenderTypesEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterColorHandlersEvent$ColorResolvers to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterItemDecorationsEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterPresetEditorsEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:09] [Render thread/INFO] [minecraft/ReloadableResourceManager]: Reloading ResourceManager: vanilla, file/Minecraft-Mod-Language-Modpack-Converted-1.20.1.zip
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:10] [Render thread/WARN] [minecraft/FilePackResources]: Invalid path in datapack: i18nupdatemod:font/OFL.txt, ignoring
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:10] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.ModelEvent$RegisterGeometryLoaders to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:10] [Worker-Main-3/INFO] [minecraft/UnihexProvider]: Found unifont_all_no_pua-15.0.06.hex, loading
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] libpng warning: iCCP: known incorrect sRGB profile
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] libpng warning: iCCP: known incorrect sRGB profile
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] libpng warning: iCCP: known incorrect sRGB profile
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] libpng warning: iCCP: known incorrect sRGB profile
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] libpng warning: iCCP: known incorrect sRGB profile
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] libpng warning: iCCP: known incorrect sRGB profile
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:18] [Worker-Main-12/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.ModelEvent$RegisterAdditional to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:19] [Worker-Main-11/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.ModelEvent$ModifyBakingResult to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:19] [Render thread/WARN] [minecraft/ClientLanguage]: Skipped language file: minecells:lang/zh_cn.json (com.google.gson.JsonSyntaxException: Expected chat.minecells.wipe_try to be a string, was an array (["\n...n"]))
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:19] [Render thread/WARN] [minecraft/ClientLanguage]: Skipped language file: isometric-renders:lang/zh_cn.json (com.google.gson.JsonSyntaxException: Expected gui.isometric-renders.hud.area_selection.clear_hint to be a string, was an array ([{"t..."}]))
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:19] [Render thread/WARN] [minecraft/ClientLanguage]: Skipped language file: mythicmetals:lang/zh_cn.json (com.google.gson.JsonSyntaxException: Expected tooltip.mythril_drill.refuel to be a string, was an array ([{"t..."}]))
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:19] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: minecraft:item.goat_horn.play
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:19] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:19] [Render thread/INFO] [mojang/Library]: OpenAL initialized on device OpenAL Soft on 鑰虫満 (Realtek(R) Audio)
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:19] [Render thread/INFO] [minecraft/SoundEngine]: Sound engine started
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:19] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.sound.SoundEngineLoadEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.TextureStitchEvent$Post to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.TextureStitchEvent$Post to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.TextureStitchEvent$Post to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.TextureStitchEvent$Post to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.TextureStitchEvent$Post to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.TextureStitchEvent$Post to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.TextureStitchEvent$Post to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.TextureStitchEvent$Post to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.TextureStitchEvent$Post to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.ModelEvent$BakingCompleted to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$CreateSkullModels to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.EntityRenderersEvent$AddLayers to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/WARN] [minecraft/ShaderInstance]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.RegisterShadersEvent to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.TextureStitchEvent$Post to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.TextureStitchEvent$Post to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/ERROR] [ne.mi.fm.ModLoader/]: Cowardly refusing to send event net.minecraftforge.client.event.TextureStitchEvent$Post to a broken mod state
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] Negative index in crash report handler (23/25)
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] [10:40:20] [Render thread/FATAL] [ne.mi.cl.lo.ClientModLoader/]: Crash report saved to D:\game\mc\.minecraft\versions\娴嬭瘯MOD\crash-reports\crash-2026-08-04_10.40.20-fml.txt
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] ---- Minecraft Crash Report ----
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] // Daisy, daisy...
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] Time: 2026-08-04 10:40:20
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] Description: Mod loading error has occurred
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] java.lang.Exception: Mod Loading has failed
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.logging.CrashReportExtender.dumpModLoadingCrashReport(CrashReportExtender.java:60) ~[forge-1.20.1-47.4.20-universal.jar%23311!/:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.client.loading.ClientModLoader.completeModLoading(ClientModLoader.java:135) ~[forge-1.20.1-47.4.20-universal.jar%23311!/:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.client.Minecraft.lambda$new$4(Minecraft.java:571) ~[client-1.20.1-20230612.114412-srg.jar%23306!/:?] {re:classloading,pl:accesstransformer:B}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.Util.m_137521_(Util.java:421) ~[client-1.20.1-20230612.114412-srg.jar%23306!/:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.client.Minecraft.lambda$new$5(Minecraft.java:564) ~[client-1.20.1-20230612.114412-srg.jar%23306!/:?] {re:classloading,pl:accesstransformer:B}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.client.loading.ForgeLoadingOverlay.m_88315_(ForgeLoadingOverlay.java:146) ~[forge-1.20.1-47.4.20-universal.jar%23311!/:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.client.renderer.GameRenderer.m_109093_(GameRenderer.java:954) ~[client-1.20.1-20230612.114412-srg.jar%23306!/:?] {re:classloading,pl:accesstransformer:B}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.client.Minecraft.m_91383_(Minecraft.java:1146) ~[client-1.20.1-20230612.114412-srg.jar%23306!/:?] {re:classloading,pl:accesstransformer:B}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.client.Minecraft.m_91374_(Minecraft.java:718) ~[client-1.20.1-20230612.114412-srg.jar%23306!/:?] {re:classloading,pl:accesstransformer:B}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.client.main.Main.main(Main.java:218) ~[%e6%b5%8b%e8%af%95MOD.jar:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.4.20.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.4.20.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.fml.loading.targets.CommonClientLaunchHandler.lambda$makeService$0(CommonClientLaunchHandler.java:25) ~[fmlloader-1.20.1-47.4.20.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] A detailed walkthrough of the error, its code path and all known details is as follows:
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] ---------------------------------------------------------------------------------------
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] -- Head --
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] Thread: Render thread
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] Suspected Mods: NONE
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] Stacktrace:
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.logging.CrashReportExtender.lambda$dumpModLoadingCrashReport$7(CrashReportExtender.java:63) ~[forge-1.20.1-47.4.20-universal.jar%23311!/:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] -- MOD ftbquests --
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] Details:
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Mod File: /D:/game/mc/.minecraft/versions/娴嬭瘯MOD/mods/ftb-quests-forge-1902.5.10-build.497.jar
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Failure message: Mod ftbquests requires minecraft 1.19.2 or above, and below 1.20
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		Currently, minecraft is 1.20.1
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Mod Version: 1902.5.10-build.497
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Mod Issue URL: https://github.com/FTBTeam/FTB-Mods-Issues/issues
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Exception message: MISSING EXCEPTION MESSAGE
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] Stacktrace:
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.logging.CrashReportExtender.lambda$dumpModLoadingCrashReport$7(CrashReportExtender.java:63) ~[forge-1.20.1-47.4.20-universal.jar%23311!/:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.logging.CrashReportExtender.dumpModLoadingCrashReport(CrashReportExtender.java:61) ~[forge-1.20.1-47.4.20-universal.jar%23311!/:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.client.loading.ClientModLoader.completeModLoading(ClientModLoader.java:135) ~[forge-1.20.1-47.4.20-universal.jar%23311!/:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.client.Minecraft.lambda$new$4(Minecraft.java:571) ~[client-1.20.1-20230612.114412-srg.jar%23306!/:?] {re:classloading,pl:accesstransformer:B}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.Util.m_137521_(Util.java:421) ~[client-1.20.1-20230612.114412-srg.jar%23306!/:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.client.Minecraft.lambda$new$5(Minecraft.java:564) ~[client-1.20.1-20230612.114412-srg.jar%23306!/:?] {re:classloading,pl:accesstransformer:B}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.client.loading.ForgeLoadingOverlay.m_88315_(ForgeLoadingOverlay.java:146) ~[forge-1.20.1-47.4.20-universal.jar%23311!/:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.client.renderer.GameRenderer.m_109093_(GameRenderer.java:954) ~[client-1.20.1-20230612.114412-srg.jar%23306!/:?] {re:classloading,pl:accesstransformer:B}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.client.Minecraft.m_91383_(Minecraft.java:1146) ~[client-1.20.1-20230612.114412-srg.jar%23306!/:?] {re:classloading,pl:accesstransformer:B}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.client.Minecraft.m_91374_(Minecraft.java:718) ~[client-1.20.1-20230612.114412-srg.jar%23306!/:?] {re:classloading,pl:accesstransformer:B}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraft.client.main.Main.main(Main.java:218) ~[%e6%b5%8b%e8%af%95MOD.jar:?] {re:classloading}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.4.20.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.4.20.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at net.minecraftforge.fml.loading.targets.CommonClientLaunchHandler.lambda$makeService$0(CommonClientLaunchHandler.java:25) ~[fmlloader-1.20.1-47.4.20.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?] {}
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] -- System Details --
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] Details:
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Minecraft Version: 1.20.1
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Minecraft Version ID: 1.20.1
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Operating System: Windows 11 (amd64) version 10.0
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Java Version: 25.0.1, Microsoft
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode), Microsoft
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Memory: 687202096 bytes (655 MiB) / 1207959552 bytes (1152 MiB) up to 7113539584 bytes (6784 MiB)
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	CPUs: 32
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Processor Vendor: AuthenticAMD
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Processor Name: AMD Ryzen 9 8940HX with Radeon Graphics        
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Identifier: AuthenticAMD Family 25 Model 97 Stepping 2
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Microarchitecture: Zen 3
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Frequency (GHz): 2.39
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Number of physical packages: 1
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Number of physical CPUs: 16
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Number of logical CPUs: 32
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Graphics card #0 name: wjIddDriver Device
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Graphics card #0 vendor: wujie
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Graphics card #0 VRAM (MB): 0.00
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Graphics card #0 deviceId: unknown
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Graphics card #0 versionInfo: DriverVersion=9.22.56.244
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Graphics card #1 name: Microsoft 鍩烘湰鏄剧ず閫傞厤鍣?	Graphics card #1 vendor: (鏍囧噯鏄剧ず鍗＄被鍨? (0x1002)
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Graphics card #1 VRAM (MB): 0.00
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Graphics card #1 deviceId: 0x164e
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Graphics card #1 versionInfo: DriverVersion=10.0.26100.1
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Graphics card #2 name: NVIDIA GeForce RTX 5060 Laptop GPU
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Graphics card #2 vendor: NVIDIA (0x10de)
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Graphics card #2 VRAM (MB): 4095.00
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Graphics card #2 deviceId: 0x2d59
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Graphics card #2 versionInfo: DriverVersion=32.0.15.9174
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Memory slot #0 capacity (MB): 16384.00
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Memory slot #0 clockSpeed (GHz): 5.60
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Memory slot #0 type: Unknown
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Virtual memory max (MB): 35047.02
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Virtual memory used (MB): 18510.41
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Swap memory total (MB): 19472.00
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Swap memory used (MB): 1300.73
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	JVM Flags: 13 total; -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -XX:-OmitStackTraceInFastThrow -Xmx6758m -XX:+UnlockExperimentalVMOptions -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:G1HeapRegionSize=32M -XX:MaxGCPauseMillis=50 -XX:+PerfDisableSharedMem -XX:MinHeapFreeRatio=25 -XX:MaxHeapFreeRatio=40
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	ModLauncher: 10.0.9+10.0.9+main.dcd20f30
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	ModLauncher launch target: forgeclient
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	ModLauncher naming: srg
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	ModLauncher services: 
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		mixin-0.8.5.jar mixin PLUGINSERVICE 
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		eventbus-6.2.33.jar eventbus PLUGINSERVICE 
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		fmlloader-1.20.1-47.4.20.jar slf4jfixer PLUGINSERVICE 
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		fmlloader-1.20.1-47.4.20.jar object_holder_definalize PLUGINSERVICE 
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		fmlloader-1.20.1-47.4.20.jar runtime_enum_extender PLUGINSERVICE 
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		fmlloader-1.20.1-47.4.20.jar capability_token_subclass PLUGINSERVICE 
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		accesstransformers-8.0.4.jar accesstransformer PLUGINSERVICE 
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		fmlloader-1.20.1-47.4.20.jar runtimedistcleaner PLUGINSERVICE 
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		modlauncher-10.0.9.jar mixin TRANSFORMATIONSERVICE 
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		modlauncher-10.0.9.jar fml TRANSFORMATIONSERVICE 
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		modlauncher-10.0.9.jar I18nUpdateMod TRANSFORMATIONSERVICE 
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	FML Language Providers: 
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		minecraft@1.0
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		lowcodefml@null
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		javafml@null
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 	Mod List: 
+10:40:22.487 I <26 · Crash Analyzer> [ModCrash] 		client-1.20.1-20230612.114412-srg.jar             |Minecraft                     |minecraft                     |1.20.1              |NONE      |Manifest: a1:d4:5e:04:4f:d3:d6:e0:7b:37:97:cf:77:b0:de:ad:4a:47:ce:8c:96:49:5f:0a:cf:8c:ae:b2:6d:4b:8a:3f
+10:40:22.497 I <26 · Crash Analyzer> [ModCrash] 步骤 1：收集日志文件完成，收集到 4 个文件
+10:40:22.497 I <26 · Crash Analyzer> [ModCrash] 步骤 2：准备日志文本
+10:40:22.497 I <26 · Crash Analyzer> [ModCrash] crash-2026-08-04_10.40.20-fml.txt 分类为 CrashReport
+10:40:22.497 I <26 · Crash Analyzer> [ModCrash] latest.log 分类为 MinecraftLog
+10:40:22.497 I <26 · Crash Analyzer> [ModCrash] debug.log 分类为 MinecraftLog
+10:40:22.497 I <26 · Crash Analyzer> [ModCrash] rawoutput.log 分类为 MinecraftLog
+10:40:22.499 I <26 · Crash Analyzer> [ModCrash] 输出报告：D:\game\mc\.minecraft\versions\测试MOD\logs\latest.log，作为 Minecraft 或启动器日志
+10:40:22.499 I <26 · Crash Analyzer> [ModCrash] 输出报告：D:\game\mc\.minecraft\versions\测试MOD\logs\debug.log，作为 Minecraft 或启动器日志
+10:40:22.499 I <26 · Crash Analyzer> [ModCrash] 输出报告：C:\Users\*************\AppData\Local\Temp\PCL\TaskTemp\2616-647624\RawOutput.log，作为 Minecraft 或启动器日志
+10:40:22.499 I <26 · Crash Analyzer> [ModCrash] 导入分析：C:\Users\*************\AppData\Local\Temp\PCL\TaskTemp\2616-647624\RawOutput.log，作为启动器日志
+10:40:22.499 I <26 · Crash Analyzer> [ModCrash] 导入分析：D:\game\mc\.minecraft\versions\测试MOD\logs\latest.log，作为 Minecraft 日志
+10:40:22.502 I <26 · Crash Analyzer> [ModCrash] 导入分析：D:\game\mc\.minecraft\versions\测试MOD\logs\debug.log，作为 Minecraft Debug 日志
+10:40:22.502 I <26 · Crash Analyzer> [ModCrash] 输出报告：D:\game\mc\.minecraft\versions\测试MOD\crash-reports\crash-2026-08-04_10.40.20-fml.txt，作为 Minecraft 崩溃报告
+10:40:22.502 I <26 · Crash Analyzer> [ModCrash] 导入分析：D:\game\mc\.minecraft\versions\测试MOD\crash-reports\crash-2026-08-04_10.40.20-fml.txt，作为 Minecraft 崩溃报告
+10:40:22.502 I <26 · Crash Analyzer> [ModCrash] [Crash] 步骤 2：准备日志文本完成，找到游戏日志、游戏 Debug 日志、崩溃日志用作分析
+10:40:22.502 I <26 · Crash Analyzer> [ModCrash] 步骤 3：分析崩溃原因
+10:40:22.526 I <26 · Crash Analyzer> [ModCrash] 可能的崩溃原因：Mod缺少前置或MC版本错误（Mod ID: 'minecraft', Requested by: 'ftbquests', Expected range: '[1.19.2,1.20)', Actual version: '1.20.1'）
+10:40:22.526 I <26 · Crash Analyzer> [ModCrash] 可能的崩溃原因：确定Mod导致游戏崩溃（/D:/game/mc/.minecraft/versions/测试MOD/mods/ftb-quests-forge-1902.5.10-build.497.jar）
+10:40:22.526 I <26 · Crash Analyzer> [ModCrash] 步骤 3：分析崩溃原因完成，找到 2 条可能的原因
+10:40:22.526 I <26 · Crash Analyzer> [ModCrash] - Mod缺少前置或MC版本错误（Mod ID: 'minecraft', Requested by: 'ftbquests', Expected range: '[1.19.2,1.20)', Actual version: '1.20.1'）
+10:40:22.526 I <26 · Crash Analyzer> [ModCrash] - 确定Mod导致游戏崩溃（/D:/game/mc/.minecraft/versions/测试MOD/mods/ftb-quests-forge-1902.5.10-build.497.jar）
+10:40:22.535 I [FormMain] 窗口已置顶，位置：(248.666666666667, 160), 1209.33333333333 x 691.333333333333
+10:40:22.617 I [MyMsgText] 普通弹窗：Minecraft 出现错误
+10:40:22.617 I [MyMsgText] 由于未安装正确的前置 Mod，导致游戏退出。
+10:40:22.617 I [MyMsgText] 缺失的依赖项：
+10:40:22.617 I [MyMsgText]  - Mod ID: 'minecraft', Requested by: 'ftbquests', Expected range: '[1.19.2,1.20)', Actual version: '1.20.1'
+10:40:22.617 I [MyMsgText] 请根据上述信息进行对应处理，如果看不懂英文可以使用翻译软件。
+10:40:22.617 I [MyMsgText] 此外，名为 /D:/game/mc/.minecraft/versions/测试MOD/mods/ftb-quests-forge-1902.5.10-build.497.jar 的 Mod 导致了游戏出错。
+10:40:22.617 I [MyMsgText] 你可以尝试禁用此 Mod，然后观察游戏是否还会崩溃。
+10:40:22.617 I [MyMsgText] 你可以查看错误报告了解错误具体是如何发生的。
+10:40:22.617 I [MyMsgText] 如果要寻求帮助，请把错误报告文件发给对方，而不是发送这个窗口的照片或者截图。
+10:40:29.564 I [MyButton] 按下按钮：导出错误报告
+10:40:29.564 I <26 · Crash Analyzer> [ModMain] 普通弹框返回：3
+10:40:29.565 I [Dialogs] 保存弹窗：选择保存位置（FileName=错误报告-2026-8-4_10.40.29.zip, InitialDirectory=, Filter=Minecraft 错误报告(*.zip)|*.zip）
+10:40:29.768 I [ModAnimation] 两个动画帧间隔 109 ms
+10:40:30.147 I [ModAnimation] 两个动画帧间隔 202 ms
+10:40:31.577 I [Dialogs] 保存弹窗返回：E:\Saved\MOD\MC MOD\1.20.1 Forge\Monster Waves\错误报告-2026-8-4_10.40.29.zip
+10:40:31.676 W <26 · Crash Analyzer> [ModMain] 诊断信息：
+10:40:31.676 W <26 · Crash Analyzer> [ModMain] 操作系统：Microsoft Windows 11 专业版
+10:40:31.676 W <26 · Crash Analyzer> [ModMain] 剩余内存：8500 M / 15575 M
+10:40:31.676 W <26 · Crash Analyzer> [ModMain] DPI：144（150%）
+10:40:31.676 W <26 · Crash Analyzer> [ModMain] MC 文件夹：D:\game\mc\.minecraft\
+10:40:31.676 W <26 · Crash Analyzer> [ModMain] 文件位置：D:\game\mc\
+10:40:31.686 I <26 · Crash Analyzer> [ModCrash] 导出错误报告文件：latest.log
+10:40:31.702 I <26 · Crash Analyzer> [ModCrash] 导出错误报告文件：debug.log
+10:40:31.706 I <26 · Crash Analyzer> [ModCrash] 导出错误报告文件：游戏崩溃前的输出.txt
+10:40:31.706 I <26 · Crash Analyzer> [ModCrash] 导出错误报告文件：crash-2026-08-04_10.40.20-fml.txt
+10:40:31.706 I <26 · Crash Analyzer> [ModCrash] 导出错误报告文件：测试MOD.json

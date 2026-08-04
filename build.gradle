@@ -75,8 +75,8 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:1.20.1-47.4.10"
     implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:11.1.136")
-    // v9.3 技能点加点界面（FTB Library，仅客户端 GUI 使用；1902=1.20.1，build.700 为该版本线最新）
-    implementation fg.deobf("dev.ftb.mods:ftb-library-forge:1902.4.2-build.700")
+    // v9.3 技能点加点界面（FTB Library，仅客户端 GUI 使用；2001=1.20.1 版本线，maven 可用的最新为 2001.1.1-build.1）
+    implementation fg.deobf("dev.ftb.mods:ftb-library-forge:2001.1.1-build.1")
 }
 
 tasks.named("processResources", ProcessResources).configure {
