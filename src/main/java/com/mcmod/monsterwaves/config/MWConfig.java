@@ -287,6 +287,16 @@ public class MWConfig implements ConfigData {
     public List<LootEntry> normalLoot = new ArrayList<>(List.of(
             new LootEntry("minecraft:diamond", 1, 1, 0.1)));
 
+    /** 精英怪专属掉落表（仅精英掉落；Boss 也会掉落本表） */
+    @ConfigEntry.Category("loot")
+    @ConfigEntry.Gui.Tooltip()
+    public List<LootEntry> eliteLoot = new ArrayList<>();
+
+    /** Boss 专属掉落表（仅 Boss 掉落） */
+    @ConfigEntry.Category("loot")
+    @ConfigEntry.Gui.Tooltip()
+    public List<LootEntry> bossLoot = new ArrayList<>();
+
     /** 掉落条目：item 注册名 / nbt（可选）/ min-max 数量 / 概率（0~1）/ 是否受抢夺影响 */
     public static class LootEntry {
         public String item = "minecraft:diamond";

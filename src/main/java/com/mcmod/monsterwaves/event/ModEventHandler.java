@@ -5,6 +5,7 @@ import com.mcmod.monsterwaves.arena.ArenaDimensionManager;
 import com.mcmod.monsterwaves.config.MWConfig;
 import com.mcmod.monsterwaves.data.PlayerDataManager;
 import com.mcmod.monsterwaves.item.ModItems;
+import com.mcmod.monsterwaves.mob.EliteBossHandler;
 import com.mcmod.monsterwaves.safe.SafeDimensionManager;
 import com.mcmod.monsterwaves.spawn.MobSpawnManager;
 import com.mcmod.monsterwaves.stage.StageManager;
@@ -368,13 +369,29 @@ public final class ModEventHandler {
         event.setDroppedExperience(newXp);
     }
 
-    /** 统一掉落：按配置 normalLoot 生成掉落物（概率/数量受难度影响） */
+    /** 统一掉落：普通表所有怪；精英追加精英表；Boss 再追加 Boss 表（概率/数量受难度影响） */
     private static void dropLoot(LivingEntity entity, ServerLevel level, double difficulty, String owner) {
         MWConfig cfg = MWConfig.get();
-        if (!cfg.lootEnabled || cfg.normalLoot.isEmpty()) {
+        if (!cfg.lootEnabled) {
             return;
         }
-        for (MWConfig.LootEntry entry : cfg.normalLoot) {
+        dropTable(entity, level, difficulty, owner, cfg.normalLoot);
+        if (EliteBossHandler.isBoss(entity)) {
+            dropTable(entity, level, difficulty, owner, cfg.eliteLoot);
+            dropTable(entity, level, difficulty, owner, cfg.bossLoot);
+        } else if (EliteBossHandler.isElite(entity)) {
+            dropTable(entity, level, difficulty, owner, cfg.eliteLoot);
+        }
+    }
+
+    /** 掉落一张掉落表 */
+    private static void dropTable(LivingEntity entity, ServerLevel level, double difficulty, String owner,
+                                  java.util.List<MWConfig.LootEntry> table) {
+        if (table == null || table.isEmpty()) {
+            return;
+        }
+        MWConfig cfg = MWConfig.get();
+        for (MWConfig.LootEntry entry : table) {
             if (entry == null || entry.item == null || entry.item.isEmpty()) {
                 continue;
             }
