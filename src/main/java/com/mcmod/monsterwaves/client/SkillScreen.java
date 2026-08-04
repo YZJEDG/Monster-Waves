@@ -5,7 +5,6 @@ import com.mcmod.monsterwaves.data.PlayerDataManager;
 import com.mcmod.monsterwaves.network.C2SAddPoint;
 import com.mcmod.monsterwaves.network.C2SResetAll;
 import com.mcmod.monsterwaves.network.NetworkHandler;
-import dev.ftb.mods.ftblibrary.icon.Icon;
 import dev.ftb.mods.ftblibrary.icon.Icons;
 import dev.ftb.mods.ftblibrary.ui.IScreenWrapper;
 import dev.ftb.mods.ftblibrary.ui.Panel;
@@ -17,23 +16,27 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * v9.3 技能点加点界面（FTB Library ButtonListBaseScreen）：
  * - 自带搜索框（按属性名过滤）与滚动列表
  * - 标题栏实时显示 等级 / 技能点 / 已分配
- * - 列表首行为"重置全部加点"按钮（按配置收费，resetEnabled=false 时禁用），其余为属性行（点击 = 加 1 点）
- * - 只显示 attributeConfigs 白名单内启用的属性；可点性由配置/上限决定，点数校验在服务端
+ * - 按 **mod 分类**（自动读取属性注册名 namespace 判断来源，minecraft 置顶，组内按注册名固定排序）
+ * - 每组分一个不可点击的组标题行 + 属性行（点击 = 加 1 点）；首行为重置按钮
+ * - 只显示 attributeConfigs 白名单内启用的属性；点数校验在服务端
  */
 @OnlyIn(Dist.CLIENT)
 public class SkillScreen extends ButtonListBaseScreen {
     private static SkillScreen openInstance;
-    private final List<AttributeEntry> entries = new ArrayList<>();
+    private final List<AttributeGroup> groups = new ArrayList<>();
 
     public SkillScreen() {
         setTitle(headerTitle());
@@ -74,22 +77,30 @@ public class SkillScreen extends ButtonListBaseScreen {
             }
         });
 
-        // 属性行（白名单内启用的属性）
-        rebuildEntries();
-        for (AttributeEntry e : entries) {
-            panel.add(new SimpleTextButton(panel, rowTitle(e), Icons.ADD) {
+        // 按 mod 分组：minecraft 置顶，其余按命名空间字母序；组内按注册名固定排序（不随已分配点数变化）
+        rebuildGroups();
+        for (AttributeGroup g : groups) {
+            panel.add(new SimpleTextButton(panel, Component.literal("▶ " + g.displayName), Icons.INFO) {
                 @Override
                 public void onClicked(MouseButton button) {
-                    if (button.isLeft() && e.canAdd) {
-                        NetworkHandler.sendToServer(new C2SAddPoint(e.attributeId));
-                    }
-                }
-
-                @Override
-                public Component getTitle() {
-                    return rowTitle(e);
+                    // 组标题：不可点击
                 }
             });
+            for (AttributeEntry e : g.entries) {
+                panel.add(new SimpleTextButton(panel, rowTitle(e), Icons.ADD) {
+                    @Override
+                    public void onClicked(MouseButton button) {
+                        if (button.isLeft() && e.canAdd) {
+                            NetworkHandler.sendToServer(new C2SAddPoint(e.attributeId));
+                        }
+                    }
+
+                    @Override
+                    public Component getTitle() {
+                        return rowTitle(e);
+                    }
+                });
+            }
         }
     }
 
@@ -112,28 +123,65 @@ public class SkillScreen extends ButtonListBaseScreen {
         }
     }
 
-    private void rebuildEntries() {
-        entries.clear();
+    /** 按属性注册名 namespace 分组（自动读取属性来源 mod），组与组内均为固定顺序 */
+    private void rebuildGroups() {
+        groups.clear();
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) {
             return;
         }
+        Map<String, AttributeGroup> byNs = new LinkedHashMap<>();
         for (AttributeInstance inst : mc.player.getAttributes().getSyncableAttributes()) {
             String id = ForgeRegistries.ATTRIBUTES.getKey(inst.getAttribute()).toString();
             if (!PlayerDataManager.isEnabled(id)) {
-                continue; // 白名单外不显示
+                continue; // 白名单外不显示、不可加
             }
-            int allocated = SkillDataCache.getAllocated(id);
-            int maxPts = PlayerDataManager.maxPoints(id);
-            boolean capped = maxPts >= 0 && allocated >= maxPts;
-            entries.add(new AttributeEntry(id,
+            String ns = id.contains(":") ? id.substring(0, id.indexOf(':')) : "unknown";
+            byNs.computeIfAbsent(ns, AttributeGroup::new).entries.add(new AttributeEntry(id,
                     PlayerDataManager.displayName(id),
                     SkillDataCache.getValue(id, inst.getValue()),
-                    allocated,
-                    !capped));
+                    SkillDataCache.getAllocated(id),
+                    !isCapped(id)));
         }
-        entries.sort(Comparator.comparingInt((AttributeEntry e) -> e.allocated).reversed()
-                .thenComparing(e -> e.displayName));
+        // 组顺序：minecraft 置顶，其余按命名空间字母序
+        List<AttributeGroup> ordered = new ArrayList<>(byNs.values());
+        ordered.sort(Comparator.comparing(g -> g.namespace.equals("minecraft") ? "" : g.namespace));
+        // 组内：按属性注册名固定排序
+        for (AttributeGroup g : ordered) {
+            g.entries.sort(Comparator.comparing(e -> e.attributeId));
+        }
+        groups.addAll(ordered);
+    }
+
+    private static boolean isCapped(String id) {
+        int maxPts = PlayerDataManager.maxPoints(id);
+        return maxPts >= 0 && SkillDataCache.getAllocated(id) >= maxPts;
+    }
+
+    /** 属性来源 mod 显示名：minecraft→原版，其余取 ModList 显示名（无则用命名空间） */
+    private static String modDisplayName(String namespace) {
+        if (namespace.equals("minecraft")) {
+            return "原版 Minecraft";
+        }
+        try {
+            var container = ModList.get().getModContainerById(namespace);
+            if (container.isPresent()) {
+                return container.get().getModInfo().getDisplayName();
+            }
+        } catch (Exception ignored) {
+        }
+        return namespace;
+    }
+
+    private static class AttributeGroup {
+        final String namespace;
+        final String displayName;
+        final List<AttributeEntry> entries = new ArrayList<>();
+
+        AttributeGroup(String namespace) {
+            this.namespace = namespace;
+            this.displayName = modDisplayName(namespace);
+        }
     }
 
     private static class AttributeEntry {

@@ -242,13 +242,36 @@ public final class PlayerDataManager {
 
     // ===== 属性应用 =====
 
-    /** 重新应用玩家全部技能点属性 modifier（登录/重生/换维度时调用） */
+    /** 重新应用玩家全部技能点属性 modifier（登录/重生/换维度时调用）。
+     * 白名单（attributeConfigs）外的属性：移除 modifier、清除分配并返还技能点——移出白名单后不受加点系统影响。 */
     public static void applyAll(Player player) {
         if (player.level().isClientSide) {
             return;
         }
         migrateIfNeeded(player);
+        // 清理白名单外属性（一次性修正 + 每次进入时兜底）
+        java.util.List<String> toRemove = new java.util.ArrayList<>();
+        for (String k : data(player).getCompound(ALLOCATED_KEY).getAllKeys()) {
+            if (!isEnabled(k)) {
+                toRemove.add(k);
+            }
+        }
+        for (String k : toRemove) {
+            int v = getAllocated(player, k);
+            Attribute attr = resolveAttribute(k);
+            if (attr != null) {
+                removeModifier(player, attr);
+            }
+            allocatedTag(player).remove(k);
+            if (v > 0) {
+                mutable(player).putInt(POINTS_KEY, getPoints(player) + v);
+            }
+        }
+        // 应用白名单内属性
         for (Map.Entry<String, Integer> entry : getAllAllocated(player).entrySet()) {
+            if (!isEnabled(entry.getKey())) {
+                continue;
+            }
             Attribute attr = resolveAttribute(entry.getKey());
             if (attr != null) {
                 applyModifier(player, attr, entry.getValue());
