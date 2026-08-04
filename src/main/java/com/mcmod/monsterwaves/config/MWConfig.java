@@ -488,4 +488,36 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("eliteBoss")
     @ConfigEntry.Gui.Tooltip()
     public boolean difficultyAffectsChance = true;
+
+    // ===== 怪物传送（mobTeleport，仅本 mod 生成的维度生效）=====
+
+    /** 怪物传送开关（怪远离玩家时拉回，防溢出；仅休息/战斗维度+本 mod 生成的怪） */
+    @ConfigEntry.Category("mobTeleport")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean teleportEnabled = true;
+
+    /** 距离阈值：怪与最近玩家超过此距离（格）时传送 */
+    @ConfigEntry.Category("mobTeleport")
+    @ConfigEntry.Gui.Tooltip()
+    public double teleportThreshold = 80.0;
+
+    /** 传送落点距玩家最小距离 */
+    @ConfigEntry.Category("mobTeleport")
+    @ConfigEntry.Gui.Tooltip()
+    public double teleportMinDistance = 5.0;
+
+    /** 传送落点距玩家最大距离 */
+    @ConfigEntry.Category("mobTeleport")
+    @ConfigEntry.Gui.Tooltip()
+    public double teleportMaxDistance = 20.0;
+
+    /** 每只怪传送冷却（tick，20=1s） */
+    @ConfigEntry.Category("mobTeleport")
+    @ConfigEntry.Gui.Tooltip()
+    public int teleportCooldown = 600;
+
+    /** 检测间隔（tick，20=1s） */
+    @ConfigEntry.Category("mobTeleport")
+    @ConfigEntry.Gui.Tooltip()
+    public int teleportCheckInterval = 10;
 }

@@ -142,5 +142,16 @@
   "text.autoconfig.monsterwaves.option.attackAlgorithm": "攻击难度算法",
   "text.autoconfig.monsterwaves.option.attackAlgorithm.@Tooltip": "add=加算（默认）；multiply=乘算",
   "text.autoconfig.monsterwaves.option.armorAlgorithm": "护甲难度算法",
-  "text.autoconfig.monsterwaves.option.armorAlgorithm.@Tooltip": "add=加算（默认）；multiply=乘算"
+  "text.autoconfig.monsterwaves.option.armorAlgorithm.@Tooltip": "add=加算（默认）；multiply=乘算",
+  "text.autoconfig.monsterwaves.category.mobTeleport": "怪物传送",
+  "text.autoconfig.monsterwaves.option.teleportEnabled": "怪物传送开关",
+  "text.autoconfig.monsterwaves.option.teleportEnabled.@Tooltip": "怪远离最近玩家时拉回（防溢出）；仅休息/战斗维度+本mod生成的怪",
+  "text.autoconfig.monsterwaves.option.teleportThreshold": "距离阈值",
+  "text.autoconfig.monsterwaves.option.teleportThreshold.@Tooltip": "怪与最近玩家超过此距离（格）时传送到玩家附近",
+  "text.autoconfig.monsterwaves.option.teleportMinDistance": "传送最小距离",
+  "text.autoconfig.monsterwaves.option.teleportMaxDistance": "传送最大距离",
+  "text.autoconfig.monsterwaves.option.teleportCooldown": "传送冷却",
+  "text.autoconfig.monsterwaves.option.teleportCooldown.@Tooltip": "每只怪传送后冷却（tick，20=1秒）",
+  "text.autoconfig.monsterwaves.option.teleportCheckInterval": "检测间隔",
+  "text.autoconfig.monsterwaves.option.teleportCheckInterval.@Tooltip": "每隔多少 tick 检测一次（20=1秒）"
 }

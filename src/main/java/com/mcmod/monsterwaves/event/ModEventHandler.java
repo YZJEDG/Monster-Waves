@@ -81,6 +81,8 @@ public final class ModEventHandler {
         StageManager.serverTick(server);
         // Boss 血条进度更新/清理
         com.mcmod.monsterwaves.mob.BossManager.tick(server);
+        // 怪物传送（防溢出，仅 mod 维度）
+        com.mcmod.monsterwaves.mob.MobTeleportHandler.tick(server);
         // 休息维度玩家规则：锁饥饿 + 跳下传送
         ServerLevel safeLevel = SafeDimensionManager.getSafeLevel(server);
         if (safeLevel != null) {
