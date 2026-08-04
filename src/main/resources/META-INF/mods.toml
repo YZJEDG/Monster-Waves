@@ -36,6 +36,6 @@ description='''
 [[dependencies.${mod_id}]]
     modId="ftblibrary"
     mandatory=true
-    versionRange="[1,)"
+    versionRange="[1902,2001)"
     ordering="NONE"
     side="CLIENT"
