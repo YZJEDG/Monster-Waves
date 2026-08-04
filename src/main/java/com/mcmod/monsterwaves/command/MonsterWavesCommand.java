@@ -51,8 +51,7 @@ public final class MonsterWavesCommand {
     }
 
     /** Tab 补全：已注册实体（过滤非生物类 MISC 实体，如物品/箭/船） */
-    private static final SuggestionProvider<CommandSourceStack> SUGGEST_MOBS = (ctx, builder) ->
-            SharedSuggestionProvider.suggest(
+    private static final SuggestionProvider<CommandSourceStack> SUGGEST_MOBS = (ctx, builder) ->            SharedSuggestionProvider.suggest(
                     ForgeRegistries.ENTITY_TYPES.getKeys().stream()
                             .filter(rl -> {
                                 EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(rl);
@@ -61,6 +60,10 @@ public final class MonsterWavesCommand {
                             .map(ResourceLocation::toString)
                             .sorted(),
                     builder);
+
+    /** spawn 类型补全：normal / elite / boss */
+    private static final SuggestionProvider<CommandSourceStack> SUGGEST_MOB_TYPE = (ctx, builder) ->
+            SharedSuggestionProvider.suggest(java.util.List.of("normal", "elite", "boss"), builder);
 
     /** Tab 补全：可用阶段 id */
     private static final SuggestionProvider<CommandSourceStack> SUGGEST_STAGE_IDS = (ctx, builder) ->
@@ -76,9 +79,14 @@ public final class MonsterWavesCommand {
                 .then(Commands.literal("spawn")
                         .requires(src -> src.hasPermission(2))
                         .then(Commands.argument("mob", ResourceLocationArgument.id()).suggests(SUGGEST_MOBS)
-                                .executes(ctx -> spawn(ctx, 1))
+                                .executes(ctx -> spawn(ctx, 1, "normal"))
                                 .then(Commands.argument("count", com.mojang.brigadier.arguments.IntegerArgumentType.integer(1, 100))
-                                        .executes(ctx -> spawn(ctx, com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "count"))))))
+                                        .executes(ctx -> spawn(ctx, com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "count"), "normal"))
+                                        .then(Commands.argument("type", com.mojang.brigadier.arguments.StringArgumentType.word())
+                                                .suggests(SUGGEST_MOB_TYPE)
+                                                .executes(ctx -> spawn(ctx,
+                                                        com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "count"),
+                                                        com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "type")))))))
                 .then(Commands.literal("stats")
                         .executes(ctx -> stats(ctx, ctx.getSource().getPlayerOrException()))
                         .then(Commands.argument("player", EntityArgument.player())
@@ -143,11 +151,11 @@ public final class MonsterWavesCommand {
         );
     }
 
-    private static int spawn(CommandContext<CommandSourceStack> ctx, int count) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+    private static int spawn(CommandContext<CommandSourceStack> ctx, int count, String type) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         ResourceLocation rl = ResourceLocationArgument.getId(ctx, "mob");
         String mobId = rl.toString();
-        EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(rl);
-        if (type == null) {
+        EntityType<?> type_ = ForgeRegistries.ENTITY_TYPES.getValue(rl);
+        if (type_ == null) {
             ctx.getSource().sendFailure(Component.literal("未知生物：" + mobId + "（格式：minecraft:zombie）"));
             return 0;
         }
@@ -157,13 +165,19 @@ public final class MonsterWavesCommand {
         StageManager.Stage stage = StageManager.getData(level.getServer()).currentStage();
         int spawned = 0;
         for (int i = 0; i < count; i++) {
-            Entity entity = type.spawn(level,
+            Entity entity = type_.spawn(level,
                     player.blockPosition().offset(level.getRandom().nextInt(5) - 2, 0,
                             level.getRandom().nextInt(5) - 2),
                     MobSpawnType.COMMAND);
             if (entity instanceof Mob mob) {
                 mob.getPersistentData().putBoolean(MobSpawnManager.MARKER, true);
                 MobSpawnManager.applyDifficultyTo(mob, difficulty, stage);
+                // 强制类型：normal（默认）/ elite / boss（v10.4 完整指令集）
+                if ("elite".equals(type)) {
+                    com.mcmod.monsterwaves.mob.EliteBossHandler.makeElite(mob);
+                } else if ("boss".equals(type)) {
+                    com.mcmod.monsterwaves.mob.EliteBossHandler.makeBoss(mob);
+                }
                 spawned++;
             } else if (entity != null) {
                 // 非 Mob 实体（如物品/经验球）不适用本模组流程，直接移除
@@ -171,7 +185,9 @@ public final class MonsterWavesCommand {
             }
         }
         int finalSpawned = spawned;
-        ctx.getSource().sendSuccess(() -> Component.literal("已生成 " + finalSpawned + " 只 " + mobId), true);
+        String typeLabel = "normal".equals(type) ? "" : (" §e[" + type + "]");
+        String finalType = typeLabel;
+        ctx.getSource().sendSuccess(() -> Component.literal("已生成 " + finalSpawned + " 只 " + mobId + finalType), true);
         return finalSpawned;
     }
 
