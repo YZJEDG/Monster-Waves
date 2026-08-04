@@ -32,6 +32,32 @@ import java.util.List;
 public final class MobSpawnManager {
     public static final String MARKER = "monsterwaves_spawned";
 
+    // v1.0.9 本 mod 生成生物的 UUID 追踪集合（会话内存）：掉落拦截/传送优先用集合判断（精确且不依赖 NBT，
+    // 兼容任意 mod 生物——其他 mod 生物不在集合也不带 MARKER，原版掉落不受影响）；重启后集合清空，由 NBT MARKER 兜底
+    private static final java.util.Set<java.util.UUID> TRACKED = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    /** 标记为本 mod 生成（打 NBT 标记 + 加入 UUID 追踪集合） */
+    public static void track(Mob mob) {
+        if (mob == null) {
+            return;
+        }
+        mob.getPersistentData().putBoolean(MARKER, true);
+        TRACKED.add(mob.getUUID());
+    }
+
+    /** 本 mod 生成的生物（UUID 集合或 NBT 标记任一命中） */
+    public static boolean isTracked(net.minecraft.world.entity.Entity e) {
+        return e != null && (TRACKED.contains(e.getUUID())
+                || e.getPersistentData().getBoolean(MARKER));
+    }
+
+    /** 移除追踪（死亡延迟调用，避免在掉落事件前移除导致拦截失效） */
+    public static void untrack(java.util.UUID id) {
+        if (id != null) {
+            TRACKED.remove(id);
+        }
+    }
+
     private MobSpawnManager() {
     }
 
