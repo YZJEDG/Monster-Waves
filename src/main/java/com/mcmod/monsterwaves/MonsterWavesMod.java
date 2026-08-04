@@ -5,7 +5,7 @@ import com.mcmod.monsterwaves.event.ModEventHandler;
 import com.mcmod.monsterwaves.item.ModItems;
 import com.mcmod.monsterwaves.network.NetworkHandler;
 import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -43,7 +43,9 @@ public class MonsterWavesMod {
             modBus.register(com.mcmod.monsterwaves.client.KeyBindings.class);
         });
         // 注册 Cloth Config 配置（config/monsterwaves.json5，GUI 自动集成 Mods 列表）
-        AutoConfig.register(MWConfig.class, JanksonConfigSerializer::new);
+        // JSON 配置（config/monsterwaves.json）：贴合主流配置格式（其他 mod 多用 toml/json）；
+        // Forge 原生 serverconfig(TOML) 不支持 Map/嵌套对象（attributeConfigs），故用 Cloth + Gson 序列化器保留全部结构与 GUI。
+        AutoConfig.register(MWConfig.class, GsonConfigSerializer::new);
         // 条件显示：开启"传送到重生点"时隐藏自定义坐标字段（fallDestinationX/Y/Z）
         AutoConfig.getGuiRegistry(MWConfig.class).registerPredicateTransformer(
                 (entries, key, field, config, defaults, registry) ->
