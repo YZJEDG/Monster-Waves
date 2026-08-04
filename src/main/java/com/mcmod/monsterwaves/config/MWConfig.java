@@ -169,12 +169,13 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("skillSystem")
     @ConfigEntry.Gui.Tooltip()
     public Map<String, AttributeConfig> attributeConfigs = new java.util.HashMap<>(Map.of(
-            "minecraft:generic.attack_damage", new AttributeConfig(true, false, 50),
-            "minecraft:generic.armor", new AttributeConfig(true, false, 50),
-            "minecraft:generic.max_health", new AttributeConfig(true, false, 50),
+            // 默认全部百分比加成（每点 +percentagePerPoint；每属性可单独改回数值/幅度/上限）
+            "minecraft:generic.attack_damage", new AttributeConfig(true, true, 50),
+            "minecraft:generic.armor", new AttributeConfig(true, true, 50),
+            "minecraft:generic.max_health", new AttributeConfig(true, true, 50),
             "minecraft:generic.movement_speed", new AttributeConfig(true, true, 50),
-            "minecraft:generic.attack_speed", new AttributeConfig(true, false, 50),
-            "minecraft:generic.block_break_speed", new AttributeConfig(true, false, 50),
+            "minecraft:generic.attack_speed", new AttributeConfig(true, true, 50),
+            "minecraft:generic.block_break_speed", new AttributeConfig(true, true, 50),
             // 额外属性（tacz 测试）：百分比型
             "tacz:gun_fire_rate", new AttributeConfig(true, true, 50),
             "tacz:gun_reload_speed", new AttributeConfig(true, true, 50)));
@@ -183,8 +184,8 @@ public class MWConfig implements ConfigData {
     public static class AttributeConfig {
         /** 是否允许加点 */
         public boolean enabled = true;
-        /** 是否百分比加成（每点 +percentagePerPoint，适合移动速度等低基础值属性） */
-        public boolean percentage = false;
+        /** 是否百分比加成（默认 true：每点 +percentagePerPoint；false = 每点 +1 数值） */
+        public boolean percentage = true;
         /** 该属性加点上限（-1=无限） */
         public int maxPoints = 50;
         /** 该属性百分比加成幅度（每点；0 = 跟随全局 percentagePerPoint） */
