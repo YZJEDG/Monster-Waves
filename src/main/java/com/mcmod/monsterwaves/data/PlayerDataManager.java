@@ -240,6 +240,24 @@ public final class PlayerDataManager {
         return allocated;
     }
 
+    /** 轻量检查：玩家是否有白名单外已分配属性（有则触发 applyAll 清理并返还技能点） */
+    public static void cleanupOutOfWhitelist(Player player) {
+        if (player.level().isClientSide) {
+            return;
+        }
+        boolean dirty = false;
+        CompoundTag allocated = data(player).getCompound(ALLOCATED_KEY);
+        for (String k : allocated.getAllKeys()) {
+            if (!isEnabled(k)) {
+                dirty = true;
+                break;
+            }
+        }
+        if (dirty) {
+            applyAll(player);
+        }
+    }
+
     // ===== 属性应用 =====
 
     /** 重新应用玩家全部技能点属性 modifier（登录/重生/换维度时调用）。

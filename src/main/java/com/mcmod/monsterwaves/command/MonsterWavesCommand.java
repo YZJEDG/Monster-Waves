@@ -122,6 +122,9 @@ public final class MonsterWavesCommand {
                                                 .executes(MonsterWavesCommand::skillResetAttr))))
                         .then(Commands.literal("gui")
                                 .executes(MonsterWavesCommand::skillGui)))
+                .then(Commands.literal("reload")
+                        .requires(src -> src.hasPermission(2))
+                        .executes(MonsterWavesCommand::reloadConfig))
                 .then(Commands.literal("player")
                         .then(Commands.literal("list")
                                 .executes(MonsterWavesCommand::playerList)))
@@ -222,6 +225,21 @@ public final class MonsterWavesCommand {
     private static int skillGui(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         NetworkHandler.sendTo(player, new S2COpenGui());
+        return 1;
+    }
+
+    /** 重新加载 JSON 配置并重新应用全部在线玩家属性（改完 config/monsterwaves.json 后无需重启） */
+    private static int reloadConfig(CommandContext<CommandSourceStack> ctx) {
+        try {
+            me.shedaniel.autoconfig.AutoConfig.getConfigHolder(MWConfig.class).load();
+        } catch (Exception e) {
+            ctx.getSource().sendFailure(Component.literal("配置重载失败：" + e.getMessage()));
+            return 0;
+        }
+        for (ServerPlayer p : ctx.getSource().getServer().getPlayerList().getPlayers()) {
+            PlayerDataManager.applyAll(p);
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal("配置已重载，全部玩家属性已重新应用（白名单外分配已清理并返还技能点）"), true);
         return 1;
     }
 

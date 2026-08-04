@@ -100,6 +100,21 @@ public final class ModEventHandler {
         }
     }
 
+    /** 周期兜底：每 5 秒检查在线玩家是否有白名单外分配（配置移出白名单后自动清理并返还，无需重进） */
+    @SubscribeEvent
+    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+        if (!(event.player instanceof ServerPlayer p)) {
+            return;
+        }
+        if (p.level().getGameTime() % 100 != 0) {
+            return;
+        }
+        PlayerDataManager.cleanupOutOfWhitelist(p);
+    }
+
     /**
      * 大范围拾取：自动拾取玩家周围掉落物入背包。
      * - 黑名单过滤；onlyOwnDrops 时仅拾取归属自己的掉落（DROP_OWNER 标记）
