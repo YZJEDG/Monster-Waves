@@ -17,3 +17,7 @@ bin/
 # 系统
 Thumbs.db
 .DS_Store
+
+# 本地工具/附件（不入库）
+.reasonix/
+*.ps1
