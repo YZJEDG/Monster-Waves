@@ -184,13 +184,13 @@ public class MWConfig implements ConfigData {
         list.add(new StageConfig("💀 鏖战期", 12.0, 9000, 30.0, 6.0, 6.0));
         StageConfig abyss = new StageConfig("🌑 深渊期", 30.0, 9000, 100.0, 12.0, 12.0);
         abyss.mobEffects = new ArrayList<>(List.of(
-                new EffectEntry("minecraft:speed", 0, -1, 0.5),
-                new EffectEntry("minecraft:resistance", 0, -1, 0.5)));
+                new StageConfig.EffectEntry("minecraft:speed", 0, -1, 0.5),
+                new StageConfig.EffectEntry("minecraft:resistance", 0, -1, 0.5)));
         list.add(abyss);
         StageConfig finale = new StageConfig("🔥 终局之战", 60.0, -1, 400.0, 25.0, 20.0);
         finale.mobEffects = new ArrayList<>(List.of(
-                new EffectEntry("minecraft:speed", 0, -1, 0.8),
-                new EffectEntry("minecraft:resistance", 0, -1, 0.8)));
+                new StageConfig.EffectEntry("minecraft:speed", 0, -1, 0.8),
+                new StageConfig.EffectEntry("minecraft:resistance", 0, -1, 0.8)));
         list.add(finale);
         return list;
     }
