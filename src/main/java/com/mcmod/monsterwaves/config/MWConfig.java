@@ -405,17 +405,17 @@ public class MWConfig implements ConfigData {
 
     // ===== 经验加成（drop.experience）=====
     /** 经验加成开关（替代原属性球掉落，加速技能点获取） */
-    @ConfigEntry.Category("drop.experience")
+    @ConfigEntry.Category("drop")
     @ConfigEntry.Gui.Tooltip()
     public boolean experienceEnabled = true;
 
     /** 击杀怪物经验倍率 */
-    @ConfigEntry.Category("drop.experience")
+    @ConfigEntry.Category("drop")
     @ConfigEntry.Gui.Tooltip()
     public double experienceMultiplier = 1.0;
 
     /** 每点难度额外经验加成（0.2 = 每点难度 +20%） */
-    @ConfigEntry.Category("drop.experience")
+    @ConfigEntry.Category("drop")
     @ConfigEntry.Gui.Tooltip()
     public double experienceBonusPerDifficulty = 0.2;
 

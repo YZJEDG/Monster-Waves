@@ -31,7 +31,6 @@
   "text.autoconfig.monsterwaves.option.resetCostPoints": "重置消耗",
   "text.autoconfig.monsterwaves.option.resetCostPoints.@Tooltip": "GUI 重置全部加点时从返还技能点中扣除的数量（0 = 免费）",
   "text.autoconfig.monsterwaves.option.resetEnabled": "允许重置加点",
-  "text.autoconfig.monsterwaves.category.drop.experience": "经验加成",
   "text.autoconfig.monsterwaves.option.experienceEnabled": "启用经验加成",
   "text.autoconfig.monsterwaves.option.experienceEnabled.@Tooltip": "击杀敌对怪物获得额外经验（替代原属性球掉落，加速技能点获取）",
   "text.autoconfig.monsterwaves.option.experienceMultiplier": "经验倍率",
@@ -179,5 +178,7 @@
   "text.autoconfig.monsterwaves.option.statusNoticeEnabled": "状态播报开关",
   "text.autoconfig.monsterwaves.option.statusNoticeEnabled.@Tooltip": "每 statusNoticeInterval tick 在聊天栏提示当前阶段/难度（替代 HUD 界面）",
   "text.autoconfig.monsterwaves.option.statusNoticeInterval": "状态播报间隔",
-  "text.autoconfig.monsterwaves.option.statusNoticeInterval.@Tooltip": "tick（600=30 秒）"
+  "text.autoconfig.monsterwaves.option.statusNoticeInterval.@Tooltip": "tick（600=30 秒）",
+  "text.autoconfig.monsterwaves.category.default": "默认",
+  "text.autoconfig.monsterwaves.category.drop": "经验加成"
 }
