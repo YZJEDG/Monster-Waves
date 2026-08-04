@@ -36,6 +36,7 @@
   "text.autoconfig.monsterwaves.option.resetCostPoints": "Reset Cost",
   "text.autoconfig.monsterwaves.option.resetCostPoints.@Tooltip": "Skill points deducted from refund when resetting all via GUI (0 = free)",
   "text.autoconfig.monsterwaves.option.resetEnabled": "Allow Reset",
+  "text.autoconfig.monsterwaves.option.resetEnabled.@Tooltip": "When off, the GUI reset button is disabled (command skill reset still works)",
   "text.autoconfig.monsterwaves.category.drop.experience": "Experience Bonus",
   "text.autoconfig.monsterwaves.option.experienceEnabled": "Enable XP Bonus",
   "text.autoconfig.monsterwaves.option.experienceEnabled.@Tooltip": "Hostile mobs drop extra experience (replaces ball drops, speeds up skill points)",

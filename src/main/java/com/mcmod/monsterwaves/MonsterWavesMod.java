@@ -34,9 +34,11 @@ public class MonsterWavesMod {
         MinecraftForge.EVENT_BUS.register(ModEventHandler.class);
         // 技能点网络通信（v9.0）
         NetworkHandler.register();
-        // 客户端：技能点按键与加点界面
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                MinecraftForge.EVENT_BUS.register(com.mcmod.monsterwaves.client.ClientEvents.class));
+        // 客户端：技能点按键（**mod 总线**：RegisterKeyMappingsEvent 只在 modBus 触发，注册错总线按键不会进入游戏"控制"设置）与 P 键检测（Forge 总线）
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            MinecraftForge.EVENT_BUS.register(com.mcmod.monsterwaves.client.ClientEvents.class);
+            modBus.register(com.mcmod.monsterwaves.client.KeyBindings.class);
+        });
         // 注册 Cloth Config 配置（config/monsterwaves.json5，GUI 自动集成 Mods 列表）
         AutoConfig.register(MWConfig.class, JanksonConfigSerializer::new);
         // 条件显示：开启"传送到重生点"时隐藏自定义坐标字段（fallDestinationX/Y/Z）
