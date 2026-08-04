@@ -47,9 +47,18 @@ public final class MobTeleportHandler {
         if (players.isEmpty()) {
             return;
         }
-        // 全维度扫描（box 覆盖整个维度）
-        var box = new AABB(-3.0E7, level.getMinBuildHeight(), -3.0E7,
-                3.0E7, level.getMaxBuildHeight(), 3.0E7);
+        // v1.0.3 性能优化：不再全维度扫描（旧版每 10 tick 遍历整个维度所有实体，是 mod 最大开销）。
+        // 改为每个玩家为中心 (threshold+maxDistance) 半径的局部 AABB 合并扫描。
+        // 语义：怪离所有玩家都超过 threshold+maxDistance 时不处理；玩家靠近后仍会被拉回，防溢出效果在玩家周围保持。
+        double reach = cfg.teleportThreshold + cfg.teleportMaxDistance;
+        AABB box = null;
+        for (ServerPlayer p : players) {
+            AABB local = p.getBoundingBox().inflate(reach);
+            box = (box == null) ? local : box.minmax(local);
+        }
+        if (box == null) {
+            return;
+        }
         for (Mob mob : level.getEntitiesOfClass(Mob.class, box)) {
             if (!mob.getPersistentData().getBoolean(MobSpawnManager.MARKER)) {
                 continue;

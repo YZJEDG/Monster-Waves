@@ -28,15 +28,24 @@ public final class StageManager {
     }
 
     /** 从配置读取阶段列表（各阶段难度/时长/怪物池/属性倍率/BUFF 可分别调整） */
+    // v1.0.3 5 秒窗口缓存：避免每 tick 重建阶段对象；GUI/指令改配置后最多 5 秒生效
+    private static java.util.List<Stage> cachedStages = null;
+    private static long cachedWindow = -1;
+
     public static java.util.List<Stage> getStages() {
-        return com.mcmod.monsterwaves.config.MWConfig.get().stages.stream()
-                .map(s -> new Stage(s.id, s.difficulty, s.duration,
-                        s.mobListOverride == null ? java.util.List.of() : s.mobListOverride,
-                        s.attributeMultipliers == null ? 1.0 : s.attributeMultipliers.healthMultiplier,
-                        s.attributeMultipliers == null ? 1.0 : s.attributeMultipliers.attackMultiplier,
-                        s.attributeMultipliers == null ? 1.0 : s.attributeMultipliers.armorMultiplier,
-                        s.mobEffects == null ? java.util.List.of() : s.mobEffects))
-                .toList();
+        long window = System.currentTimeMillis() / 5000;
+        if (cachedStages == null || cachedWindow != window) {
+            cachedWindow = window;
+            cachedStages = com.mcmod.monsterwaves.config.MWConfig.get().stages.stream()
+                    .map(s -> new Stage(s.id, s.difficulty, s.duration,
+                            s.mobListOverride == null ? java.util.List.of() : s.mobListOverride,
+                            s.attributeMultipliers == null ? 1.0 : s.attributeMultipliers.healthMultiplier,
+                            s.attributeMultipliers == null ? 1.0 : s.attributeMultipliers.attackMultiplier,
+                            s.attributeMultipliers == null ? 1.0 : s.attributeMultipliers.armorMultiplier,
+                            s.mobEffects == null ? java.util.List.of() : s.mobEffects))
+                    .toList();
+        }
+        return cachedStages;
     }
 
     public static StageData getData(MinecraftServer server) {

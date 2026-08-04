@@ -58,7 +58,7 @@
 <body>
 <header>
   <h1>怪物狂潮 <span class="badge">Monster Waves</span></h1>
-  <span class="ver">v1.0.1 · Minecraft 1.20.1 · Forge 47.4.10 · 开发者浏览版</span>
+  <span class="ver">v1.0.3 · Minecraft 1.20.1 · Forge 47.4.10 · 开发者浏览版</span>
   <input id="search" type="text" placeholder="🔍 搜索（表格/文本过滤）…">
 </header>
 <div class="wrap">
@@ -309,6 +309,8 @@ public static void onCalc(MobAttributeCalculateEvent e) {
 <h2 id="changelog"><span class="no">13</span>变更记录（摘要）</h2>
 <table>
   <tr><th style="width:110px">版本</th><th>内容</th></tr>
+  <tr><td>v1.0.3</td><td>代码审查加固：配置校验 validatePostLoad、怪物传送改玩家局部 AABB（性能）、C2S 限流、网络包方向注册等</td></tr>
+  <tr><td>v1.0.2</td><td>安全加固：网络包方向注册（防伪造 S2C DoS）、fallDestination 非法回退、掉落数量 clamp、tacz 注册降级</td></tr>
   <tr><td>v1.0.1</td><td>统一掉落分级：新增 <code>eliteLoot</code>（仅精英，Boss 也掉）与 <code>bossLoot</code>（仅 Boss）独立掉落表；三表独立计算不共享概率池</td></tr>
   <tr><td>v1.0.0</td><td>正式版打包：版本 0.1.0→1.0.0；新增 README.md 发布说明</td></tr>
   <tr><td>v10.6</td><td>聊天栏状态播报（每 30 秒提示阶段/难度，替代 HUD，可配）</td></tr>

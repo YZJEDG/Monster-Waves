@@ -51,6 +51,10 @@ public final class ModEventHandler {
     /** 状态播报计数器（每 statusNoticeInterval tick 一次聊天栏提示） */
     private static int statusTicker = 0;
 
+    // v1.0.3 拾取黑名单缓存（配置实例变化时重建，避免逐物品 List.contains 线性扫描）
+    private static java.util.Set<String> pickupBlacklistCache = null;
+    private static Object pickupCfgRef = null;
+
     /** 掉落物归属标记（击杀者 UUID，供 onlyOwnDrops 使用） */
     private static final String DROP_OWNER = "monsterwaves_owner";
 
@@ -86,11 +90,9 @@ public final class ModEventHandler {
         net.minecraft.network.chat.Component msg = net.minecraft.network.chat.Component.literal(
                 "§e【怪物狂潮】§r 当前阶段: §b" + stage.id() + "§r 难度: §c"
                         + String.format("%.1f", diff) + "§r" + (stage.isInfinite() ? " §7(无限)" : ""));
-        for (ServerLevel lv : server.getAllLevels()) {
-            if (!com.mcmod.monsterwaves.spawn.MobSpawnManager.isDimensionEnabled(lv)) {
-                continue;
-            }
-            for (ServerPlayer p : lv.players()) {
+        for (ServerPlayer p : server.getPlayerList().getPlayers()) {
+            // v1.0.3 单层遍历（替代 维度×玩家 双层），阶段/难度值上方已取一次
+            if (com.mcmod.monsterwaves.spawn.MobSpawnManager.isDimensionEnabled(p.serverLevel())) {
                 p.displayClientMessage(msg, false);
             }
         }
@@ -159,34 +161,35 @@ public final class ModEventHandler {
             return;
         }
         double range = Math.max(1.0, cfg.pickupRange);
+        // v1.0.3 黑名单转 HashSet 缓存（配置实例变化才重建）
+        if (pickupBlacklistCache == null || pickupCfgRef != cfg) {
+            pickupCfgRef = cfg;
+            pickupBlacklistCache = cfg.pickupBlacklist == null
+                    ? java.util.Set.of()
+                    : new java.util.HashSet<>(cfg.pickupBlacklist);
+        }
         for (ServerPlayer player : level.players()) {
-            // 经验球：拉向玩家（原版接触自动吸收经验），不受 onlyOwnDrops 限制
-            if (cfg.pickupXp) {
-                java.util.List<net.minecraft.world.entity.ExperienceOrb> orbs =
-                        level.getEntitiesOfClass(net.minecraft.world.entity.ExperienceOrb.class,
-                                player.getBoundingBox().inflate(range));
-                for (net.minecraft.world.entity.ExperienceOrb orb : orbs) {
-                    if (orb.isRemoved()) {
-                        continue;
-                    }
+            // v1.0.3 合并为一次实体查询（少一次 section 遍历），按类型分流
+            java.util.List<net.minecraft.world.entity.Entity> entities =
+                    level.getEntitiesOfClass(net.minecraft.world.entity.Entity.class,
+                            player.getBoundingBox().inflate(range),
+                            e -> (e instanceof net.minecraft.world.entity.ExperienceOrb && cfg.pickupXp)
+                                    || (e instanceof ItemEntity && cfg.pickupItems));
+            for (net.minecraft.world.entity.Entity entity : entities) {
+                if (entity.isRemoved()) {
+                    continue;
+                }
+                if (entity instanceof net.minecraft.world.entity.ExperienceOrb orb) {
+                    // 经验球：拉向玩家（原版接触自动吸收经验），不受 onlyOwnDrops 限制
                     net.minecraft.world.phys.Vec3 dir = player.position().add(0, 0.8, 0)
                             .subtract(orb.position()).normalize();
                     orb.setDeltaMovement(dir.scale(0.6));
                     orb.hasImpulse = true; // 服务端速度同步到客户端
-                }
-            }
-            java.util.List<ItemEntity> items = level.getEntitiesOfClass(ItemEntity.class,
-                    player.getBoundingBox().inflate(range));
-            for (ItemEntity item : items) {
-                if (item.isRemoved()) {
                     continue;
                 }
-                // 普通物品
-                if (!cfg.pickupItems) {
-                    continue;
-                }
+                ItemEntity item = (ItemEntity) entity;
                 String reg = ForgeRegistries.ITEMS.getKey(item.getItem().getItem()).toString();
-                if (cfg.pickupBlacklist.contains(reg)) {
+                if (pickupBlacklistCache.contains(reg)) {
                     continue;
                 }
                 if (cfg.pickupOnlyOwnDrops) {

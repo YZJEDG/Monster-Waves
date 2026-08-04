@@ -90,6 +90,7 @@ public final class MonsterWavesCommand {
                 .then(Commands.literal("stats")
                         .executes(ctx -> stats(ctx, ctx.getSource().getPlayerOrException()))
                         .then(Commands.argument("player", EntityArgument.player())
+                                .requires(src -> src.hasPermission(2)) // v1.0.3 查他人需 op
                                 .executes(ctx -> stats(ctx, EntityArgument.getPlayer(ctx, "player")))))
                 .then(Commands.literal("difficulty")
                         .executes(MonsterWavesCommand::difficulty))
@@ -118,6 +119,7 @@ public final class MonsterWavesCommand {
                         .then(Commands.literal("points")
                                 .executes(ctx -> stats(ctx, ctx.getSource().getPlayerOrException()))
                                 .then(Commands.argument("player", EntityArgument.player())
+                                        .requires(src -> src.hasPermission(2)) // v1.0.3 查他人需 op
                                         .executes(ctx -> stats(ctx, EntityArgument.getPlayer(ctx, "player")))))
                         .then(Commands.literal("add")
                                 .requires(src -> src.hasPermission(2))
@@ -152,6 +154,11 @@ public final class MonsterWavesCommand {
     }
 
     private static int spawn(CommandContext<CommandSourceStack> ctx, int count, String type) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        // v1.0.3 type 枚举校验（不再静默按 normal 处理）
+        if (!"normal".equals(type) && !"elite".equals(type) && !"boss".equals(type)) {
+            ctx.getSource().sendFailure(Component.literal("无效类型：" + type + "（可用 normal / elite / boss）"));
+            return 0;
+        }
         ResourceLocation rl = ResourceLocationArgument.getId(ctx, "mob");
         String mobId = rl.toString();
         EntityType<?> type_ = ForgeRegistries.ENTITY_TYPES.getValue(rl);

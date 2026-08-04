@@ -275,11 +275,15 @@ public final class SafeDimensionManager {
         return block == null ? fallback : block.defaultBlockState();
     }
 
-    /** 休息维度玩家规则：锁定饥饿与饱和度 */
+    /** 休息维度玩家规则：锁定饥饿与饱和度（v1.0.3 仅在低于目标时写入，避免每 tick 无意义赋值） */
     public static void applySafeRules(ServerPlayer player) {
         if (isSafe(player.level())) {
-            player.getFoodData().setFoodLevel(20);
-            player.getFoodData().setSaturation(10.0f);
+            if (player.getFoodData().getFoodLevel() < 20) {
+                player.getFoodData().setFoodLevel(20);
+            }
+            if (player.getFoodData().getSaturationLevel() < 10.0f) {
+                player.getFoodData().setSaturation(10.0f);
+            }
         }
     }
 

@@ -26,6 +26,109 @@ public class MWConfig implements ConfigData {
         return AutoConfig.getConfigHolder(MWConfig.class).getConfig();
     }
 
+    /**
+     * v1.0.3 配置校验（Cloth 配置加载后调用 validatePostLoad；GUI 保存同样经过）：
+     * 所有数值 clamp、null 列表/元素兜底、非法条目清理——避免手编 JSON 导致崩溃或行为异常
+     * （负概率必掉、难度 0 吞精英、maxMobsPerPlayer=0 不刷怪、null 元素 NPE 等）。
+     */
+    @Override
+    public void validatePostLoad() {
+        // ===== spawn =====
+        spawnInterval = Math.max(1, spawnInterval);
+        minDistance = Math.max(1, minDistance);
+        maxDistance = Math.max(minDistance, maxDistance);
+        if (maxMobsPerPlayer < 0) maxMobsPerPlayer = -1; // 统一语义：负 = 无限（与精英上限一致）
+        mobCountMin = Math.max(1, mobCountMin);
+        mobCountMax = Math.max(mobCountMin, mobCountMax);
+        mobStatRadius = Math.max(1.0, mobStatRadius);
+        if (mobPool == null) mobPool = new ArrayList<>();
+        mobPool.removeIf(e -> e == null || e.isBlank());
+
+        // ===== stage =====
+        if (stages == null) stages = new ArrayList<>();
+        stages.removeIf(s -> s == null || s.id == null || s.id.isBlank());
+        if (stages.isEmpty()) {
+            // 全被清理时回退默认三阶段，避免 StageManager 空列表崩溃
+            stages.add(new StageConfig("萌芽期", 1.0, 6000));
+            stages.add(new StageConfig("激战期", 2.5, 12000));
+            stages.add(new StageConfig("终局之战", 5.0, -1));
+        }
+        for (StageConfig s : stages) {
+            s.difficulty = Math.max(0.1, s.difficulty);
+            if (s.duration == 0) s.duration = -1; // 0 视为无限（避免每 tick 切阶段刷屏）
+            if (s.duration < -1) s.duration = Math.max(1, s.duration);
+            if (s.mobListOverride == null) s.mobListOverride = new ArrayList<>();
+            s.mobListOverride.removeIf(e -> e == null || e.isBlank());
+            if (s.attributeMultipliers == null) s.attributeMultipliers = new StageConfig.AttributeMultipliers();
+            s.attributeMultipliers.healthMultiplier = Math.max(0.0, s.attributeMultipliers.healthMultiplier);
+            s.attributeMultipliers.attackMultiplier = Math.max(0.0, s.attributeMultipliers.attackMultiplier);
+            s.attributeMultipliers.armorMultiplier = Math.max(0.0, s.attributeMultipliers.armorMultiplier);
+            if (s.mobEffects == null) s.mobEffects = new ArrayList<>();
+            s.mobEffects.removeIf(e -> e == null || e.effect == null || e.effect.isBlank());
+            for (StageConfig.EffectEntry e : s.mobEffects) {
+                e.chance = Math.max(0.0, Math.min(1.0, e.chance));
+            }
+        }
+
+        // ===== loot（三张表独立） =====
+        lootGlobalChanceMultiplier = Math.max(0.0, lootGlobalChanceMultiplier);
+        lootExtraCountPerLevel = Math.max(0.0, lootExtraCountPerLevel);
+        for (List<LootEntry> table : List.of(normalLoot, eliteLoot, bossLoot)) {
+            if (table == null) continue;
+            table.removeIf(e -> e == null || e.item == null || e.item.isBlank());
+            for (LootEntry e : table) {
+                e.chance = Math.max(0.0, Math.min(1.0, e.chance));
+                e.minCount = Math.max(1, e.minCount);
+                e.maxCount = Math.max(e.minCount, Math.min(4096, e.maxCount));
+            }
+        }
+
+        // ===== experience =====
+        experienceMultiplier = Math.max(0.0, experienceMultiplier);
+        experienceBonusPerDifficulty = Math.max(0.0, experienceBonusPerDifficulty);
+
+        // ===== dimensions / pickup =====
+        if (enabledDimensions == null) enabledDimensions = new ArrayList<>();
+        enabledDimensions.removeIf(e -> e == null || e.isBlank());
+        if (pickupBlacklist == null) pickupBlacklist = new ArrayList<>();
+        pickupBlacklist.removeIf(e -> e == null || e.isBlank());
+        pickupRange = Math.max(1.0, pickupRange);
+        pickupInterval = Math.max(1, pickupInterval);
+
+        // ===== skill =====
+        pointsPerLevel = Math.max(1, pointsPerLevel);
+        xpPerPoint = Math.max(1, xpPerPoint);
+        percentagePerPoint = Math.max(0.0, percentagePerPoint);
+        if (attributeConfigs == null) attributeConfigs = new java.util.HashMap<>();
+        if (attributeDisplayNames == null) attributeDisplayNames = new java.util.HashMap<>();
+        attributeConfigs.values().removeIf(c -> c == null);
+        for (AttributeConfig c : attributeConfigs.values()) {
+            c.maxPoints = Math.max(-1, c.maxPoints);
+            c.percentagePerPoint = Math.max(0.0, c.percentagePerPoint);
+        }
+
+        // ===== safe / arena =====
+        safeSpawnY = Math.max(0, safeSpawnY);
+        if (fallTeleportY >= safeSpawnY) fallTeleportY = safeSpawnY - 1; // 避免一进空岛即坠落
+        islandRadius = Math.max(1, islandRadius);
+        arenaSpawnY = Math.max(0, arenaSpawnY);
+
+        // ===== mob teleport =====
+        teleportThreshold = Math.max(8.0, teleportThreshold);
+        teleportMaxDistance = Math.max(1.0, teleportMaxDistance);
+        teleportCheckInterval = Math.max(1, teleportCheckInterval);
+
+        // ===== 苦痛传递 =====
+        painTransferenceMaxLevel = Math.max(1, Math.min(255, painTransferenceMaxLevel));
+        painTransferenceBaseDamagePercent = Math.max(0.0, Math.min(10.0, painTransferenceBaseDamagePercent));
+        painTransferenceDamagePercentPerLevel = Math.max(0.0, painTransferenceDamagePercentPerLevel);
+        painTransferenceBaseRadius = Math.max(0.0, painTransferenceBaseRadius);
+        painTransferenceRadiusPerLevel = Math.max(0.0, painTransferenceRadiusPerLevel);
+
+        // ===== status =====
+        statusNoticeInterval = Math.max(1, statusNoticeInterval);
+    }
+
     // ===== 全局（general）=====
     @ConfigEntry.Category("general")
     @ConfigEntry.Gui.Tooltip()
@@ -192,7 +295,6 @@ public class MWConfig implements ConfigData {
             Map.entry("minecraft:generic.max_health", new AttributeConfig(true, true, 50)),
             Map.entry("minecraft:generic.movement_speed", new AttributeConfig(true, true, 50)),
             Map.entry("minecraft:generic.attack_speed", new AttributeConfig(true, true, 50)),
-            Map.entry("minecraft:generic.block_break_speed", new AttributeConfig(true, true, 50)),
             Map.entry("minecraft:generic.luck", new AttributeConfig(true, true, 50)),
             Map.entry("minecraft:generic.armor_toughness", new AttributeConfig(true, true, 50)),
             // 枪械加成（gunsmithlib = Gunsmith Library，TaCZ 实际读取的属性）：

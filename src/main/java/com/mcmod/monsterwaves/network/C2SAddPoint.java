@@ -29,7 +29,7 @@ public class C2SAddPoint {
         NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
-            if (player != null) {
+            if (player != null && !NetworkHandler.isThrottled(player)) {
                 boolean ok = PlayerDataManager.addPoint(player, msg.attributeId);
                 if (!ok) {
                     player.displayClientMessage(

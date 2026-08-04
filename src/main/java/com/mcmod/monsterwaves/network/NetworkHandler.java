@@ -63,4 +63,22 @@ public final class NetworkHandler {
     public static void sendToServer(Object packet) {
         CHANNEL.sendToServer(packet);
     }
+
+    // v1.0.3 C2S 限流：每玩家每 5 tick（0.25 秒）最多处理 1 个 C2S 请求，
+    // 防作弊客户端高频伪造请求造成带宽/主线程放大（加点/重置本身有业务校验，不受影响）
+    private static final java.util.Map<java.util.UUID, Long> LAST_C2S_TICK = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /** C2S 包 handle 开头调用：返回 true 表示该请求应被丢弃（限流） */
+    public static boolean isThrottled(ServerPlayer player) {
+        if (player == null || player.getServer() == null) {
+            return false;
+        }
+        long tick = player.getServer().getTickCount();
+        Long last = LAST_C2S_TICK.get(player.getUUID());
+        if (last != null && tick - last < 5) {
+            return true;
+        }
+        LAST_C2S_TICK.put(player.getUUID(), tick);
+        return false;
+    }
 }

@@ -56,7 +56,8 @@ public final class ModEnchantments {
             // TaCZ 枪械（无 tacz 时安全返回 false）
             try {
                 return com.tacz.guns.api.item.IGun.getIGunOrNull(stack) != null;
-            } catch (Throwable t) {
+            } catch (NoClassDefFoundError e) {
+                // v1.0.3 只吞 tacz 缺失（可选依赖兼容）；其余异常正常抛出便于定位
                 return false;
             }
         }

@@ -19,7 +19,7 @@ public class C2SRequestSync {
         NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
-            if (player != null) {
+            if (player != null && !NetworkHandler.isThrottled(player)) {
                 NetworkHandler.sendTo(player, S2CSyncData.from(player));
             }
         });

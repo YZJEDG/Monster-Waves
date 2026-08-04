@@ -15,6 +15,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -89,7 +90,9 @@ public final class MobSpawnManager {
                     types.add(type);
                     weights.add(weight);
                 }
-            } catch (NumberFormatException ignored) {
+            } catch (NumberFormatException e) {
+                // v1.0.3 不再静默丢弃：非法权重条目记 debug 日志，便于定位配置错误
+                MonsterWavesMod.LOGGER.debug("MW 怪物池权重非法，已跳过：{}", entry);
             }
         }
     }
@@ -130,8 +133,9 @@ public final class MobSpawnManager {
         int tx = (int) Math.floor(player.getX() + Math.cos(angle) * dist);
         int tz = (int) Math.floor(player.getZ() + Math.sin(angle) * dist);
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-        int startY = (int) Math.ceil(player.getY()) + 5;
-        for (int y = startY; y > level.getMinBuildHeight(); y--) {
+        // v1.0.3 从地表最高实心块往下找，避免从天空逐格扫到世界底部（getHeight 一次定位）
+        int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, tx, tz) + 1;
+        for (; y > level.getMinBuildHeight(); y--) {
             pos.set(tx, y, tz);
             if (!level.isLoaded(pos)) {
                 break;

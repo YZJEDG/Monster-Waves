@@ -20,7 +20,7 @@ public class C2SResetAll {
         NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
-            if (player != null) {
+            if (player != null && !NetworkHandler.isThrottled(player)) {
                 PlayerDataManager.resetAll(player, true);
                 NetworkHandler.sendTo(player, S2CSyncData.from(player));
             }
