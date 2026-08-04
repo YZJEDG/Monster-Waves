@@ -27,3 +27,14 @@ libs/
 
 # Playwright 浏览器验证临时文件
 .playwright-mcp/
+
+# 错误报告 / 崩溃日志（调试产物，不入库）
+.errreport/
+错误报告-*.zip
+crash-*.txt
+
+# FTB jar 下载缓存（maven 可重新获取，不入库）
+.ftbdl/
+
+# 杂项素材（不入库）
+martirals/
