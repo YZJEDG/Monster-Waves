@@ -134,6 +134,11 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public boolean enabled = true;
 
+    /** 配置文件自动热更新：检测 config/monsterwaves.json5 修改后自动重载（每 5 秒轮询 mtime），无需重启/指令 */
+    @ConfigEntry.Category("general")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean configAutoReload = true;
+
     // ===== 生成设置（spawn）=====
     @ConfigEntry.Category("spawn")
     @ConfigEntry.Gui.Tooltip()

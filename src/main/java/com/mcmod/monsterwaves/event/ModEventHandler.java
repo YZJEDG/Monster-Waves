@@ -104,6 +104,8 @@ public final class ModEventHandler {
         }
         MinecraftServer server = event.getServer();
         StageManager.serverTick(server);
+        // 配置文件自动热更新（改 monsterwaves.json5 后自动生效）
+        com.mcmod.monsterwaves.config.ConfigHotReload.tick(server);
         // Boss 血条进度更新/清理
         com.mcmod.monsterwaves.mob.BossManager.tick(server);
         // 怪物传送（防溢出，仅 mod 维度）
