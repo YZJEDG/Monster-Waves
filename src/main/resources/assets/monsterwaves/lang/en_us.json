@@ -156,8 +156,4 @@
   "text.autoconfig.monsterwaves.option.maxElitesPerPlayer.@Tooltip": "Max elites (incl. bosses) within mobStatRadius of a player; -1 = unlimited",
   "text.autoconfig.monsterwaves.option.maxBossesPerPlayer": "Max Bosses per Player",
   "text.autoconfig.monsterwaves.option.maxBossesPerPlayer.@Tooltip": "Max bosses within mobStatRadius of a player; -1 = unlimited",
-  "text.autoconfig.monsterwaves.option.eliteScale": "Elite Scale",
-  "text.autoconfig.monsterwaves.option.eliteScale.@Tooltip": "Render scale (1.0 = original, 1.3 = 1.3x larger); hitbox unchanged",
-  "text.autoconfig.monsterwaves.option.bossScale": "Boss Scale",
-  "text.autoconfig.monsterwaves.option.bossScale.@Tooltip": "Render scale (1.0 = original, 2.0 = 2x larger); hitbox unchanged"
 }

@@ -499,16 +499,6 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public int maxBossesPerPlayer = 1;
 
-    /** 精英体型缩放（渲染倍率，1.0=原大小） */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
-    public double eliteScale = 1.3;
-
-    /** Boss 体型缩放（渲染倍率，1.0=原大小） */
-    @ConfigEntry.Category("eliteBoss")
-    @ConfigEntry.Gui.Tooltip()
-    public double bossScale = 2.0;
-
     // ===== 怪物传送（mobTeleport，仅本 mod 生成的维度生效）=====
 
     /** 怪物传送开关（怪远离玩家时拉回，防溢出；任何启用生成引擎的维度 + 仅本 mod 生成的怪） */

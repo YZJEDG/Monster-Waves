@@ -40,9 +40,3 @@ description='''
     ordering="NONE"
     side="CLIENT"
 
-[[dependencies.${mod_id}]]
-    modId="customhitboxlib"
-    mandatory=true
-    versionRange="[1,)"
-    ordering="NONE"
-    side="BOTH"

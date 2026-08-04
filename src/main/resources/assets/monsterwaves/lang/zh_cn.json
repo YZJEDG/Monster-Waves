@@ -156,8 +156,4 @@
   "text.autoconfig.monsterwaves.option.maxElitesPerPlayer.@Tooltip": "玩家周围 mobStatRadius 范围内精英（含Boss）数量上限；-1=不限",
   "text.autoconfig.monsterwaves.option.maxBossesPerPlayer": "Boss数量上限",
   "text.autoconfig.monsterwaves.option.maxBossesPerPlayer.@Tooltip": "玩家周围 mobStatRadius 范围内 Boss 数量上限；-1=不限",
-  "text.autoconfig.monsterwaves.option.eliteScale": "精英体型缩放",
-  "text.autoconfig.monsterwaves.option.eliteScale.@Tooltip": "渲染倍率（1.0=原大小，1.3=1.3倍大）；碰撞箱不变",
-  "text.autoconfig.monsterwaves.option.bossScale": "Boss体型缩放",
-  "text.autoconfig.monsterwaves.option.bossScale.@Tooltip": "渲染倍率（1.0=原大小，2.0=2倍大）；碰撞箱不变"
 }

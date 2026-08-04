@@ -40,8 +40,6 @@ public class MonsterWavesMod {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             MinecraftForge.EVENT_BUS.register(com.mcmod.monsterwaves.client.ClientEvents.class);
             modBus.register(com.mcmod.monsterwaves.client.KeyBindings.class);
-            // 精英/Boss 体型缩放（RenderLivingEvent，客户端）
-            MinecraftForge.EVENT_BUS.register(com.mcmod.monsterwaves.client.MobScaleRenderer.class);
         });
         // 符咒加入创造物品栏「战斗用品」（mod 总线事件）
         modBus.addListener(com.mcmod.monsterwaves.item.ModItems::onBuildCreativeTab);

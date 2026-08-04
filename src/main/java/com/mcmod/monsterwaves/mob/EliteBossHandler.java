@@ -60,23 +60,20 @@ public final class EliteBossHandler {
     public static void makeElite(Mob mob) {
         MWConfig cfg = MWConfig.get();
         upgrade(mob, ELITE_KEY, PREFIX_ELITE,
-                cfg.eliteHealthMultiplier, cfg.eliteAttackMultiplier, cfg.eliteArmorMultiplier,
-                (float) cfg.eliteScale);
+                cfg.eliteHealthMultiplier, cfg.eliteAttackMultiplier, cfg.eliteArmorMultiplier);
     }
 
-    /** 升级为 Boss（含 Boss 血条；碰撞箱从精英基础上放大到 bossScale） */
+    /** 升级为 Boss（含 Boss 血条） */
     public static void makeBoss(Mob mob) {
         MWConfig cfg = MWConfig.get();
         upgrade(mob, BOSS_KEY, PREFIX_BOSS,
-                cfg.bossHealthMultiplier, cfg.bossAttackMultiplier, cfg.bossArmorMultiplier,
-                (float) (cfg.bossScale / Math.max(0.1, cfg.eliteScale)));
+                cfg.bossHealthMultiplier, cfg.bossAttackMultiplier, cfg.bossArmorMultiplier);
         BossManager.show(mob);
     }
 
     /** 属性乘算 + 名字变色 + 发光 + 碰撞箱缩放（幂等：已有标记则跳过） */
     private static void upgrade(Mob mob, String key, String prefix,
-                                double hpMult, double atkMult, double armMult,
-                                float collisionFactor) {
+                                double hpMult, double atkMult, double armMult) {
         var data = mob.getPersistentData();
         if (data.getBoolean(key)) {
             return;
@@ -106,27 +103,6 @@ public final class EliteBossHandler {
         mob.setCustomNameVisible(true);
         // 发光（长期，无粒子）
         mob.addEffect(new MobEffectInstance(MobEffects.GLOWING, 999999, 0, false, false, false));
-        // 碰撞箱缩放（CustomHitboxLib；Boss 传 bossScale/eliteScale 从精英基础上放大）
-        applyHitboxScale(mob, collisionFactor);
-    }
-
-    /** 碰撞箱缩放（v10.3）：改用 CustomHitboxLib——附加放大尺寸的子碰撞箱（伤害自动转发主体，库处理同步）。
-     * 底部对齐（怪变大脚不离地）；Boss 从精英基础上放大（比例法，见 makeBoss）。 */
-    private static void applyHitboxScale(Mob mob, float scale) {
-        if (scale <= 0 || Math.abs(scale - 1.0f) < 0.001f) {
-            return;
-        }
-        try {
-            net.minecraft.world.entity.EntityDimensions base = mob.getDimensions(mob.getPose());
-            net.minecraft.world.entity.EntityDimensions scaled = new net.minecraft.world.entity.EntityDimensions(
-                    base.width * scale, base.height * scale, base.fixed);
-            double yOffset = (scaled.height - base.height) / 2.0; // 底部对齐
-            dev.customhitboxlib.api.MultipartHelper.removePart(mob, "monsterwaves_scale");
-            dev.customhitboxlib.api.MultipartHelper.addPart(mob, "monsterwaves_scale", scaled,
-                    dev.customhitboxlib.api.PartPositioners.relativeTo(mob, 0, yOffset, 0));
-        } catch (Throwable e) {
-            com.mcmod.monsterwaves.MonsterWavesMod.LOGGER.warn("MW 碰撞箱缩放失败: {}", e.toString());
-        }
     }
 
     public static boolean isElite(LivingEntity e) {
@@ -147,22 +123,5 @@ public final class EliteBossHandler {
             return cfg.eliteXpMultiplier;
         }
         return 1.0;
-    }
-
-    /** 体型缩放（渲染倍率，供客户端 RenderLivingEvent 缩放）：Boss > 精英 > 1.0。
-     * 注意：客户端实体无 NBT 标记（persistentData 不同步），改用**自定义名前缀**判断（customName 同步）。 */
-    public static float getScale(LivingEntity e) {
-        MWConfig cfg = MWConfig.get();
-        if (e == null || !e.hasCustomName()) {
-            return 1.0f;
-        }
-        String name = e.getCustomName().getString();
-        if (name.startsWith(PREFIX_BOSS)) {
-            return (float) cfg.bossScale;
-        }
-        if (name.startsWith(PREFIX_ELITE)) {
-            return (float) cfg.eliteScale;
-        }
-        return 1.0f;
     }
 }
