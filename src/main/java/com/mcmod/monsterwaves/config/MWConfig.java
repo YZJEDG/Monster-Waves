@@ -317,9 +317,9 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public boolean arenaEnabled = true;
 
-    /** 刷怪维度出生点 Y（X/Z 固定为 0） */
+    /** 刷怪维度出生点 Y（X/Z 固定为 0；配合超平坦地表 y=63，海平面以上避免光影把低处当地下而变暗） */
     @ConfigEntry.Category("arena")
-    public int arenaSpawnY = 4;
+    public int arenaSpawnY = 64;
 
     // ===== 大范围拾取（pickup）=====
     /** 大范围拾取总开关 */
