@@ -67,6 +67,10 @@ public final class MonsterWavesCommand {
             SharedSuggestionProvider.suggest(
                     StageManager.getStages().stream().map(StageManager.Stage::id).toList(), builder);
 
+    /** Tab 补全：白名单属性注册名（attributeConfigs 键，含 tacz 等模组属性） */
+    private static final SuggestionProvider<CommandSourceStack> SUGGEST_ATTRIBUTES = (ctx, builder) ->
+            SharedSuggestionProvider.suggest(MWConfig.get().attributeConfigs.keySet(), builder);
+
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("monsterwaves")
                 .then(Commands.literal("spawn")
@@ -119,6 +123,7 @@ public final class MonsterWavesCommand {
                                 .then(Commands.argument("player", EntityArgument.player())
                                         .executes(MonsterWavesCommand::skillResetAll)
                                         .then(Commands.argument("attribute", StringArgumentType.string())
+                                                .suggests(SUGGEST_ATTRIBUTES)
                                                 .executes(MonsterWavesCommand::skillResetAttr))))
                         .then(Commands.literal("gui")
                                 .executes(MonsterWavesCommand::skillGui)))
