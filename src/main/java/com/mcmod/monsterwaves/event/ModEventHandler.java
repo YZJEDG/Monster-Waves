@@ -287,10 +287,12 @@ public final class ModEventHandler {
                 && entity instanceof net.minecraft.world.entity.Mob bossMob) {
             com.mcmod.monsterwaves.mob.BossManager.hide(bossMob);
         }
-        // 统一掉落
-        dropLoot(entity, level, difficulty, owner);
-        // v1.0.9 延迟移除 UUID 追踪（下 tick 执行，确保 LivingDropsEvent 掉落拦截先完成）
-        level.getServer().execute(() -> MobSpawnManager.untrack(entity.getUUID()));
+        // 统一掉落（v1.0.12：只对本 mod 生成的生物生效；原版/其他 mod 生物不受本 mod 掉落系统影响）
+        if (MobSpawnManager.isTracked(entity)) {
+            dropLoot(entity, level, difficulty, owner);
+            // v1.0.9 延迟移除 UUID 追踪（下 tick 执行，确保 LivingDropsEvent 掉落过滤先完成）
+            level.getServer().execute(() -> MobSpawnManager.untrack(entity.getUUID()));
+        }
     }
 
     /** 原版掉落过滤 + 归属标记：只追踪本 mod 生成的怪（UUID 集合 + NBT 双判断，兼容任意 mod 生物） */
