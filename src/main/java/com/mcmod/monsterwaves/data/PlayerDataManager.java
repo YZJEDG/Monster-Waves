@@ -23,7 +23,7 @@ import java.util.UUID;
  * - 已分配点数存 monsterwaves_data.allocated（属性注册名 → 点数）
  * - 旧属性球数据（attributes 段）首次访问时一次性迁移：
  *   每属性值/2 → 已分配点数（向下取整），另补偿"原属性球拾取数量 × 20%"技能点
- * - 属性应用：每点 +1（ADDITION）；百分比属性（配置 percentageAttributes）每点 +percentagePerPoint（MULTIPLY_TOTAL）
+ * - 属性应用：每点 +1（ADDITION）；百分比属性（attributeConfigs 中 percentage=true）每点 +percentagePerPoint（MULTIPLY_TOTAL）
  * - 获取模式：LEVEL（升级得点）/ XP（积累经验得点）/ DISABLED，均由事件驱动；外部可监听 SkillPointGainEvent 自定义算法
  */
 public final class PlayerDataManager {
@@ -51,6 +51,15 @@ public final class PlayerDataManager {
         return root.getCompound(DATA_KEY);
     }
 
+    /** 确保 allocated 段存在并返回其引用（getCompound 对缺失键返回临时对象，直接 putInt 会丢失！） */
+    private static CompoundTag allocatedTag(Player player) {
+        CompoundTag d = mutable(player);
+        if (!d.contains(ALLOCATED_KEY)) {
+            d.put(ALLOCATED_KEY, new CompoundTag());
+        }
+        return d.getCompound(ALLOCATED_KEY);
+    }
+
     /** 首次访问迁移旧属性球数据（一次性；无旧数据则仅打迁移标记） */
     public static void migrateIfNeeded(Player player) {
         if (player.level().isClientSide) {
@@ -66,7 +75,7 @@ public final class PlayerDataManager {
         }
         CompoundTag old = d.getCompound(OLD_ATTRIBUTES_KEY);
         if (!old.isEmpty()) {
-            CompoundTag allocated = d.getCompound(ALLOCATED_KEY);
+            CompoundTag allocated = allocatedTag(player);
             int total = 0;
             for (String k : old.getAllKeys()) {
                 int v = old.getInt(k);
@@ -76,7 +85,6 @@ public final class PlayerDataManager {
                     allocated.putInt(k, allocated.getInt(k) + points);
                 }
             }
-            d.put(ALLOCATED_KEY, allocated);
             // 补偿：原属性球拾取数量（=各属性值总和）的 20%
             int bonus = (int) Math.floor(total * 0.2);
             d.putInt(POINTS_KEY, d.getInt(POINTS_KEY) + bonus);
@@ -162,7 +170,8 @@ public final class PlayerDataManager {
             return false;
         }
         int allocated = getAllocated(player, attrId);
-        if (cfg.perAttributeMaxPoints >= 0 && allocated >= cfg.perAttributeMaxPoints) {
+        int maxPts = maxPoints(attrId);
+        if (maxPts >= 0 && allocated >= maxPts) {
             return false;
         }
         if (cfg.maxTotalPoints >= 0 && totalAllocated(player) >= cfg.maxTotalPoints) {
@@ -179,7 +188,7 @@ public final class PlayerDataManager {
         if (!spendPoints(player, spent.getAmount())) {
             return false;
         }
-        mutable(player).getCompound(ALLOCATED_KEY).putInt(attrId, allocated + 1);
+        allocatedTag(player).putInt(attrId, allocated + 1);
         applyModifier(player, attr, allocated + 1);
         return true;
     }
@@ -222,7 +231,7 @@ public final class PlayerDataManager {
         if (MinecraftForge.EVENT_BUS.post(event)) {
             return 0;
         }
-        mutable(player).getCompound(ALLOCATED_KEY).remove(attrId);
+        allocatedTag(player).remove(attrId);
         mutable(player).putInt(POINTS_KEY, getPoints(player) + allocated);
         Attribute attr = resolveAttribute(attrId);
         if (attr != null) {
@@ -263,8 +272,7 @@ public final class PlayerDataManager {
         UUID uuid = uuidFor(attr);
         inst.removeModifier(uuid);
         MWConfig cfg = MWConfig.get();
-        boolean percentage = cfg.percentageAttributes.contains(
-                ForgeRegistries.ATTRIBUTES.getKey(attr).toString());
+        boolean percentage = isPercentage(ForgeRegistries.ATTRIBUTES.getKey(attr).toString());
         AttributeModifier mod;
         if (percentage) {
             mod = new AttributeModifier(uuid, "monsterwaves_skill",
@@ -294,10 +302,22 @@ public final class PlayerDataManager {
         return ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.tryParse(attrId));
     }
 
-    /** 属性是否可加点（配置 attributeEnabled 为空=全部可加） */
+    /** 属性是否可加点：白名单（attributeConfigs）中存在且 enabled=true */
     public static boolean isEnabled(String attrId) {
-        Map<String, Boolean> m = MWConfig.get().attributeEnabled;
-        return m.isEmpty() || m.getOrDefault(attrId, true);
+        MWConfig.AttributeConfig cfg = MWConfig.get().attributeConfigs.get(attrId);
+        return cfg != null && cfg.enabled;
+    }
+
+    /** 属性加点上限（白名单外返回 0=不可加） */
+    public static int maxPoints(String attrId) {
+        MWConfig.AttributeConfig cfg = MWConfig.get().attributeConfigs.get(attrId);
+        return cfg == null ? 0 : cfg.maxPoints;
+    }
+
+    /** 属性是否百分比加成 */
+    public static boolean isPercentage(String attrId) {
+        MWConfig.AttributeConfig cfg = MWConfig.get().attributeConfigs.get(attrId);
+        return cfg != null && cfg.percentage;
     }
 
     /** 属性显示名：配置 attributeDisplayNames > 原版属性名 > 注册名 */

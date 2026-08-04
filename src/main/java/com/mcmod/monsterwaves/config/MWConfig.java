@@ -144,11 +144,6 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public int maxTotalPoints = -1;
 
-    /** 单属性加点上限 */
-    @ConfigEntry.Category("skillSystem")
-    @ConfigEntry.Gui.Tooltip()
-    public int perAttributeMaxPoints = 50;
-
     /** 打开加点界面的按键（KeyMapping 名称，如 key.keyboard.p） */
     @ConfigEntry.Category("skillSystem")
     public String keyBinding = "key.keyboard.p";
@@ -164,14 +159,39 @@ public class MWConfig implements ConfigData {
             "minecraft:generic.attack_speed", "攻击速度",
             "minecraft:generic.luck", "幸运"));
 
-    /** 禁用加点的属性（注册名→false）；空=全部可加 */
-    @ConfigEntry.Category("skillSystem")
-    public Map<String, Boolean> attributeEnabled = new java.util.HashMap<>();
-
-    /** 百分比属性（注册名）：每点按百分比加成，避免基础值极低属性被数值加点破坏 */
+    /**
+     * 属性加点白名单（属性注册名 → 配置）。**未列出的属性不可加点**，开发者可自行增删。
+     * 默认：攻击/护甲/生命/速度/挖掘速度/攻击速度。
+     * 注：1.20.1 原版无 block_break_speed（挖掘速度）属性（1.21+），模组提供同名属性则自动生效。
+     */
     @ConfigEntry.Category("skillSystem")
     @ConfigEntry.Gui.Tooltip()
-    public List<String> percentageAttributes = new ArrayList<>(List.of("minecraft:generic.movement_speed"));
+    public Map<String, AttributeConfig> attributeConfigs = new java.util.HashMap<>(Map.of(
+            "minecraft:generic.attack_damage", new AttributeConfig(true, false, 50),
+            "minecraft:generic.armor", new AttributeConfig(true, false, 50),
+            "minecraft:generic.max_health", new AttributeConfig(true, false, 50),
+            "minecraft:generic.movement_speed", new AttributeConfig(true, true, 50),
+            "minecraft:generic.attack_speed", new AttributeConfig(true, false, 50),
+            "minecraft:generic.block_break_speed", new AttributeConfig(true, false, 50)));
+
+    /** 单属性加点配置 */
+    public static class AttributeConfig {
+        /** 是否允许加点 */
+        public boolean enabled = true;
+        /** 是否百分比加成（每点 +percentagePerPoint，适合移动速度等低基础值属性） */
+        public boolean percentage = false;
+        /** 该属性加点上限（-1=无限） */
+        public int maxPoints = 50;
+
+        public AttributeConfig() {
+        }
+
+        public AttributeConfig(boolean enabled, boolean percentage, int maxPoints) {
+            this.enabled = enabled;
+            this.percentage = percentage;
+            this.maxPoints = maxPoints;
+        }
+    }
 
     /** 百分比属性每点加成比例（0.1 = +10%） */
     @ConfigEntry.Category("skillSystem")

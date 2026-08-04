@@ -21,7 +21,7 @@ public final class ClientEvents {
             Minecraft mc = Minecraft.getInstance();
             if (mc.player != null && mc.screen == null) {
                 NetworkHandler.sendToServer(new C2SRequestSync());
-                mc.setScreen(new SkillScreen());
+                new SkillScreen().openGui();
             }
         }
     }

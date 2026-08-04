@@ -32,3 +32,10 @@ description='''
     versionRange="[11.1.118,)"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="ftblibrary"
+    mandatory=true
+    versionRange="[1,)"
+    ordering="NONE"
+    side="CLIENT"

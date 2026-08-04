@@ -21,16 +21,10 @@
   "text.autoconfig.monsterwaves.option.xpPerPoint.@Tooltip": "XP 模式下每获得多少经验给 1 技能点",
   "text.autoconfig.monsterwaves.option.maxTotalPoints": "总分配上限",
   "text.autoconfig.monsterwaves.option.maxTotalPoints.@Tooltip": "全部属性可分配点数总和上限（-1 = 无限）",
-  "text.autoconfig.monsterwaves.option.perAttributeMaxPoints": "单属性加点上限",
-  "text.autoconfig.monsterwaves.option.perAttributeMaxPoints.@Tooltip": "单个属性最多可分配的技能点数",
   "text.autoconfig.monsterwaves.option.keyBinding": "加点界面按键",
   "text.autoconfig.monsterwaves.option.keyBinding.@Tooltip": "KeyMapping 名称（如 key.keyboard.p），重启生效",
   "text.autoconfig.monsterwaves.option.attributeDisplayNames": "属性显示名",
   "text.autoconfig.monsterwaves.option.attributeDisplayNames.@Tooltip": "属性注册名 → 显示名（缺省用原版属性名）",
-  "text.autoconfig.monsterwaves.option.attributeEnabled": "禁用加点属性",
-  "text.autoconfig.monsterwaves.option.attributeEnabled.@Tooltip": "属性注册名 → false 表示该属性不可加点；留空 = 全部可加",
-  "text.autoconfig.monsterwaves.option.percentageAttributes": "百分比属性",
-  "text.autoconfig.monsterwaves.option.percentageAttributes.@Tooltip": "这些属性每点按百分比加成（默认 +10%/点），避免移动速度等低基础值属性被数值加点破坏",
   "text.autoconfig.monsterwaves.option.percentagePerPoint": "百分比属性每点加成",
   "text.autoconfig.monsterwaves.option.percentagePerPoint.@Tooltip": "百分比属性每点加成比例（0.1 = +10%）",
   "text.autoconfig.monsterwaves.option.resetCostPoints": "重置消耗",
@@ -114,5 +108,10 @@
   "text.autoconfig.monsterwaves.option.healthBonusPerLevel": "每点难度生命增幅",
   "text.autoconfig.monsterwaves.option.attackBonusPerLevel": "每点难度攻击增幅",
   "text.autoconfig.monsterwaves.option.armorBonusPerLevel": "每点难度护甲增幅",
-  "text.autoconfig.monsterwaves.option.resetEnabled.@Tooltip": "关闭后界面重置按钮不可用（指令 skill reset 不受影响）"
+  "text.autoconfig.monsterwaves.option.resetEnabled.@Tooltip": "关闭后界面重置按钮不可用（指令 skill reset 不受影响）",
+  "text.autoconfig.monsterwaves.option.attributeConfigs": "属性加点配置",
+  "text.autoconfig.monsterwaves.option.attributeConfigs.@Tooltip": "白名单：属性注册名→配置（enabled 是否可加 / percentage 是否百分比 / maxPoints 上限）。未列出的属性不可加点",
+  "text.autoconfig.monsterwaves.option.attributeConfigs.enabled": "允许加点",
+  "text.autoconfig.monsterwaves.option.attributeConfigs.percentage": "百分比加成",
+  "text.autoconfig.monsterwaves.option.attributeConfigs.maxPoints": "加点上限"
 }
