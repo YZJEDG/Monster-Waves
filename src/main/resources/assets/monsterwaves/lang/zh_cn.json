@@ -156,4 +156,17 @@
   "text.autoconfig.monsterwaves.option.maxElitesPerPlayer.@Tooltip": "玩家周围 mobStatRadius 范围内精英（含Boss）数量上限；-1=不限",
   "text.autoconfig.monsterwaves.option.maxBossesPerPlayer": "Boss数量上限",
   "text.autoconfig.monsterwaves.option.maxBossesPerPlayer.@Tooltip": "玩家周围 mobStatRadius 范围内 Boss 数量上限；-1=不限",
+  "enchantment.monsterwaves.pain_transference": "苦痛传递",
+  "text.autoconfig.monsterwaves.category.enchantment": "附魔",
+  "text.autoconfig.monsterwaves.option.painTransferenceEnabled": "苦痛传递附魔开关",
+  "text.autoconfig.monsterwaves.option.painTransferenceMaxLevel": "最大等级",
+  "text.autoconfig.monsterwaves.option.painTransferenceBaseRadius": "传递基础半径",
+  "text.autoconfig.monsterwaves.option.painTransferenceRadiusPerLevel": "每级半径加成",
+  "text.autoconfig.monsterwaves.option.painTransferenceBaseDamagePercent": "传递基础伤害百分比",
+  "text.autoconfig.monsterwaves.option.painTransferenceDamagePercentPerLevel": "每级伤害百分比加成",
+  "text.autoconfig.monsterwaves.option.painTransferenceAffectSameTypeOnly": "只传递同类型怪",
+  "text.autoconfig.monsterwaves.option.painTransferenceAffectEliteBoss": "传递作用于精英/Boss",
+  "text.autoconfig.monsterwaves.option.painTransferenceExcludeSource": "排除目标自身",
+  "text.autoconfig.monsterwaves.option.painTransferenceCooldown": "触发冷却",
+  "text.autoconfig.monsterwaves.option.painTransferenceDamageSourceMessage": "伤害源标识"
 }

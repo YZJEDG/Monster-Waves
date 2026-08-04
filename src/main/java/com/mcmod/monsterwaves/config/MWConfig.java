@@ -525,4 +525,61 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("mobTeleport")
     @ConfigEntry.Gui.Tooltip()
     public int teleportCheckInterval = 10;
+
+    // ===== 苦痛传递附魔（enchantment，v10.5，设计见 mod概述.md 第 13 节）=====
+
+    /** 苦痛传递附魔总开关 */
+    @ConfigEntry.Category("enchantment")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean painTransferenceEnabled = true;
+
+    /** 苦痛传递最大等级 */
+    @ConfigEntry.Category("enchantment")
+    @ConfigEntry.Gui.Tooltip()
+    public int painTransferenceMaxLevel = 5;
+
+    /** 传递范围基础半径（格） */
+    @ConfigEntry.Category("enchantment")
+    @ConfigEntry.Gui.Tooltip()
+    public double painTransferenceBaseRadius = 4.0;
+
+    /** 每级半径加成 */
+    @ConfigEntry.Category("enchantment")
+    @ConfigEntry.Gui.Tooltip()
+    public double painTransferenceRadiusPerLevel = 1.0;
+
+    /** 传递伤害基础百分比（0.15 = 主伤害的 15%） */
+    @ConfigEntry.Category("enchantment")
+    @ConfigEntry.Gui.Tooltip()
+    public double painTransferenceBaseDamagePercent = 0.15;
+
+    /** 每级伤害百分比加成 */
+    @ConfigEntry.Category("enchantment")
+    @ConfigEntry.Gui.Tooltip()
+    public double painTransferenceDamagePercentPerLevel = 0.05;
+
+    /** 只传递给同类型怪物 */
+    @ConfigEntry.Category("enchantment")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean painTransferenceAffectSameTypeOnly = false;
+
+    /** 传递伤害是否作用于精英/Boss */
+    @ConfigEntry.Category("enchantment")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean painTransferenceAffectEliteBoss = true;
+
+    /** 排除目标自身（不传递给被直接命中的目标） */
+    @ConfigEntry.Category("enchantment")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean painTransferenceExcludeSource = true;
+
+    /** 触发冷却（tick，0=无冷却） */
+    @ConfigEntry.Category("enchantment")
+    @ConfigEntry.Gui.Tooltip()
+    public int painTransferenceCooldown = 0;
+
+    /** 伤害源标识（调试用，自定义伤害源 msgId） */
+    @ConfigEntry.Category("enchantment")
+    @ConfigEntry.Gui.Tooltip()
+    public String painTransferenceDamageSourceMessage = "pain_transference";
 }

@@ -77,6 +77,8 @@ dependencies {
     implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:11.1.136")
     // v9.3 技能点加点界面（FTB Library，仅客户端 GUI 使用；2001=1.20.1 版本线，maven 可用的最新为 2001.1.1-build.1）
     implementation fg.deobf("dev.ftb.mods:ftb-library-forge:2001.1.1-build.1")
+    // v10.5 枪械附魔（TaCZ API 编译依赖；运行时由 mods 目录提供）
+    compileOnly files("libs/tacz-1.20.1-1.1.8-hotfix.jar")
 }
 
 tasks.named("processResources", ProcessResources).configure {

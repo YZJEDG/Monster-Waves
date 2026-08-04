@@ -156,4 +156,17 @@
   "text.autoconfig.monsterwaves.option.maxElitesPerPlayer.@Tooltip": "Max elites (incl. bosses) within mobStatRadius of a player; -1 = unlimited",
   "text.autoconfig.monsterwaves.option.maxBossesPerPlayer": "Max Bosses per Player",
   "text.autoconfig.monsterwaves.option.maxBossesPerPlayer.@Tooltip": "Max bosses within mobStatRadius of a player; -1 = unlimited",
+  "enchantment.monsterwaves.pain_transference": "Pain Transference",
+  "text.autoconfig.monsterwaves.category.enchantment": "Enchantment",
+  "text.autoconfig.monsterwaves.option.painTransferenceEnabled": "Pain Transference Enabled",
+  "text.autoconfig.monsterwaves.option.painTransferenceMaxLevel": "Max Level",
+  "text.autoconfig.monsterwaves.option.painTransferenceBaseRadius": "Base Radius",
+  "text.autoconfig.monsterwaves.option.painTransferenceRadiusPerLevel": "Radius Per Level",
+  "text.autoconfig.monsterwaves.option.painTransferenceBaseDamagePercent": "Base Damage Percent",
+  "text.autoconfig.monsterwaves.option.painTransferenceDamagePercentPerLevel": "Damage Percent Per Level",
+  "text.autoconfig.monsterwaves.option.painTransferenceAffectSameTypeOnly": "Affect Same Type Only",
+  "text.autoconfig.monsterwaves.option.painTransferenceAffectEliteBoss": "Affect Elite/Boss",
+  "text.autoconfig.monsterwaves.option.painTransferenceExcludeSource": "Exclude Source",
+  "text.autoconfig.monsterwaves.option.painTransferenceCooldown": "Cooldown",
+  "text.autoconfig.monsterwaves.option.painTransferenceDamageSourceMessage": "Damage Source Message"
 }

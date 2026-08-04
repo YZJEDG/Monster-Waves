@@ -43,6 +43,10 @@ public class MonsterWavesMod {
         });
         // 符咒加入创造物品栏「战斗用品」（mod 总线事件）
         modBus.addListener(com.mcmod.monsterwaves.item.ModItems::onBuildCreativeTab);
+        // v10.5 苦痛传递附魔注册（mod 总线）
+        com.mcmod.monsterwaves.enchant.ModEnchantments.register(modBus);
+        // 苦痛传递触发（Forge 总线：近战/箭/枪）
+        MinecraftForge.EVENT_BUS.register(com.mcmod.monsterwaves.enchant.PainTransferenceHandler.class);
         // 注册 Cloth Config 配置（config/monsterwaves.json5，GUI 自动集成 Mods 列表）
         // JSON 配置（config/monsterwaves.json）：贴合主流配置格式（其他 mod 多用 toml/json）；
         // Forge 原生 serverconfig(TOML) 不支持 Map/嵌套对象（attributeConfigs），故用 Cloth + Gson 序列化器保留全部结构与 GUI。

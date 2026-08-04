@@ -40,3 +40,10 @@ description='''
     ordering="NONE"
     side="CLIENT"
 
+[[dependencies.${mod_id}]]
+    modId="tacz"
+    mandatory=false
+    versionRange="[1,)"
+    ordering="NONE"
+    side="BOTH"
+
