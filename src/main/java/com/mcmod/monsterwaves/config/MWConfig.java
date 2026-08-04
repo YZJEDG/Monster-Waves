@@ -184,9 +184,8 @@ public class MWConfig implements ConfigData {
             "minecraft:creeper:2"));
 
     // ===== 阶段系统（stage）=====
-    /** 阶段列表（可分别调整各阶段难度/时长/怪物池/属性倍率/BUFF；字段见开发手册"阶段字段"表） */
-    @ConfigEntry.Category("stage")
-    @ConfigEntry.Gui.Tooltip()
+    /** 阶段列表（可分别调整各阶段难度/时长/怪物池/属性倍率/BUFF；字段见开发手册"阶段字段"表；v1.3.1 移出 GUI——嵌套 AttributeMultipliers 无 GUI provider 导致打开配置界面卡死，请直接改 json5，阶段切换用指令 stage set） */
+    @ConfigEntry.Gui.Excluded
     public List<StageConfig> stages = buildDefaultStages();
 
     /**
@@ -330,8 +329,8 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Category("skillSystem")
     public String keyBinding = "key.keyboard.p";
 
-    /** 属性显示名（属性注册名→显示名；缺省用原版属性名） */
-    @ConfigEntry.Category("skillSystem")
+    /** 属性显示名（属性注册名→显示名；缺省用原版属性名；v1.3.1 移出 GUI——Map 无 GUI provider，直接改 json5） */
+    @ConfigEntry.Gui.Excluded
     public Map<String, String> attributeDisplayNames = new java.util.HashMap<>(Map.ofEntries(
             Map.entry("minecraft:generic.attack_damage", "攻击力"),
             Map.entry("minecraft:generic.max_health", "最大生命"),
@@ -350,8 +349,7 @@ public class MWConfig implements ConfigData {
      * 默认：攻击/护甲/生命/速度/挖掘速度/攻击速度 + **额外属性** tacz 射速/换弹（百分比型，测试 TaCZ 对接）。
      * 注：1.20.1 原版无 block_break_speed（挖掘速度）属性（1.21+），模组提供同名属性则自动生效。
      */
-    @ConfigEntry.Category("skillSystem")
-    @ConfigEntry.Gui.Tooltip()
+    @ConfigEntry.Gui.Excluded
     public Map<String, AttributeConfig> attributeConfigs = new java.util.HashMap<>(Map.ofEntries(
             // 默认全部百分比加成（每点 +percentagePerPoint；每属性可单独改回数值/幅度/上限）
             Map.entry("minecraft:generic.attack_damage", new AttributeConfig(true, true, 50)),
