@@ -183,6 +183,8 @@ public final class MobSpawnManager {
         }
         mob.getPersistentData().putBoolean(MARKER, true);
         applyDifficultyTo(mob, difficulty, stage);
+        // 精英/Boss 升级（v9.2+ 第三阶段）
+        com.mcmod.monsterwaves.mob.EliteBossHandler.tryUpgrade(mob, difficulty);
         MonsterWavesMod.LOGGER.debug("MW 已生成 {} 于 {}", type, pos);
     }
 

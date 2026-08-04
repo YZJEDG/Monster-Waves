@@ -406,4 +406,71 @@ public class MWConfig implements ConfigData {
 
     @ConfigEntry.Category("safe")
     public int fallDestinationZ = 0;
+
+    // ===== 精英怪 / Boss（第三阶段）=====
+
+    /** 精英怪开关 */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean eliteEnabled = true;
+
+    /** 精英怪概率（每只生成怪；随难度提升） */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public double eliteChance = 0.02;
+
+    /** 精英生命倍率 */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public double eliteHealthMultiplier = 3.0;
+
+    /** 精英攻击倍率 */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public double eliteAttackMultiplier = 2.0;
+
+    /** 精英护甲倍率 */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public double eliteArmorMultiplier = 2.0;
+
+    /** 精英经验倍率 */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public double eliteXpMultiplier = 2.0;
+
+    /** Boss 开关 */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean bossEnabled = true;
+
+    /** Boss 概率（远小于精英；随难度提升） */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public double bossChance = 0.002;
+
+    /** Boss 生命倍率 */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public double bossHealthMultiplier = 50.0;
+
+    /** Boss 攻击倍率 */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public double bossAttackMultiplier = 10.0;
+
+    /** Boss 护甲倍率 */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public double bossArmorMultiplier = 10.0;
+
+    /** Boss 经验倍率 */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public double bossXpMultiplier = 20.0;
+
+    /** 概率随当前难度提升（难度越高精英/Boss 越常见） */
+    @ConfigEntry.Category("eliteBoss")
+    @ConfigEntry.Gui.Tooltip()
+    public boolean difficultyAffectsChance = true;
 }

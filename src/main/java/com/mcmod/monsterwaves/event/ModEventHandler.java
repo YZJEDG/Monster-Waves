@@ -79,6 +79,8 @@ public final class ModEventHandler {
         }
         MinecraftServer server = event.getServer();
         StageManager.serverTick(server);
+        // Boss 血条进度更新/清理
+        com.mcmod.monsterwaves.mob.BossManager.tick(server);
         // 休息维度玩家规则：锁饥饿 + 跳下传送
         ServerLevel safeLevel = SafeDimensionManager.getSafeLevel(server);
         if (safeLevel != null) {
@@ -248,6 +250,11 @@ public final class ModEventHandler {
         if (event.getSource().getEntity() instanceof net.minecraft.world.entity.player.Player killer) {
             owner = killer.getStringUUID();
         }
+        // Boss 死亡：移除 Boss 血条
+        if (com.mcmod.monsterwaves.mob.EliteBossHandler.isBoss(entity)
+                && entity instanceof net.minecraft.world.entity.Mob bossMob) {
+            com.mcmod.monsterwaves.mob.BossManager.hide(bossMob);
+        }
         // 统一掉落
         dropLoot(entity, level, difficulty, owner);
     }
@@ -327,6 +334,8 @@ public final class ModEventHandler {
         ServerLevel level = (ServerLevel) event.getEntity().level();
         double difficulty = StageManager.getDifficulty(level.getServer());
         double factor = cfg.experienceMultiplier + cfg.experienceBonusPerDifficulty * (difficulty - 1);
+        // 精英/Boss 经验倍率（精英 ×2、Boss ×20 等，配置）
+        factor *= com.mcmod.monsterwaves.mob.EliteBossHandler.xpMultiplier(event.getEntity());
         int newXp = (int) Math.round(event.getOriginalExperience() * factor);
         event.setDroppedExperience(newXp);
     }
