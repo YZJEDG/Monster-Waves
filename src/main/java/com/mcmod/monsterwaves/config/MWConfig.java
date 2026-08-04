@@ -95,6 +95,19 @@ public class MWConfig implements ConfigData {
                 e.maxCount = Math.max(e.minCount, Math.min(4096, e.maxCount));
             }
         }
+        // v1.0.17 怪物掉落表校验：mobType 判空、tier 非法回退 any、entries 同掉落条目规则
+        if (mobLoot == null) mobLoot = new ArrayList<>();
+        mobLoot.removeIf(m -> m == null || m.entries == null);
+        for (MobLoot m : mobLoot) {
+            if (m.mobType == null) m.mobType = "";
+            if (m.tier == null || !m.tier.matches("any|normal|elite|boss")) m.tier = "any";
+            m.entries.removeIf(e -> e == null || e.item == null || e.item.isBlank());
+            for (LootEntry e : m.entries) {
+                e.chance = Math.max(0.0, Math.min(1.0, e.chance));
+                e.minCount = Math.max(1, e.minCount);
+                e.maxCount = Math.max(e.minCount, Math.min(4096, e.maxCount));
+            }
+        }
 
         // ===== experience =====
         experienceMultiplier = Math.max(0.0, experienceMultiplier);
@@ -472,6 +485,17 @@ public class MWConfig implements ConfigData {
     /** 阶段掉落条目：stageId 阶段id（空=所有阶段）/ tier 怪物等级（any=全部、normal=普通、elite=精英(不含Boss)、boss=Boss）/ entries 掉落条目 */
     public static class StageLoot {
         public String stageId = "";
+        public String tier = "any";
+        public List<LootEntry> entries = new ArrayList<>();
+    }
+
+    /** 怪物掉落表（v1.0.17）：按【具体怪物注册名 + 等级】配置掉落，实现特定怪物的特定掉落；mobType 空=所有怪；移出 GUI 直接改 json5 */
+    @ConfigEntry.Gui.Excluded
+    public List<MobLoot> mobLoot = new ArrayList<>();
+
+    /** 怪物掉落条目：mobType 怪物注册名（如 minecraft:zombie / cataclysm:ender_golem，空=所有怪）/ tier 怪物等级（any/normal/elite/boss）/ entries 掉落条目 */
+    public static class MobLoot {
+        public String mobType = "";
         public String tier = "any";
         public List<LootEntry> entries = new ArrayList<>();
     }

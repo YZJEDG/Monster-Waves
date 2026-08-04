@@ -409,6 +409,20 @@ public final class ModEventHandler {
             }
             dropTable(entity, level, difficulty, owner, sl.entries);
         }
+        // v1.0.17 怪物掉落表（追加）：匹配具体怪物注册名 + 怪物等级（tier），实现特定怪物的特定掉落
+        String mobId = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString();
+        for (MWConfig.MobLoot ml : cfg.mobLoot) {
+            if (ml == null || ml.entries == null) {
+                continue;
+            }
+            if (!ml.mobType.isEmpty() && !ml.mobType.equals(mobId)) {
+                continue;
+            }
+            if (!matchesTier(ml.tier, entity)) {
+                continue;
+            }
+            dropTable(entity, level, difficulty, owner, ml.entries);
+        }
     }
 
     /** 阶段掉落 tier 匹配：any=全部 / normal=普通 / elite=精英(不含Boss) / boss=Boss */
