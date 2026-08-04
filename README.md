@@ -43,20 +43,43 @@
 
 ## 依赖
 
-| Mod | 必需 | 说明 |
+### 必需依赖（不装则无法启动）
+
+| Mod | 版本 | 用途 |
 |---|---|---|
-| Cloth Config（≥11.1.118） | ✅ | 配置界面 |
-| FTB Library（2001 系） | ✅ | 加点界面（客户端） |
-| TaCZ（1.1.7+） | ⬜ 可选 | 枪械功能（含附魔/属性），缺失时其余功能正常 |
-| Gunsmith Library（tacz1.1.8 版） | ⬜ 可选 | 枪械属性（射速/换弹/伤害等），缺失时相关属性行不显示 |
+| Forge | 47.4.x | 加载器 |
+| Minecraft | 1.20.1 | 游戏本体 |
+| Cloth Config | ≥11.1.118 | 配置界面（游戏内 Mods 列表 → 怪物狂潮 → Config） |
+| FTB Library | 2001 系（`[2001,2002)`） | 加点界面 GUI（客户端） |
+
+### 可选联动（不装不影响本体，仅对应功能降级）
+
+> 以下均为**联动内容**：缺失时 Mod 照常运行，只是相关特性不生效。代码通过 `ModList.isLoaded()` 检测后按需挂载，不会因缺失/版本不兼容崩溃。
+
+| Mod | 版本 | 联动功能 | 缺失时的影响 |
+|---|---|---|---|
+| TaCZ（Timeless and Classics Zero） | 1.1.7+ | 枪械联动：苦痛传递附魔可作用于 TaCZ 枪械（`GunPainTransferenceHandler`，仅 tacz 加载时注册） | 仅失去枪械联动，其余功能正常 |
+| Gunsmith Library（TaCZ 1.1.8 配套版） | tacz1.1.8 版 | 枪械属性加成（射速/换弹速度/子弹伤害/子弹速度）——TaCZ 实际读取的属性由它提供 | 加点界面不显示枪械属性行，其余属性正常 |
+
+> 补充说明：Gunsmith Library 是 TaCZ 的附属模组，装 TaCZ 时建议一并安装以获得完整枪械联动；只装 TaCZ 不装 Gunsmith Library 时枪械附魔联动仍可用，仅加点界面缺少枪械属性行。
 
 > 依赖缺失不会导致 Mod 崩溃（TaCZ/Gunsmith 相关功能自动降级）。
 
 ## 安装
 
 1. 安装 **Forge 1.20.1（47.4.x）**
-2. 将 `monsterwaves-1.0.0.jar` 与上述依赖放入 `mods/`
+2. 将 `monsterwaves-1.0.0.jar` 与上述**必需依赖**放入 `mods/`（可选联动按需添加）
 3. 启动游戏，配置在 `config/monsterwaves.json5`（或游戏内 Catalogue → 怪物狂潮 → Config）
+
+## 构建（开发者）
+
+```bash
+./gradlew.bat build    # 产物在 build/libs/monsterwaves-1.0.0.jar
+```
+
+- 编译依赖：Cloth Config / FTB Library 走 maven；**TaCZ 为本地编译依赖**（`compileOnly`，仅编译期、不打进 jar），jar 位于 `libs/tacz-1.20.1-1.1.8-hotfix.jar`
+- 该 jar 因体积大且属第三方产物**不入库**（见 `.gitignore` 的 `libs/`），clone 后编译前需自行放入对应 TaCZ 1.1.8 jar
+- 运行时不打包第三方依赖：所有联动（TaCZ/Gunsmith/FTB）由玩家自行放入 `mods/`
 
 ## 快速上手
 
