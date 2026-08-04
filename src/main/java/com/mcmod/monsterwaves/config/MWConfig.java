@@ -548,10 +548,10 @@ public class MWConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public double painTransferenceRadiusPerLevel = 1.0;
 
-    /** 传递伤害基础百分比（0.15 = 主伤害的 15%） */
+    /** 传递伤害基础百分比（0.30 = 主伤害的 30%） */
     @ConfigEntry.Category("enchantment")
     @ConfigEntry.Gui.Tooltip()
-    public double painTransferenceBaseDamagePercent = 0.15;
+    public double painTransferenceBaseDamagePercent = 0.30;
 
     /** 每级伤害百分比加成 */
     @ConfigEntry.Category("enchantment")
