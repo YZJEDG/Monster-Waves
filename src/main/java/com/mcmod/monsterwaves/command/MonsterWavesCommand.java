@@ -122,7 +122,7 @@ public final class MonsterWavesCommand {
                                 .requires(src -> src.hasPermission(2))
                                 .then(Commands.argument("player", EntityArgument.player())
                                         .executes(MonsterWavesCommand::skillResetAll)
-                                        .then(Commands.argument("attribute", StringArgumentType.string())
+                                        .then(Commands.argument("attribute", StringArgumentType.greedyString())
                                                 .suggests(SUGGEST_ATTRIBUTES)
                                                 .executes(MonsterWavesCommand::skillResetAttr))))
                         .then(Commands.literal("gui")
@@ -218,7 +218,8 @@ public final class MonsterWavesCommand {
         String attrId = StringArgumentType.getString(ctx, "attribute");
         int refunded = PlayerDataManager.resetAttribute(target, attrId);
         if (refunded <= 0) {
-            ctx.getSource().sendFailure(Component.literal("该属性没有已分配点数或不存在：" + attrId));
+            ctx.getSource().sendFailure(Component.literal("该属性没有已分配点数或不存在：" + attrId
+                    + "（格式：/monsterwaves skill reset <玩家> <属性>，无需数量参数）"));
             return 0;
         }
         ctx.getSource().sendSuccess(() -> Component.literal("已重置 " + target.getScoreboardName() + " 的 "
