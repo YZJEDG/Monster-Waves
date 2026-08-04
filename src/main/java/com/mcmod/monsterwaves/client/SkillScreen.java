@@ -178,25 +178,46 @@ public class SkillScreen extends ButtonListBaseScreen {
         }
     }
 
-    /** 按属性注册名 namespace 分组（自动读取属性来源 mod）；组与组内均为固定顺序 */
+    /** 按属性注册名 namespace 分组（自动读取属性来源 mod）；组与组内均为固定顺序。
+     * 枚举方式：**白名单驱动**（遍历 attributeConfigs 键解析属性，不依赖 getSyncableAttributes 过滤，
+     * 保证 tacz 等自注册属性必然列出），再用 syncable 属性兜底补充。 */
     private void rebuildGroups() {
         groups.clear();
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) {
             return;
         }
+        java.util.Set<String> seen = new java.util.HashSet<>();
         Map<String, AttributeGroup> byNs = new LinkedHashMap<>();
+        // 1) 白名单驱动：每个白名单属性都尝试加入（已注册且玩家有实例才显示）
+        for (String id : MWConfig.get().attributeConfigs.keySet()) {
+            if (!PlayerDataManager.isEnabled(id)) {
+                continue;
+            }
+            var attr = PlayerDataManager.resolveAttribute(id);
+            var inst = attr == null ? null : mc.player.getAttribute(attr);
+            if (attr == null || inst == null) {
+                continue;
+            }
+            addEntry(byNs, id, inst);
+            seen.add(id);
+        }
+        // 2) syncable 兜底：白名单内但上面漏掉的可同步属性（如非注册名匹配差异）
         for (AttributeInstance inst : mc.player.getAttributes().getSyncableAttributes()) {
             String id = ForgeRegistries.ATTRIBUTES.getKey(inst.getAttribute()).toString();
-            if (!PlayerDataManager.isEnabled(id)) {
-                continue; // 白名单外不显示、不可加
+            if (seen.contains(id) || !PlayerDataManager.isEnabled(id)) {
+                continue;
             }
-            String ns = id.contains(":") ? id.substring(0, id.indexOf(':')) : "unknown";
-            byNs.computeIfAbsent(ns, AttributeGroup::new).entries.add(new AttributeEntry(id,
-                    PlayerDataManager.displayName(id),
-                    SkillDataCache.getValue(id, inst.getValue()),
-                    SkillDataCache.getAllocated(id),
-                    !isCapped(id)));
+            addEntry(byNs, id, inst);
+        }
+        // 首次打开时输出排查日志：tacz 属性注册/实例状态
+        if (!debugLogged) {
+            debugLogged = true;
+            var taczAttr = PlayerDataManager.resolveAttribute("tacz:gun_fire_rate");
+            var taczInst = taczAttr == null ? null : mc.player.getAttribute(taczAttr);
+            com.mcmod.monsterwaves.MonsterWavesMod.LOGGER.info("[MonsterWaves] UI: tacz属性已注册={} 玩家有实例={}；本玩家可同步属性数={}",
+                    taczAttr != null, taczInst != null,
+                    mc.player.getAttributes().getSyncableAttributes().size());
         }
         List<AttributeGroup> ordered = new ArrayList<>(byNs.values());
         ordered.sort(Comparator.comparing(g -> g.namespace.equals("minecraft") ? "" : g.namespace));
@@ -204,6 +225,17 @@ public class SkillScreen extends ButtonListBaseScreen {
             g.entries.sort(Comparator.comparing(e -> e.attributeId));
         }
         groups.addAll(ordered);
+    }
+
+    private static boolean debugLogged = false;
+
+    private void addEntry(Map<String, AttributeGroup> byNs, String id, AttributeInstance inst) {
+        String ns = id.contains(":") ? id.substring(0, id.indexOf(':')) : "unknown";
+        byNs.computeIfAbsent(ns, AttributeGroup::new).entries.add(new AttributeEntry(id,
+                PlayerDataManager.displayName(id),
+                SkillDataCache.getValue(id, inst.getValue()),
+                SkillDataCache.getAllocated(id),
+                !isCapped(id)));
     }
 
     private static boolean isCapped(String id) {
